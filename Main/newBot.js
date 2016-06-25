@@ -224,7 +224,7 @@ app.post('/fb', (req, res) => {
         delete sessions[sessionId];
         console.log('session terminated');
       } else {
-        fbMessage(sender,'Too bad!');
+        execute(sender,'HI',sessionId);
         delete sessions[sessionId];
         console.log('session terminated');
       }
@@ -256,6 +256,26 @@ var execute = (sender, msg , sessionId ) => {
   if (sessions[sessionId].module !== -1) {
   
 	switch(sessions[sessionId].intent){
+    case "help":
+    fbMessage(sender,"Hi, my name is NUS bot builded with node.js. Ask me anything with the following formats: ");
+    fbMessage(sender,"1. If you wish to know about class location of any module today, include 'class <modulecode>'");
+    fbMessage(sender,"2. If you wish to know about exam detail of any module, include 'exam <modulecode>' ");
+    fbMessage(sender,"3. I can be your calculator xD");
+    fbMessage(sender,"4. I know everyone famous in the history of mankind. You can even ask me what's the meaning of life");
+    break;
+
+
+
+    case "module":
+    fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
+    break;
+
+
+
+
+
+
+
 		case "unsure":
 
 		fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
@@ -311,7 +331,7 @@ var execute = (sender, msg , sessionId ) => {
         var messageToSend = "The time of examination of module " + sessions[sessionId].module + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
         " and it will be held in " + result.ExamVenue + ".";
         
-        fbMessageWithButtons(sender,messageToSend,'Thank you', 'how about ...');
+        fbMessageWithButtons(sender,messageToSend,'Thank you', 'Help me');
 		// delete sessions[sessionId];
 		console.log("Waiting for other messages");
 
@@ -344,8 +364,10 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
     console.log(result);
     if (result[1] != null)
       fbMessage(sender, result[1].subpods[0].text);
+      fbMessage(sender, "Not what you're looking for? You can type --help for help" );
     else
-      fbMessage(sender, "We cannot do this for now!");
+      fbMessage(sender, "Hmmm interesting. Let me think about it");
+      fbMessage(sender, "Not what you're looking for? You can type --help for help" );
 });
 }
 
