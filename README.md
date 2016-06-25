@@ -12,16 +12,15 @@ Users want to know whether CS3217 is available next sem and the procedure to app
 # Does your proposed features make for a good Minimum Viable Product (MVP)?
 At first, for our MVP, we will just create a facebook bot that is able to handle requests about modules. Further info and database will be needed to scale the project but it provides a good environment to test the users’ experience and get their feedbacks.
 
+Update 1: Basic requests about modules, classes, and location in NUS have been handled. Our next improved MVP will be able to search for teachers' info (eg. modules taught and email), and maybe bidding queries
+
 # How you plan to achieve the end product through the remaining sprints:
 We have the echo bot and the AI engine. Next step should be to connect them with nusmods api to get the modules database.
 
-# Draft out a clear plan for satisfying the Orbital requirements in terms of time contributed for the remaining sprints.
+Update 1: Module database has been retrieved from nusmods and basic modules queries have been handle. By the next milestone, hopefully we can finish the MVP
 
-Gemini
-Used an alternative platform: Unity (Milestone 1)
-Achievements
-Avatars
-Game notifier to tell gamers how much of the game is completed
+# Draft out a clear plan for satisfying the Orbital requirements in terms of time contributed for the remaining sprints.
+After finishing the MVP, we will test our bot with students from NUS. Only then we'll know what to do to perfect our product.
 
 
 
