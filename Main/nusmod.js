@@ -81,19 +81,29 @@ findModule: function(string){
 // find keyword in a string
 findKey: function(string){
   var intent;
+  console.log(string);
+  console.log(string.search("HELLO"));
+  console.log(string.search("--HELP"));
+  console.log(string.search("WHAT CAN YOU DO"));
 
-  if (((string.search("HI")) != -1 ) || (string.search("HELLO") != -1) || (string.search("--HELP") != 1) || (string.search("WHAT CAN YOU DO") != -1)) 
+
+  if ((string  === "HI")  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1) {
+    console.log('why');
     intent = "help";
-  else if (string.search("EXAM") != -1 && string.search("CLASS") != -1)
+  }
+  else {
+    if (string.search("EXAM") != -1 && string.search("CLASS") != -1)
     intent = "unsure";
-  else if (string.search("EXAM") != -1)
+    else if (string.search("EXAM") != -1)
     intent = "exam";
-  else if (string.search("CLASS") != -1)
+    else if (string.search("CLASS") != -1)
     intent = "class";
-  else if (string.search("MODULE") != -1)
+    else if (string.search("MODULE") != -1)
     INTENT = "module";
+  }
   // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)
   //   intent = "no intent"
+  console.log(intent);
   return intent;
 },
 

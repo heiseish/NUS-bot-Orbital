@@ -6,6 +6,7 @@ const express = require('express');
 const request = require('request');
 var path = require('path');
 var nus = require( path.resolve( __dirname, "./nusmod.js" ) );
+var os = require('os');
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
@@ -95,10 +96,10 @@ const fbMessageWithButtons = (recipientId, msg, val1, val2, cb) => {
         		}
         		]
         	}
+        },
       },
     },
-  },
-};
+  };
   fbReq(opts, (err, resp, data) => {
     if (cb) {
       cb(err || data.error && data.error.message, data);
@@ -127,10 +128,10 @@ const fbMessageWithButtons_location = (recipientId, msg, location, cb) => {
             }
             ]
           }
+        },
       },
     },
-  },
-};
+  };
   fbReq(opts, (err, resp, data) => {
     if (cb) {
       cb(err || data.error && data.error.message, data);
@@ -153,38 +154,38 @@ app.get('/fb', (req, res) => {
   if (req.query['hub.mode'] === 'subscribe' &&
     req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
     res.send(req.query['hub.challenge']);
-  } else {
-    res.sendStatus(400);
-  }
+} else {
+  res.sendStatus(400);
+}
 });
 
 // Message handler
 app.post('/fb', (req, res) => {
- 
+
 
   let messaging_events = req.body.entry[0].messaging
-	for (let i = 0; i < messaging_events.length; i++) {
+  for (let i = 0; i < messaging_events.length; i++) {
 
-		let event = req.body.entry[0].messaging[i]
-		let sender = event.sender.id
-		const sessionId = findOrCreateSession(sender);
-
-
-
-		if (event.message && event.message.text) {
-			let text = event.message.text.toUpperCase()
-      merge(sender, text, sessionId);
-			execute(sender,text,sessionId);
-		}
+    let event = req.body.entry[0].messaging[i]
+    let sender = event.sender.id
+    const sessionId = findOrCreateSession(sender);
 
 
 
-		if (event.postback) {
-      let text = sessions[sessionId].text
+    if (event.message && event.message.text) {
+     let text = event.message.text.toUpperCase()
+     merge(sender, text, sessionId);
+     execute(sender,text,sessionId);
+   }
 
 
-      switch(sessions[sessionId].intent){
-        case 'unsure':
+
+   if (event.postback) {
+    let text = sessions[sessionId].text
+
+
+    switch(sessions[sessionId].intent){
+      case 'unsure':
       if (event.postback.payload == 'yay' ) {
         // intent === exam
         text = text.replace('CLASS','');
@@ -198,17 +199,7 @@ app.post('/fb', (req, res) => {
       }
       break;
 
-        case 'exam':
-			if (event.postback.payload == 'yay' ) {
-				fbMessage(sender,'It is my pleasure!');
-				delete sessions[sessionId];
-				console.log('session terminated');
-			} else {
-				fbMessage(sender,'Too bad!');
-				delete sessions[sessionId];
-				console.log('session terminated');
-			}
-      break;
+    
 
       case 'class':
       if (event.postback.payload == 'yay' ) {
@@ -219,20 +210,27 @@ app.post('/fb', (req, res) => {
       break;
 
       case 'exam':
+      delete sessions[sessionId].intent;
+      delete sessions[sessionId].module;
+
       if (event.postback.payload == 'yay' ) {
         fbMessage(sender,'It is my pleasure!');
         delete sessions[sessionId];
+        
         console.log('session terminated');
       } else {
-        execute(sender,'HI',sessionId);
-        delete sessions[sessionId];
-        console.log('session terminated');
-      }
-		}
-  }
-	}
 
-  res.sendStatus(200);
+        merge(sender,'HI',findOrCreateSession(sender));
+        
+        execute(sender,sessions[sessionId].text,findOrCreateSession(sender));
+        
+        // console.log('session terminated');
+      }
+    }
+  }
+}
+
+res.sendStatus(200);
 });
 
 //function to check text
@@ -249,38 +247,20 @@ var merge = (sender, msg, sessionId) => {
 
 var execute = (sender, msg , sessionId ) => {
 
-  console.log("Executing ...")
+  console.log("Executing ...");
+  console.log(msg);
+  console.log(sessions[sessionId]);
   
 	// var module = nusmod.findModule(msg);
   // If there is a module 
   if (sessions[sessionId].module !== -1) {
-  
-	switch(sessions[sessionId].intent){
-    case "help":
-    fbMessage(sender,"Hi, my name is NUS bot builded with node.js. Ask me anything with the following formats: ");
-    fbMessage(sender,"1. If you wish to know about class location of any module today, include 'class <modulecode>'");
-    fbMessage(sender,"2. If you wish to know about exam detail of any module, include 'exam <modulecode>' ");
-    fbMessage(sender,"3. I can be your calculator xD");
-    fbMessage(sender,"4. I know everyone famous in the history of mankind. You can even ask me what's the meaning of life");
+
+   switch(sessions[sessionId].intent){
+    case "unsure":
+
+    fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
+
     break;
-
-
-
-    case "module":
-    fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
-    break;
-
-
-
-
-
-
-
-		case "unsure":
-
-		fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
-
-		break;
 
 		// case "no intent":
 
@@ -292,9 +272,9 @@ var execute = (sender, msg , sessionId ) => {
 		
 		var result = {};
 
-      nus.findClass(sessions[sessionId].module).then(function(res){
-  
-        for (var i = 0; i < res.length; i++){
+    nus.findClass(sessions[sessionId].module).then(function(res){
+
+      for (var i = 0; i < res.length; i++){
 
         var messageToSend = res[i].LessonType + ": STARTS AT " + res[i].StartTime + ' AND ENDS AT ' + res[i].EndTime + ' , @' + res[i].Venue;
         // console.log(messageToSend);
@@ -306,7 +286,7 @@ var execute = (sender, msg , sessionId ) => {
     // delete sessions[sessionId];
     console.log("Waiting for other messages");
 
-    }).catch(function(err){
+  }).catch(function(err){
       // console.log(err);
 
       var messageToSend = "Either there is no such module or there is no class for that module today.";
@@ -314,15 +294,15 @@ var execute = (sender, msg , sessionId ) => {
       console.log("Waiting for other messages");
 
     });
-		
-		break;
 
-		case "exam":
+  break;
 
-		
-			var result = {};
+  case "exam":
 
-			nus.getModule(sessions[sessionId].module).then(function(res){
+
+  var result = {};
+
+  nus.getModule(sessions[sessionId].module).then(function(res){
 				// console.log(nus.findModule(msg));
 				// console.log(res);
 				result = Object.assign(result,res);
@@ -335,21 +315,45 @@ var execute = (sender, msg , sessionId ) => {
 		// delete sessions[sessionId];
 		console.log("Waiting for other messages");
 
-		}).catch(function(err){
-			console.log(err);
+  }).catch(function(err){
+   console.log(err);
 
-			var messageToSend = "Sorry we cannot find your module";
-			fbMessage(sender,messageToSend);
-			console.log("Waiting for other messages");
+   var messageToSend = "Sorry we cannot find your module";
+   fbMessage(sender,messageToSend);
+   console.log("Waiting for other messages");
 
-		});
-		
+ });
 
 
-	}
-} else if (sessions[sessionId].intent != null) {
-  fbMessage(sender,'There is either no module indicated or we cannot find your module. What module exactly?');
+
 }
+} else if (sessions[sessionId].intent != null) {
+  switch(sessions[sessionId].intent){
+    case "help":
+    fbMessage(sender,"Hi, my name is NUS bot builded with node.js. Ask me anything with the following formats: " + os.EOL + 
+      "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+      "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
+      "3. You can even ask me what's the meaning of life xD");
+    delete sessions[sessionId];
+
+    
+    // fbMessage(sender,"1. If you wish to know about class location of any module today, include 'class <modulecode>'");
+    // fbMessage(sender,"2. If you wish to know about exam detail of any module, include 'exam <modulecode>' ");
+    // fbMessage(sender,"3. I can be your calculator xD");
+    // fbMessage(sender,"4. I know everyone famous in the history of mankind. You can even ask me what's the meaning of life");
+    break;
+
+
+
+    case "module":
+    fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
+    break;
+
+    default:
+    fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+  }
+}
+
 else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
   //Wolfram API here
   //id1: YRV6XE-V42GEH4RPY
@@ -370,7 +374,7 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
       fbMessage(sender, "Hmmm interesting. Let me think about it");
       fbMessage(sender, "Not what you're looking for? You can type --help for help" );
     }
-});
+  });
 }
 
 }
