@@ -82,7 +82,7 @@ findModule: function(string){
 findKey: function(string){
   var intent;
 
-  if (((string.search("HI")) != -1 ) || (string.search("HELLO") != -1) || (string.search("--HELP") != 1) || (string.search("WHAT CAN YOU DO") != -1) || 
+  if (((string.search("HI")) != -1 ) || (string.search("HELLO") != -1) || (string.search("--HELP") != 1) || (string.search("WHAT CAN YOU DO") != -1)) 
     intent = "help";
   else if (string.search("EXAM") != -1 && string.search("CLASS") != -1)
     intent = "unsure";
