@@ -318,7 +318,7 @@ var execute = (sender, msg , sessionId ) => {
   }).catch(function(err){
    console.log(err);
 
-   var messageToSend = "Sorry we cannot find your module";
+   var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
    fbMessage(sender,messageToSend);
    console.log("Waiting for other messages");
 
@@ -357,8 +357,14 @@ var execute = (sender, msg , sessionId ) => {
 else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
   //Wolfram API here
   //id1: YRV6XE-V42GEH4RPY
-  console.log("before wolfram query");
-  var wolfram_key = "YRV6XE-V42GEH4RPY";
+  //id2: KE8U2V-UGWP6UJQ6L
+  var date = new Date();
+  date = date.getDate();
+  if (date % 2 == 1)
+    var wolfram_key = "YRV6XE-V42GEH4RPY";
+  else 
+    var wolfram_key = "KE8U2V-UGWP6UJQ6L";
+  
   var wolfram = require('wolfram-alpha').createClient(wolfram_key);
   
   wolfram.query(sessions[sessionId].text, function (err, result) {
@@ -368,11 +374,11 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
     console.log(result);
     if (result[1] != null){
       fbMessage(sender, result[1].subpods[0].text);
-      fbMessage(sender, "Not what you're looking for? You can type --help for help" );
+      // fbMessage(sender, "Not what you're looking for? You can type --help for help" );
     }
     else {
       fbMessage(sender, "Hmmm interesting. Let me think about it");
-      fbMessage(sender, "Not what you're looking for? You can type --help for help" );
+      // fbMessage(sender, "Not what you're looking for? You can type --help for help" );
     }
   });
 }
