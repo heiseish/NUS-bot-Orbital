@@ -1,7 +1,22 @@
 var http = require('http');
 var path = require('path');
 var modules = path.resolve( __dirname, "./modules.json");
-// var classroom = path.resolve( __dirname, "./classroom.json");
+var classroom = path.resolve( __dirname, "./classroom.json");
+
+var d = new Date();
+var weekday = new Array(7);
+weekday[0]=  "Sunday";
+weekday[1] = "Monday";
+weekday[2] = "Tuesday";
+weekday[3] = "Wednesday";
+weekday[4] = "Thursday";
+weekday[5] = "Friday";
+weekday[6] = "Saturday";
+
+// var n = weekday[d.getDay()];
+var n = weekday[1];
+
+
 
 module.exports = {
   getModule: function (modulecode){
@@ -73,37 +88,11 @@ findKey: function(string){
     intent = "exam";
   else if (string.search("CLASS") != -1)
     intent = "class";
-  else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)
-    intent = "no intent"
+  // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)
+  //   intent = "no intent"
   return intent;
 },
-// findTutorialClass: function(modulecode){
-//   return new Promise( function(response,reject){
-//       var fs = require("fs");
-//       var body = fs.readFileSync(classroom);
-//       var result = JSON.parse(body);
-//       // console.log(typeof body);
 
-//       var i = 0;
-//       while (i < result.length){
-//         // console.log("outside if" + modulecode);
-//         if (result[i].ModuleCode === modulecode){
-//         // console.log(modulecode)
-        
-//         // console.log(result[i]);
-//         response(result[i]);
-
-//       };
-//       i++;
-//     };
-//     if (i === result.length){
-//       reject(modulecode);
-//     }
-
-//   })
-
-
-// },
 
   convertPeriod: function(str){
     if (str.search("M") != -1)
@@ -120,29 +109,50 @@ findKey: function(string){
     return time + ' on ' + date;
   },
 
-// findLecture: function(modulecode){
-//   return new Promise( function(response,reject){
-//       var fs = require("fs");
-//       var body = fs.readFileSync(classroom);
-//       var result = JSON.parse(body);
-//       // console.log(typeof body);
+  findClass: function(modulecode){
+  return new Promise( function(response,reject){
+      var fs = require("fs");
+      var body = fs.readFileSync(classroom);
+      var result = JSON.parse(body);
+      // console.log(typeof body);
 
-//       var i = 0;
-//       while (i < result.length){
-//         // console.log("outside if" + modulecode);
-//         if (result[i].ModuleCode === modulecode){
-//         // console.log(modulecode)
+      // create array of object
+      // console.log(result[0]);
+      var val = [];
+
+      var i = 0;
+      var j = 0;
+      console.log(modulecode);
+      console.log(n);
+
+      while (i < result.length){
+        // console.log("outside if" + modulecode);
+        if ((result[i].ModuleCode === modulecode) && (result[i].DayText === n)) {
+        // console.log(modulecode)
+        // console.log(result[i]);
+        val[j] = result[i];
+        // console.log(val[j]);
+        j++;
+        // console.log(result[i]);
         
-//         // console.log(result[i]);
-//         response(result[i]);
 
-//       };
-//       i++;
-//     };
-//     if (i === result.length){
-//       reject(modulecode);
-//     }
+        };
+      i++;
+    }
+    // console.log(val);
+    if ( j !== 0 )
+      response(val);
+    else
+      reject(Error("There is no class or lecture today. Chill mate"));
+    
 
-//   })
-// },
+    })
+  },
+
+  trimVenue: function(str){
+    if (str.search('-') !== -1)
+      return str.substring(0, str.indexOf("-"));
+    else
+      return str;
+  }
 }
