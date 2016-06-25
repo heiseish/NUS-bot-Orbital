@@ -362,12 +362,14 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
     if (err) throw err;
     // result = JSON.parse(result);
     console.log(result);
-    if (result[1] != null)
+    if (result[1] != null){
       fbMessage(sender, result[1].subpods[0].text);
       fbMessage(sender, "Not what you're looking for? You can type --help for help" );
-    else
+    }
+    else {
       fbMessage(sender, "Hmmm interesting. Let me think about it");
       fbMessage(sender, "Not what you're looking for? You can type --help for help" );
+    }
 });
 }
 
