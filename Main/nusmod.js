@@ -13,8 +13,8 @@ weekday[4] = "Thursday";
 weekday[5] = "Friday";
 weekday[6] = "Saturday";
 
-// var n = weekday[d.getDay()];
-var n = weekday[1];
+var n = weekday[d.getDay()];
+// var n = weekday[1];
 
 
 
@@ -82,25 +82,21 @@ findModule: function(string){
 findKey: function(string){
   var intent;
   console.log(string);
-  console.log(string.search("HELLO"));
-  console.log(string.search("--HELP"));
-  console.log(string.search("WHAT CAN YOU DO"));
+  if (string.search("WHO") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1)))
+    intent = "intro";
+  else if (string.search("HOW") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1) || (string.search('YOU CREATED') != -1)))
+    intent = "delve";
 
-
-  if ((string  === "HI")  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1) {
-    console.log('why');
+  else if ((string  === "HI")  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1 || string.search("WHAT DO YOU DO") != -1)
     intent = "help";
-  }
-  else {
-    if (string.search("EXAM") != -1 && string.search("CLASS") != -1)
+  else if (string.search("EXAM") != -1 && string.search("CLASS") != -1)
     intent = "unsure";
-    else if (string.search("EXAM") != -1)
+  else if (string.search("EXAM") != -1)
     intent = "exam";
-    else if (string.search("CLASS") != -1)
+  else if (string.search("CLASS") != -1)
     intent = "class";
-    else if (string.search("MODULE") != -1)
-    INTENT = "module";
-  }
+  else if (string.search("MODULE") != -1)
+    intent = "module";
   // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)
   //   intent = "no intent"
   console.log(intent);

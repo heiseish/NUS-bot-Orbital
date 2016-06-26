@@ -36,7 +36,7 @@ const findOrCreateSession = (fbid) => {
   if (!sessionId) {
     // No session found for user fbid, let's create a new one
     sessionId = new Date().toISOString();
-    sessions[sessionId] = {fbid: fbid, context: {}};
+    sessions[sessionId] = {fbid: fbid, context: {}, text: ''};
   }
   return sessionId;
 };
@@ -204,25 +204,27 @@ app.post('/fb', (req, res) => {
       case 'class':
       if (event.postback.payload == 'yay' ) {
         fbMessage(sender,'It is my pleasure!');
-        delete sessions[sessionId];
+        // delete sessions[sessionId];
         console.log('session terminated');
       }
       break;
 
       case 'exam':
-      delete sessions[sessionId].intent;
-      delete sessions[sessionId].module;
+      // delete sessions[sessionId].intent;
+      // delete sessions[sessionId].module;
 
       if (event.postback.payload == 'yay' ) {
         fbMessage(sender,'It is my pleasure!');
-        delete sessions[sessionId];
+        // delete sessions[sessionId];
         
         console.log('session terminated');
       } else {
+        // postback = HELP;
 
-        merge(sender,'HI',findOrCreateSession(sender));
-        
-        execute(sender,sessions[sessionId].text,findOrCreateSession(sender));
+        fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
+      "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+      "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
+      "3. You can even ask me what's the meaning of life xD");
         
         // console.log('session terminated');
       }
@@ -286,7 +288,9 @@ var execute = (sender, msg , sessionId ) => {
     // delete sessions[sessionId];
     console.log("Waiting for other messages");
 
-  }).catch(function(err){
+  }).then(function(){
+   delete sessions[sessionId];
+ }).catch(function(err){
       // console.log(err);
 
       var messageToSend = "Either there is no such module or there is no class for that module today.";
@@ -302,20 +306,24 @@ var execute = (sender, msg , sessionId ) => {
 
   var result = {};
 
-  nus.getModule(sessions[sessionId].module).then(function(res){
+
+  nus.getModule(nus.findModule(msg)).then(function(res){
 				// console.log(nus.findModule(msg));
 				// console.log(res);
 				result = Object.assign(result,res);
         // console.log(result);
 
-        var messageToSend = "The time of examination of module " + sessions[sessionId].module + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
+        var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
         " and it will be held in " + result.ExamVenue + ".";
         
         fbMessageWithButtons(sender,messageToSend,'Thank you', 'Help me');
+
 		// delete sessions[sessionId];
 		console.log("Waiting for other messages");
 
-  }).catch(function(err){
+  }).then(function(){
+   delete sessions[sessionId];
+ }).catch(function(err){
    console.log(err);
 
    var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
@@ -330,7 +338,7 @@ var execute = (sender, msg , sessionId ) => {
 } else if (sessions[sessionId].intent != null) {
   switch(sessions[sessionId].intent){
     case "help":
-    fbMessage(sender,"Hi, my name is NUS bot builded with node.js. Ask me anything with the following formats: " + os.EOL + 
+    fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
       "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
       "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
       "3. You can even ask me what's the meaning of life xD");
@@ -349,6 +357,22 @@ var execute = (sender, msg , sessionId ) => {
     fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
     break;
 
+    case "intro":
+    fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team vietboi, which comprises master Giang and Quang. I was created to serve you. Yes YOU!' + 
+      ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
+    break;
+
+    case "delve":
+    fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL + 
+      '.' + os.EOL +
+      '.' + os.EOL +
+      'Just KIDDING LEL not gonna tell you xD');
+    break;
+
     default:
     fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
   }
@@ -364,6 +388,7 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
     var wolfram_key = "YRV6XE-V42GEH4RPY";
   else 
     var wolfram_key = "KE8U2V-UGWP6UJQ6L";
+  // LOL
   
   var wolfram = require('wolfram-alpha').createClient(wolfram_key);
   
@@ -377,7 +402,7 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
       // fbMessage(sender, "Not what you're looking for? You can type --help for help" );
     }
     else {
-      fbMessage(sender, "Hmmm interesting. Let me think about it");
+      fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
       // fbMessage(sender, "Not what you're looking for? You can type --help for help" );
     }
   });
