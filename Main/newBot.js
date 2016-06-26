@@ -265,8 +265,8 @@ var execute = (sender, msg , sessionId ) => {
 		// break;
 
     //IF the intent is class
-		case "class":	
-		var result = {};
+    case "class":	
+    var result = {};
     nus.findClass(sessions[sessionId].module).then(function(res){
       for (var i = 0; i < res.length; i++){
         var messageToSend = res[i].LessonType + ": STARTS AT " + res[i].StartTime + ' AND ENDS AT ' + res[i].EndTime + ' , @' + res[i].Venue;
@@ -301,9 +301,16 @@ var execute = (sender, msg , sessionId ) => {
    console.log("Waiting for other messages");
  });
 
+ break;
+
+ default;
+ fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
+ break;
 
 
 }
+
+//If there is intent
 } else if (sessions[sessionId].intent != null) {
   switch(sessions[sessionId].intent){
     case "help":
