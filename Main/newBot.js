@@ -303,7 +303,7 @@ var execute = (sender, msg , sessionId ) => {
 
  break;
 
- default;
+ default:
  fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
  break;
 
