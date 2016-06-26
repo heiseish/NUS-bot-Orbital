@@ -22,7 +22,7 @@ if (!FB_PAGE_TOKEN) {
 }
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 
-
+//Create Session
 const sessions = {};
 const findOrCreateSession = (fbid) => {
   let sessionId;
@@ -138,7 +138,7 @@ const fbMessageWithButtons_location = (recipientId, msg, location, cb) => {
     }
   });
 };
-
+//---> End Messenger API code
 
 // Starting our webserver and putting it all together
 const app = express();
@@ -162,7 +162,7 @@ app.get('/fb', (req, res) => {
 // Message handler
 app.post('/fb', (req, res) => {
 
-
+  //Receive message
   let messaging_events = req.body.entry[0].messaging
   for (let i = 0; i < messaging_events.length; i++) {
 
@@ -171,7 +171,7 @@ app.post('/fb', (req, res) => {
     const sessionId = findOrCreateSession(sender);
 
 
-
+    //Merge and Execute
     if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
      merge(sender, text, sessionId);
@@ -179,7 +179,7 @@ app.post('/fb', (req, res) => {
    }
 
 
-
+   // If user press a button
    if (event.postback) {
     let text = sessions[sessionId].text
 
@@ -199,34 +199,28 @@ app.post('/fb', (req, res) => {
       }
       break;
 
-    
+
 
       case 'class':
       if (event.postback.payload == 'yay' ) {
         fbMessage(sender,'It is my pleasure!');
-        // delete sessions[sessionId];
         console.log('session terminated');
       }
       break;
 
       case 'exam':
-      // delete sessions[sessionId].intent;
-      // delete sessions[sessionId].module;
 
       if (event.postback.payload == 'yay' ) {
         fbMessage(sender,'It is my pleasure!');
-        // delete sessions[sessionId];
         
         console.log('session terminated');
       } else {
-        // postback = HELP;
 
         fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
-      "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
-      "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
-      "3. You can even ask me what's the meaning of life xD");
+          "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+          "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
+          "3. You can even ask me what's the meaning of life xD");
         
-        // console.log('session terminated');
       }
     }
   }
@@ -235,7 +229,7 @@ app.post('/fb', (req, res) => {
 res.sendStatus(200);
 });
 
-//function to check text
+//function to merge context, session
 var merge = (sender, msg, sessionId) => {
   console.log("Merging ...");
   var intent = nus.findKey(msg);
@@ -247,13 +241,14 @@ var merge = (sender, msg, sessionId) => {
   sessions[sessionId].text = msg;
 }
 
+
+//Execute action based on context
 var execute = (sender, msg , sessionId ) => {
 
   console.log("Executing ...");
   console.log(msg);
   console.log(sessions[sessionId]);
   
-	// var module = nusmod.findModule(msg);
   // If there is a module 
   if (sessions[sessionId].module !== -1) {
 
@@ -269,67 +264,41 @@ var execute = (sender, msg , sessionId ) => {
 		// fbMessage(sender,"We are not ready for this sh*t");
 		// break;
 
-		case "class":
-
-		
+    //IF the intent is class
+		case "class":	
 		var result = {};
-
     nus.findClass(sessions[sessionId].module).then(function(res){
-
       for (var i = 0; i < res.length; i++){
-
         var messageToSend = res[i].LessonType + ": STARTS AT " + res[i].StartTime + ' AND ENDS AT ' + res[i].EndTime + ' , @' + res[i].Venue;
-        // console.log(messageToSend);
-
-        // console.log(nus.trimVenue(res[i].Venue));
-
         fbMessageWithButtons_location(sender,messageToSend,nus.trimVenue(res[i].Venue));
       };
-    // delete sessions[sessionId];
-    console.log("Waiting for other messages");
-
-  }).then(function(){
-   delete sessions[sessionId];
- }).catch(function(err){
-      // console.log(err);
-
-      var messageToSend = "Either there is no such module or there is no class for that module today.";
-      fbMessage(sender,messageToSend);
       console.log("Waiting for other messages");
+    }).then(function(){
+     delete sessions[sessionId];
+   }).catch(function(err){
+    var messageToSend = "Either there is no such module or there is no class for that module today.";
+    fbMessage(sender,messageToSend);
+    console.log("Waiting for other messages");
+  });
 
-    });
+   break;
 
-  break;
-
-  case "exam":
-
-
-  var result = {};
-
-
-  nus.getModule(nus.findModule(msg)).then(function(res){
-				// console.log(nus.findModule(msg));
-				// console.log(res);
-				result = Object.assign(result,res);
-        // console.log(result);
-
-        var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
-        " and it will be held in " + result.ExamVenue + ".";
-        
-        fbMessageWithButtons(sender,messageToSend,'Thank you', 'Help me');
-
-		// delete sessions[sessionId];
-		console.log("Waiting for other messages");
-
+   //IF the intent is exam
+   case "exam":
+   var result = {};
+   nus.getModule(nus.findModule(msg)).then(function(res){
+    result = Object.assign(result,res);
+    var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
+    " and it will be held in " + result.ExamVenue + ".";
+    fbMessageWithButtons(sender,messageToSend,'Thank you', 'Help me');
+    console.log("Waiting for other messages");
   }).then(function(){
    delete sessions[sessionId];
  }).catch(function(err){
    console.log(err);
-
    var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
    fbMessage(sender,messageToSend);
    console.log("Waiting for other messages");
-
  });
 
 
@@ -343,14 +312,7 @@ var execute = (sender, msg , sessionId ) => {
       "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
       "3. You can even ask me what's the meaning of life xD");
     delete sessions[sessionId];
-
-    
-    // fbMessage(sender,"1. If you wish to know about class location of any module today, include 'class <modulecode>'");
-    // fbMessage(sender,"2. If you wish to know about exam detail of any module, include 'exam <modulecode>' ");
-    // fbMessage(sender,"3. I can be your calculator xD");
-    // fbMessage(sender,"4. I know everyone famous in the history of mankind. You can even ask me what's the meaning of life");
     break;
-
 
 
     case "module":
@@ -358,7 +320,7 @@ var execute = (sender, msg , sessionId ) => {
     break;
 
     case "intro":
-    fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team vietboi, which comprises master Giang and Quang. I was created to serve you. Yes YOU!' + 
+    fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
       ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
     break;
 
@@ -395,15 +357,12 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
   wolfram.query(sessions[sessionId].text, function (err, result) {
     console.log("Getting answer from Wolfram ...");
     if (err) throw err;
-    // result = JSON.parse(result);
     console.log(result);
     if (result[1] != null){
       fbMessage(sender, result[1].subpods[0].text);
-      // fbMessage(sender, "Not what you're looking for? You can type --help for help" );
     }
     else {
       fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
-      // fbMessage(sender, "Not what you're looking for? You can type --help for help" );
     }
   });
 }

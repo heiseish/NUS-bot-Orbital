@@ -34,30 +34,24 @@ module.exports = {
       var fs = require("fs");
       var body = fs.readFileSync(modules);
       var result = JSON.parse(body);
-      // console.log(typeof body);
 
       var i = 0;
       while (i < result.length){
-        // console.log("outside if" + modulecode);
         if (result[i].ModuleCode === modulecode){
-        // console.log(modulecode)
-        delete result[i].CorsBiddingStats;
-        // console.log(result[i]);
-        response(result[i]);
-
+          delete result[i].CorsBiddingStats;
+          response(result[i]);
+        };
+        i++;
       };
-      i++;
-    };
-    if (i === result.length){
-      reject(modulecode);
-    }
-
-  });
+      if (i === result.length){
+        reject(modulecode);
+      }
+    });
 
 
   },
 
- 
+
 
 // Our own functions
 
@@ -104,49 +98,38 @@ findKey: function(string){
 },
 
 
-  convertPeriod: function(str){
-    if (str.search("M") != -1)
-      return str[str.indexOf("M") - 4 ] + ' hours and ' + str[str.indexOf("M") - 2 ]+ str[str.indexOf("M") - 1 ] + ' minutes';
-    else
-      return str[str.indexOf("H") - 1 ] + ' hours';
+convertPeriod: function(str){
+  if (str.search("M") != -1)
+    return str[str.indexOf("M") - 4 ] + ' hours and ' + str[str.indexOf("M") - 2 ]+ str[str.indexOf("M") - 1 ] + ' minutes';
+  else
+    return str[str.indexOf("H") - 1 ] + ' hours';
 
-  },
+},
 
-  convertTime: function(str){
-    console.log(str);
-    var date = str.substring(0 , str.indexOf("T"));
-    var time = str.substring(str.indexOf("T") + 1 , str.indexOf("T") + 6 );
-    return time + ' on ' + date;
-  },
+convertTime: function(str){
+  console.log(str);
+  var date = str.substring(0 , str.indexOf("T"));
+  var time = str.substring(str.indexOf("T") + 1 , str.indexOf("T") + 6 );
+  return time + ' on ' + date;
+},
 
-  findClass: function(modulecode){
+findClass: function(modulecode){
   return new Promise( function(response,reject){
-      var fs = require("fs");
-      var body = fs.readFileSync(classroom);
-      var result = JSON.parse(body);
-      // console.log(typeof body);
+    var fs = require("fs");
+    var body = fs.readFileSync(classroom);
+    var result = JSON.parse(body);
+    var val = [];
 
-      // create array of object
-      // console.log(result[0]);
-      var val = [];
+    var i = 0;
+    var j = 0;
+    console.log(modulecode);
+    console.log(n);
 
-      var i = 0;
-      var j = 0;
-      console.log(modulecode);
-      console.log(n);
-
-      while (i < result.length){
-        // console.log("outside if" + modulecode);
-        if ((result[i].ModuleCode === modulecode) && (result[i].DayText === n)) {
-        // console.log(modulecode)
-        // console.log(result[i]);
+    while (i < result.length){
+      if ((result[i].ModuleCode === modulecode) && (result[i].DayText === n)) {
         val[j] = result[i];
-        // console.log(val[j]);
         j++;
-        // console.log(result[i]);
-        
-
-        };
+      };
       i++;
     }
     // console.log(val);
@@ -154,15 +137,13 @@ findKey: function(string){
       response(val);
     else
       reject(Error("There is no class or lecture today. Chill mate"));
-    
+  })
+},
 
-    })
-  },
-
-  trimVenue: function(str){
-    if (str.search('-') !== -1)
-      return str.substring(0, str.indexOf("-"));
-    else
-      return str;
-  }
+trimVenue: function(str){
+  if (str.search('-') !== -1)
+    return str.substring(0, str.indexOf("-"));
+  else
+    return str;
+}
 }
