@@ -7,6 +7,7 @@ const request = require('request');
 var path = require('path');
 var nus = require( path.resolve( __dirname, "./nusmod.js" ) );
 var os = require('os');
+const GoogleMapsAPI = require('googlemaps');
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
@@ -61,6 +62,30 @@ const fbMessage = (recipientId, msg, cb) => {
       },
       message: {
         text: msg,
+      },
+    },
+  };
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
+const fbMessageWithPicture = (recipientId, cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'image',
+          'payload': {
+            "url": "http://memesvault.com/wp-content/uploads/What-Meme-Face-06.jpg",
+          }
+          // 'stickerID': '144885022352431'
+        },
       },
     },
   };
@@ -153,9 +178,9 @@ app.get('/fb', (req, res) => {
   }
   if (req.query['hub.mode'] === 'subscribe' &&
     req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
-    res.send(req.query['hub.challenge']);
+    res.status(200).send(req.query['hub.challenge']);
 } else {
-  res.sendStatus(400);
+  res.sendStatus(403);
 }
 });
 
@@ -169,18 +194,67 @@ app.post('/fb', (req, res) => {
     let event = req.body.entry[0].messaging[i]
     let sender = event.sender.id
     const sessionId = findOrCreateSession(sender);
-
+    console.log(event);
 
     //handle attachment
-    if (event.attachments){
-      fbMessage(sender,'It looks pretty!')
-    }
+    if (event.message && event.message.attachments) {
+      switch (event.message.attachments.type){
+        case 'image':
+        fbMessageWithPicture(sender);
+        break;
+
+        case 'video':
+        fbMessage(sender,'Lol video too long I am not gonna watch it');
+        break;
+
+        case 'audio':
+        fbMessage(sender,'Woah you got such a nice voice');
+        break;
+
+       // handle location cannot use type cos attachments[0]
+        default:
+        // var publicConfig = {
+        //   key: 'AIzaSyAIHT0UumzRR8ndvG5_FWMFV9zp9h7E8-Y',
+        //   stagger_time:       1000, // for elevationPath
+        //   encode_polylines:   false,
+        //   secure:             true, // use https
+        //   proxy:              'http://127.0.0.1:9999' // optional, set a proxy for HTTP requests
+        // };
+        // var gmAPI = new GoogleMapsAPI(publicConfig);
+        var coor = event.message.attachments[0].payload.coordinates.lat + "," + event.message.attachments[0].payload.coordinates.long;
+        // console.log(coor);
+
+        // var reverseGeocodeParams = {
+        // "latlng":        coor,
+        // "result_type":   "postal_code",
+        // "language":      "en",
+        // "location_type": "APPROXIMATE"
+        // };
+
+        // gmAPI.reverseGeocode(reverseGeocodeParams, function(err, result){
+        //   console.log(result);
+        // });
+
+        fbMessage(sender,'Your lattitude,longitude are ' + coor + ' respectively');
+        // console.log(event.message.attachments[0].payload.coordinates);
+        
+      }
+      // console.log(att[0].type);
+      // res.sendStatus(200);
+     //  if(atts[0].type === "image"){
+     //   var imageURL = atts[0].payload.url;
+     //   console.log(imageURL);
+     // }
+     console.log(event.message.attachments);
+   }
 
     //Merge and Execute Text
     if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
      merge(sender, text, sessionId);
      execute(sender,text,sessionId);
+     
+    
    }
 
 
@@ -244,9 +318,10 @@ app.post('/fb', (req, res) => {
       }
     }
   }
+  res.sendStatus(200);
 }
 
-res.sendStatus(200);
+// res.sendStatus(200);
 });
 
 //function to merge context, session

@@ -89,7 +89,6 @@ findModule: function(string){
 // find keyword in a string
 findKey: function(string){
   var intent;
-  console.log(string);
   if ((string.search("WHO") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1))) || string.search("WHO ARE YOU") != -1 || string.search("WHAT ARE YOU") != -1)
     intent = "intro";
   else if (string.search("HOW") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1) || (string.search('YOU CREATED') != -1)))
