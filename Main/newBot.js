@@ -171,7 +171,7 @@ app.post('/fb', (req, res) => {
     const sessionId = findOrCreateSession(sender);
 
 
-
+    //handle attachment
     if (event.attachments){
       fbMessage(sender,'It looks pretty!')
     }
