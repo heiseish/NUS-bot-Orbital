@@ -198,7 +198,8 @@ app.post('/fb', (req, res) => {
 
     //handle attachment
     if (event.message && event.message.attachments) {
-      switch (event.message.attachments.type){
+
+      switch (event.message.attachments[0].type){
         case 'image':
         fbMessageWithPicture(sender);
         break;
@@ -212,39 +213,35 @@ app.post('/fb', (req, res) => {
         break;
 
        // handle location cannot use type cos attachments[0]
-        default:
-        // var publicConfig = {
-        //   key: 'AIzaSyAIHT0UumzRR8ndvG5_FWMFV9zp9h7E8-Y',
-        //   stagger_time:       1000, // for elevationPath
-        //   encode_polylines:   false,
-        //   secure:             true, // use https
-        //   proxy:              'http://127.0.0.1:9999' // optional, set a proxy for HTTP requests
-        // };
-        // var gmAPI = new GoogleMapsAPI(publicConfig);
+        case 'location':
+        // // var publicConfig = {
+        // //   key: 'AIzaSyAIHT0UumzRR8ndvG5_FWMFV9zp9h7E8-Y',
+        // //   stagger_time:       1000, // for elevationPath
+        // //   encode_polylines:   false,
+        // //   secure:             true, // use https
+        // //   proxy:              'http://127.0.0.1:9999' // optional, set a proxy for HTTP requests
+        // // };
+        // // var gmAPI = new GoogleMapsAPI(publicConfig);
         var coor = event.message.attachments[0].payload.coordinates.lat + "," + event.message.attachments[0].payload.coordinates.long;
-        // console.log(coor);
+        // // console.log(coor);
 
-        // var reverseGeocodeParams = {
-        // "latlng":        coor,
-        // "result_type":   "postal_code",
-        // "language":      "en",
-        // "location_type": "APPROXIMATE"
-        // };
+        // // var reverseGeocodeParams = {
+        // // "latlng":        coor,
+        // // "result_type":   "postal_code",
+        // // "language":      "en",
+        // // "location_type": "APPROXIMATE"
+        // // };
 
-        // gmAPI.reverseGeocode(reverseGeocodeParams, function(err, result){
-        //   console.log(result);
-        // });
+        // // gmAPI.reverseGeocode(reverseGeocodeParams, function(err, result){
+        // //   console.log(result);
+        // // });
 
         fbMessage(sender,'Your lattitude,longitude are ' + coor + ' respectively');
-        // console.log(event.message.attachments[0].payload.coordinates);
+        // // console.log(event.message.attachments[0].payload.coordinates);
+        // fbMessage(sender,'lol wut');
         
       }
-      // console.log(att[0].type);
-      // res.sendStatus(200);
-     //  if(atts[0].type === "image"){
-     //   var imageURL = atts[0].payload.url;
-     //   console.log(imageURL);
-     // }
+    
      console.log(event.message.attachments);
    }
 
