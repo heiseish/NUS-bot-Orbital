@@ -16,7 +16,21 @@ weekday[6] = "Saturday";
 var n = weekday[d.getDay()];
 // var n = weekday[1];
 
+var findModule =function(string){
+  var s = /([A-Z])+([A-Z])+\d+\d+\d+\d+([A-Z])/;
+  var r = /([A-Z])+([A-Z])+\d+\d+\d+\d/;
 
+  var module = string.match(r);
+  var module2 = string.match(s);
+  if (module2 == null) {
+    if (module == null)
+      return -1;
+    else 
+      return module[0];
+  }
+  else
+    return module2[0]; 
+};
 
 module.exports = {
   getModule: function (modulecode){
@@ -83,7 +97,7 @@ findKey: function(string){
 
   else if ((string  === "HI")  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1 || string.search("WHAT DO YOU DO") != -1)
     intent = "help";
-  else if (string.search("EXAM") != -1 && string.search("CLASS") != -1)
+  else if ((string.search("EXAM") != -1 && string.search("CLASS") != -1) || (findModule(string) &&  string.search("EXAM") === -1 && string.search("CLASS") === -1))
     intent = "unsure";
   else if (string.search("EXAM") != -1)
     intent = "exam";

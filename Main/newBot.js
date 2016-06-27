@@ -186,15 +186,30 @@ app.post('/fb', (req, res) => {
 
     switch(sessions[sessionId].intent){
       case 'unsure':
+      console.log(text);
       if (event.postback.payload == 'yay' ) {
         // intent === exam
-        text = text.replace('CLASS','');
-        execute(sender,text,sessionId);
+        if (text.search('CLASS') != -1) {
+          text = text.replace('CLASS','');
+          merge(sender, text, sessionId);
+          execute(sender,text,sessionId);
+        } else {
+          text += " EXAM";
+          merge(sender,text, sessionId);
+          execute(sender,text,sessionId);
+        };
         
       } else {
         // intent === class
-        text = text.replace('EXAM','');
-        execute(sender,text,sessionId);
+        if (text.search('EXAM') != -1) {
+          text = text.replace('EXAM','');
+          merge(sender, text, sessionId);
+          execute(sender,text,sessionId);
+        } else {
+          text += " CLASS";
+          merge(sender,text, sessionId);
+          execute(sender,text,sessionId);
+        };
         
       }
       break;
@@ -253,9 +268,9 @@ var execute = (sender, msg , sessionId ) => {
   if (sessions[sessionId].module !== -1) {
 
    switch(sessions[sessionId].intent){
-    case "unsure":
-
+    default:
     fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
+
 
     break;
 
@@ -300,12 +315,7 @@ var execute = (sender, msg , sessionId ) => {
    fbMessage(sender,messageToSend);
    console.log("Waiting for other messages");
  });
-
- break;
-
- default:
- fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
- break;
+ 
 
 
 }
