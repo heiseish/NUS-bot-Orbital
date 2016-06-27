@@ -171,7 +171,12 @@ app.post('/fb', (req, res) => {
     const sessionId = findOrCreateSession(sender);
 
 
-    //Merge and Execute
+
+    if (event.attachments){
+      fbMessage(sender,'It looks pretty!')
+    }
+
+    //Merge and Execute Text
     if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
      merge(sender, text, sessionId);
@@ -179,7 +184,7 @@ app.post('/fb', (req, res) => {
    }
 
 
-   // If user press a button
+   // If user press a button. Merge and execute Postbacks
    if (event.postback) {
     let text = sessions[sessionId].text
 
