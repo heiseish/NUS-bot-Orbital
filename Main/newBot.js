@@ -7,7 +7,8 @@ const request = require('request');
 var path = require('path');
 var nus = require( path.resolve( __dirname, "./nusmod.js" ) );
 var os = require('os');
-const GoogleMapsAPI = require('googlemaps');
+var geocoder = require('geocoder');
+
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
@@ -212,38 +213,22 @@ app.post('/fb', (req, res) => {
         fbMessage(sender,'Woah you got such a nice voice');
         break;
 
-       // handle location cannot use type cos attachments[0]
-        case 'location':
-        // // var publicConfig = {
-        // //   key: 'AIzaSyAIHT0UumzRR8ndvG5_FWMFV9zp9h7E8-Y',
-        // //   stagger_time:       1000, // for elevationPath
-        // //   encode_polylines:   false,
-        // //   secure:             true, // use https
-        // //   proxy:              'http://127.0.0.1:9999' // optional, set a proxy for HTTP requests
-        // // };
-        // // var gmAPI = new GoogleMapsAPI(publicConfig);
-        var coor = event.message.attachments[0].payload.coordinates.lat + "," + event.message.attachments[0].payload.coordinates.long;
-        // // console.log(coor);
+       // handle location
+       case 'location':
+       let lat = event.message.attachments[0].payload.coordinates.lat
+       let long = event.message.attachments[0].payload.coordinates.long
+       geocoder.reverseGeocode( lat, long, function ( err, data ) {
+          fbMessage(sender,'I see that you are in '+ data.results[0].formatted_address + ' right now!');
+          // console.log(data.results[0]);
+  // do stuff with data
+      });
 
-        // // var reverseGeocodeParams = {
-        // // "latlng":        coor,
-        // // "result_type":   "postal_code",
-        // // "language":      "en",
-        // // "location_type": "APPROXIMATE"
-        // // };
-
-        // // gmAPI.reverseGeocode(reverseGeocodeParams, function(err, result){
-        // //   console.log(result);
-        // // });
-
-        fbMessage(sender,'Your lattitude,longitude are ' + coor + ' respectively');
-        // // console.log(event.message.attachments[0].payload.coordinates);
-        // fbMessage(sender,'lol wut');
-        
+        // console.log(event.message.attachments[0].payload.coordinates);
+      
       }
     delete sessions[sessionId];
     
-     console.log(event.message.attachments);
+     
    }
 
     //Merge and Execute Text
