@@ -241,6 +241,7 @@ app.post('/fb', (req, res) => {
         // fbMessage(sender,'lol wut');
         
       }
+    delete sessions[sessionId];
     
      console.log(event.message.attachments);
    }
@@ -292,19 +293,20 @@ app.post('/fb', (req, res) => {
 
 
 
-      case 'class':
-      if (event.postback.payload == 'yay' ) {
-        fbMessage(sender,'It is my pleasure!');
-        console.log('session terminated');
-      }
-      break;
+      // case 'class':
+      // if (event.postback.payload === 'yay' ) {
+      //   fbMessage(sender,'It is my pleasure!');
+      //   console.log('session terminated');
+      // }
+      // break;
 
-      case 'exam':
+      // case 'exam':
+      default:
 
-      if (event.postback.payload == 'yay' ) {
+      if (event.postback.payload === 'yay' ) {
         fbMessage(sender,'It is my pleasure!');
         
-        console.log('session terminated');
+        // console.log('session terminated');
       } else {
 
         fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
@@ -345,7 +347,7 @@ var execute = (sender, msg , sessionId ) => {
   if (sessions[sessionId].module !== -1) {
 
    switch(sessions[sessionId].intent){
-    default:
+    case 'unsure':
     fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
 
 

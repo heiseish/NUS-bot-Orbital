@@ -93,10 +93,9 @@ findKey: function(string){
     intent = "intro";
   else if (string.search("HOW") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1) || (string.search('YOU CREATED') != -1)))
     intent = "delve";
-
   else if ((string  === "HI")  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1 || string.search("WHAT DO YOU DO") != -1)
     intent = "help";
-  else if ((string.search("EXAM") != -1 && string.search("CLASS") != -1) || (findModule(string) &&  string.search("EXAM") === -1 && string.search("CLASS") === -1))
+  else if ((string.search("EXAM") != -1 && string.search("CLASS") != -1) || ((findModule(string) != -1) &&  (string.search("EXAM") === -1) && (string.search("CLASS") === -1)))
     intent = "unsure";
   else if (string.search("EXAM") != -1)
     intent = "exam";
