@@ -7,7 +7,12 @@ const request = require('request');
 var path = require('path');
 var nus = require( path.resolve( __dirname, "./nusmod.js" ) );
 var os = require('os');
-var geocoder = require('geocoder');
+const geocoder = require('geocoder');
+var schedule = require('node-schedule'); 
+// https://www.npmjs.com/package/node-schedule
+// const MongoClient = require('mongodb').MongoClient;
+// var mongourl = 'mongodb://localhost:27017/bot';
+// const assert = require('assert');
 
 
 // Webserver parameter
@@ -218,7 +223,7 @@ app.post('/fb', (req, res) => {
        let lat = event.message.attachments[0].payload.coordinates.lat
        let long = event.message.attachments[0].payload.coordinates.long
        geocoder.reverseGeocode( lat, long, function ( err, data ) {
-          fbMessage(sender,'I see that you are in '+ data.results[0].formatted_address + ' right now!');
+          fbMessage(sender,'I see that you are @ '+ data.results[0].formatted_address + ' right now!');
           // console.log(data.results[0]);
   // do stuff with data
       });
@@ -234,8 +239,16 @@ app.post('/fb', (req, res) => {
     //Merge and Execute Text
     if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
+     
      merge(sender, text, sessionId);
      execute(sender,text,sessionId);
+
+    //  MongoClient.connect(url, function(err, db) {
+    //   assert.equal(null, err);
+    //   console.log("Connected correctly to server");
+      
+    //   db.close();
+    // });
      
     
    }
@@ -388,11 +401,17 @@ var execute = (sender, msg , sessionId ) => {
 } else if (sessions[sessionId].intent != null) {
   switch(sessions[sessionId].intent){
     case "help":
+    if (sessions[sessionId].fbid ===  '1139314066115187'){
+      fbMessage(sender,'Hi Boss Dao Truong Giang');
+    } else if (sessions[sessionId].fbid ===  '1340406605974646') {
+      fbMessage(sender,'Hi Boss Tran Viet Quang');
+    } else {
     fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
       "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
       "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
       "3. You can even ask me what's the meaning of life xD");
     delete sessions[sessionId];
+   }
     break;
 
 
