@@ -95,6 +95,13 @@ const fbMessageWithPicture = (recipientId, cb) => {
       },
     },
   };
+  if ((Math.floor(Math.random() * 9) + 1)%3 === 0) {
+    opts.form.message.attachment.payload.url = "http://img-comment-fun.9cache.com/media/287e9c03142541764332921489_700wa_0.gif";
+  } else if ((Math.floor(Math.random() * 9) + 1)%3 === 1){
+    opts.form.message.attachment.payload.url = "http://img-comment-fun.9cache.com/media/5c35c4a6146061814643754935_700wa_0.gif";
+  } else { // nothing is done
+
+  };
   fbReq(opts, (err, resp, data) => {
     if (cb) {
       cb(err || data.error && data.error.message, data);
@@ -102,7 +109,7 @@ const fbMessageWithPicture = (recipientId, cb) => {
   });
 };
 
-const fbMessageWithButtons = (recipientId, msg, val1, val2, cb) => {
+const fbMessageWithButtons_TY = (recipientId, msg, val1, val2, cb) => {
   const opts = {
     form: {
       recipient: {
@@ -127,6 +134,47 @@ const fbMessageWithButtons = (recipientId, msg, val1, val2, cb) => {
         		}
         		]
         	}
+        },
+      },
+    },
+  };
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
+const fbMessageWithButtons_US = (recipientId, msg, val1, val2, val3, cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'template',
+          'payload': {
+            'template_type': 'button',
+            'text': msg,
+            'buttons': [
+            {
+              'type': 'postback',
+              'title': val1,
+              'payload': 'exam'
+            },
+            {
+              'type': 'postback',
+              'title': val2,
+              'payload': 'class'
+            },
+            {
+              'type': 'postback',
+              'title': val3,
+              'payload': 'cors'
+            }
+            ]
+          }
         },
       },
     },
@@ -224,8 +272,7 @@ app.post('/fb', (req, res) => {
        let long = event.message.attachments[0].payload.coordinates.long
        geocoder.reverseGeocode( lat, long, function ( err, data ) {
           fbMessage(sender,'I see that you are @ '+ data.results[0].formatted_address + ' right now!');
-          // console.log(data.results[0]);
-  // do stuff with data
+          
       });
 
         // console.log(event.message.attachments[0].payload.coordinates);
@@ -262,7 +309,7 @@ app.post('/fb', (req, res) => {
     switch(sessions[sessionId].intent){
       case 'unsure':
       console.log(text);
-      if (event.postback.payload == 'yay' ) {
+      if (event.postback.payload === 'exam' ) {
         // intent === exam
         if (text.search('CLASS') != -1) {
           text = text.replace('CLASS','');
@@ -274,7 +321,7 @@ app.post('/fb', (req, res) => {
           execute(sender,text,sessionId);
         };
         
-      } else {
+      } else if (event.postback.payload === 'class' ) {
         // intent === class
         if (text.search('EXAM') != -1) {
           text = text.replace('EXAM','');
@@ -286,6 +333,10 @@ app.post('/fb', (req, res) => {
           execute(sender,text,sessionId);
         };
         
+      } else if (event.postback.payload === 'cors'){
+        text += " CORS";
+          merge(sender,text, sessionId);
+          execute(sender,text,sessionId);
       }
       break;
 
@@ -308,10 +359,10 @@ app.post('/fb', (req, res) => {
       } else {
 
         fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
-          "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
-          "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
-          "3. You can even ask me what's the meaning of life xD");
-        
+      "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+      "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
+      "3. If you wish to know about cors bidding stats of any module, include 'cors <modulecode>'" + os.EOL +
+      "4. You can even ask me what's the meaning of life xD");
       }
     }
   }
@@ -346,7 +397,7 @@ var execute = (sender, msg , sessionId ) => {
 
    switch(sessions[sessionId].intent){
     case 'unsure':
-    fbMessageWithButtons(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
+    fbMessageWithButtons_US(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location','Cors Bidding Stats');
 
 
     break;
@@ -365,6 +416,7 @@ var execute = (sender, msg , sessionId ) => {
         fbMessageWithButtons_location(sender,messageToSend,nus.trimVenue(res[i].Venue));
       };
       console.log("Waiting for other messages");
+
     }).then(function(){
      delete sessions[sessionId];
    }).catch(function(err){
@@ -382,8 +434,36 @@ var execute = (sender, msg , sessionId ) => {
     result = Object.assign(result,res);
     var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
     " and it will be held in " + result.ExamVenue + ".";
-    fbMessageWithButtons(sender,messageToSend,'Thank you', 'Help me');
+    fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
     console.log("Waiting for other messages");
+
+
+
+  }).then(function(){
+   delete sessions[sessionId];
+ }).catch(function(err){
+   console.log(err);
+   var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+   fbMessage(sender,messageToSend);
+   console.log("Waiting for other messages");
+ });
+  break;
+
+
+  case "cors":
+  console.log("cors");
+   nus.getCors(nus.findModule(msg)).then(function(res){
+    
+    for (var i = 0; i < res.length; i++){
+        var messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
+        ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
+        fbMessage(sender,messageToSend);
+      };
+    
+    console.log("Waiting for other messages");
+
+
+
   }).then(function(){
    delete sessions[sessionId];
  }).catch(function(err){
@@ -409,7 +489,8 @@ var execute = (sender, msg , sessionId ) => {
     fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
       "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
       "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
-      "3. You can even ask me what's the meaning of life xD");
+      "3. If you wish to know about cors bidding stats of any module, include 'cors <modulecode>'" + os.EOL +
+      "4. You can even ask me what's the meaning of life xD");
     delete sessions[sessionId];
    }
     break;
