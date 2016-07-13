@@ -412,6 +412,7 @@ app.post('/fb', (req, res) => {
             } else if (result.length) {
               console.log('Found:', result);
               fbMessage(sender,'You already asked me to remind you mate! Cheers!');
+              delete sessions[sessionId];
             } else {
               console.log('No document(s) found with defined "find" criteria!');
               collection.insert([user], function (err, result) {
