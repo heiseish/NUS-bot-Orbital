@@ -10,8 +10,8 @@ var os = require('os');
 const geocoder = require('geocoder');
 var schedule = require('node-schedule'); 
 // https://www.npmjs.com/package/node-schedule
-// const MongoClient = require('mongodb').MongoClient;
-// var mongourl = 'mongodb://localhost:27017/bot';
+const MongoClient = require('mongodb').MongoClient;
+const mongourl = 'mongodb://giang:Madara04@ds035664.mlab.com:35664/heroku_85w00jl0';
 // const assert = require('assert');
 
 
@@ -217,6 +217,36 @@ const fbMessageWithButtons_location = (recipientId, msg, location, cb) => {
     }
   });
 };
+
+const fbMessageQuickReply = (recipientId, msg, cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      "message":{
+        "text": msg,
+        "quick_replies":[
+        {
+          "content_type":"text",
+          "title":"Yes",
+          "payload":"yes"
+        },
+        {
+          "content_type":"text",
+          "title":"No",
+          "payload":"no"
+        }
+        ]
+      },
+    },
+  };
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
 //---> End Messenger API code
 
 // Starting our webserver and putting it all together
@@ -238,8 +268,56 @@ app.get('/fb', (req, res) => {
 }
 });
 
+
+// REMINDER HERE
+
+var round0 = new Date(2016, 6, 21, 9, 0, 0);
+remind(round0,'Open Bidding Round 0 has started and it will end at 5pm tomorrow');
+var roundopen1a = new Date(2016, 6, 25, 9, 0, 0);
+remind(roundopen1a,'Open Bidding Round 1A has started and it will end at 1pm tomorrow');
+var roundclosed1a = new Date(2016, 6, 26, 13, 0, 0);
+remind(roundclosed1a,'Closed Bidding Round 1A has started and it will end at 5pm later');
+var roundopen1b = new Date(2016, 6, 27, 9, 0, 0);
+remind(roundopen1b,'Open Bidding Round 1B has started and it will end at 3pm later');
+var roundclosed1b = new Date(2016, 6, 27, 15, 0, 0);
+remind(roundclosed1b,'Closed Bidding Round 1B has started and it will end at 5pm later');
+var roundopen1c = new Date(2016, 6, 28, 9, 0, 0);
+remind(roundopen1c,'Open Bidding Round 1C has started and it will end at 3pm tomorrow');
+var roundclosed1c = new Date(2016, 6, 29, 13, 0, 0);
+remind(roundclosed1c,'Closed Bidding Round 1C has started and it will end at 5pm later');
+
+var roundopen2a1 = new Date(2016, 7, 1, 9, 0, 0);
+remind(roundopen2a1,'Open Bidding Round 2A has started and it will end at 8.59am tomorrow');
+var roundopen2a2 = new Date(2016, 7, 3, 9, 0, 0);
+remind(roundopen2a2,'Open Bidding Round 2A has started again and it will end at 1pm later');
+var roundclosed2a = new Date(2016, 7, 3, 13, 0, 0);
+remind(roundclosed2a,'Closed Bidding Round 2A has started and it will end at 5pm later');
+var roundopen2b = new Date(2016, 7, 4, 9, 0, 0);
+remind(roundopen2b,'Open Bidding Round 2B has started and it will end at 3pm later');
+var roundclosed2b = new Date(2016, 7, 4, 15, 0, 0);
+remind(roundclosed2b,'Closed Bidding Round 2B has started and it will end at 5pm tomorrow');
+
+var roundopen3a = new Date(2016, 7, 8, 9, 0, 0);
+remind(roundopen3a,'Open Bidding Round 3A has started and it will end at 3pm later');
+var roundclosed3a = new Date(2016, 7, 8, 15, 0, 0);
+remind(roundclosed3a,'Closed Bidding Round 3A has started and it will end at 5pm later');
+var roundopen3b = new Date(2016, 7, 10, 9, 0, 0);
+remind(roundopen3b,'Open Bidding Round 3B has started and it will end at 3pm later');
+var roundclosed3b = new Date(2016, 7, 10, 15, 0, 0);
+remind(roundclosed3b,'Closed Bidding Round 3B has started and it will end at 5pm later');
+
+var test = new Date(2016, 6, 13, 11, 53, 0);
+remind(test,'Hi Boss');
+
+
+
+
+
+
+
 // Message handler
 app.post('/fb', (req, res) => {
+
 
   //Receive message
   let messaging_events = req.body.entry[0].messaging
@@ -282,23 +360,92 @@ app.post('/fb', (req, res) => {
     
      
    }
+   if (event.message && event.message.quick_reply){
+    if (event.message.quick_reply.payload === 'no'){
+      MongoClient.connect(mongourl, function (err, db) {
+        if (err) {
+          console.log('Unable to connect to the mongoDB server. Error:', err);
+        } else {
+          //HURRAY!! We are connected. :)
+          console.log('Connection established to', mongourl);
+
+          // Get the documents collection
+          var collection = db.collection('users');
+
+          //Create some users
+          var user = {id: sender, roles: ['user']};
+
+          // Insert some users
+          collection.remove({id: sender}, function (err, result) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log('Removal Done');
+              fbMessage(sender,"That's too bad then");
+              delete sessions[sessionId];
+            }
+            //Close connection
+            db.close();
+          });
+        }
+      });
+      
+    } else {
+      MongoClient.connect(mongourl, function (err, db) {
+        if (err) {
+          console.log('Unable to connect to the mongoDB server. Error:', err);
+        } else {
+          //HURRAY!! We are connected. :)
+          console.log('Connection established to', mongourl);
+
+          // Get the documents collection
+          var collection = db.collection('users');
+
+          //Create some users
+          var user = {id: sender, roles: ['user']};
+
+          // Insert some users
+
+          collection.find({id: sender}).toArray(function (err, result) {
+            if (err) {
+              console.log(err);
+            } else if (result.length) {
+              console.log('Found:', result);
+              fbMessage(sender,'You already asked me to remind you mate! Cheers!');
+            } else {
+              console.log('No document(s) found with defined "find" criteria!');
+              collection.insert([user], function (err, result) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
+                  fbMessage(sender,'Got it! Leave it to me');
+                  delete sessions[sessionId];
+                }
+
+              });
+            }
+
+            db.close();
+          });
+
+          
+        }
+      });
+    }
+  }
 
     //Merge and Execute Text
-    if (event.message && event.message.text) {
+    else if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
      
      merge(sender, text, sessionId);
      execute(sender,text,sessionId);
 
-    //  MongoClient.connect(url, function(err, db) {
-    //   assert.equal(null, err);
-    //   console.log("Connected correctly to server");
-      
-    //   db.close();
-    // });
      
     
    }
+   
 
 
    // If user press a button. Merge and execute Postbacks
@@ -369,6 +516,10 @@ app.post('/fb', (req, res) => {
   res.sendStatus(200);
 }
 
+
+
+
+
 // res.sendStatus(200);
 });
 
@@ -382,172 +533,210 @@ var merge = (sender, msg, sessionId) => {
   if (module != null)
     sessions[sessionId].module = module;
   sessions[sessionId].text = msg;
-}
+};
+
+//function remind
+function remind (date, msg){
+  var reminder = schedule.scheduleJob(date, function(){
+    MongoClient.connect(mongourl, function (err, db) {
+      if (err) {
+        console.log('Unable to connect to the mongoDB server. Error:', err);
+      } else {
+    //HURRAY!! We are connected. :)
+    console.log('Connection established to', mongourl);
+
+    // Get the documents collection
+    var collection = db.collection('users');
+
+    // Insert some users
+    collection.find({}).toArray(function (err, result) {
+      if (err) {
+        console.log(err);
+      } else if (result.length) {
+        for (var i = 0;  i < result.length; i++){
+          fbMessage(result[i].id,msg);
+
+        }
+      } else {
+        console.log('No document(s) found with defined "find" criteria!');
+      }
+      //Close connection
+      db.close();
+    });
+  }
+});
+  });
+};
 
 
 //Execute action based on context
-var execute = (sender, msg , sessionId ) => {
+  var execute = (sender, msg , sessionId ) => {
 
-  console.log("Executing ...");
-  console.log(msg);
-  console.log(sessions[sessionId]);
-  
-  // If there is a module 
-  if (sessions[sessionId].module !== -1) {
+    console.log("Executing ...");
+    console.log(msg);
+    console.log(sessions[sessionId]);
+    
+    // If there is a module 
+    if (sessions[sessionId].module !== -1) {
 
-   switch(sessions[sessionId].intent){
-    case 'unsure':
-    fbMessageWithButtons_US(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location','Cors Bidding Stats');
+     switch(sessions[sessionId].intent){
+      case 'unsure':
+      fbMessageWithButtons_US(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location','Cors Bidding Stats');
 
 
-    break;
+      break;
 
-		// case "no intent":
+  		// case "no intent":
 
-		// fbMessage(sender,"We are not ready for this sh*t");
-		// break;
+  		// fbMessage(sender,"We are not ready for this sh*t");
+  		// break;
 
-    //IF the intent is class
-    case "class":	
-    var result = {};
-    nus.findClass(sessions[sessionId].module).then(function(res){
-      for (var i = 0; i < res.length; i++){
-        var messageToSend = res[i].LessonType + ": STARTS AT " + res[i].StartTime + ' AND ENDS AT ' + res[i].EndTime + ' , @' + res[i].Venue;
-        fbMessageWithButtons_location(sender,messageToSend,nus.trimVenue(res[i].Venue));
-      };
+      //IF the intent is class
+      case "class":	
+      var result = {};
+      nus.findClass(sessions[sessionId].module).then(function(res){
+        for (var i = 0; i < res.length; i++){
+          var messageToSend = res[i].LessonType + ": STARTS AT " + res[i].StartTime + ' AND ENDS AT ' + res[i].EndTime + ' , @' + res[i].Venue;
+          fbMessageWithButtons_location(sender,messageToSend,nus.trimVenue(res[i].Venue));
+        };
+        console.log("Waiting for other messages");
+
+      }).then(function(){
+       delete sessions[sessionId];
+     }).catch(function(err){
+      var messageToSend = "Either there is no such module or there is no class for that module today.";
+      fbMessage(sender,messageToSend);
       console.log("Waiting for other messages");
+    });
+
+     break;
+
+     //IF the intent is exam
+     case "exam":
+     var result = {};
+     nus.getModule(nus.findModule(msg)).then(function(res){
+      result = Object.assign(result,res);
+      var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
+      " and it will be held in " + result.ExamVenue + ".";
+      fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
+      console.log("Waiting for other messages");
+
+
 
     }).then(function(){
      delete sessions[sessionId];
    }).catch(function(err){
-    var messageToSend = "Either there is no such module or there is no class for that module today.";
-    fbMessage(sender,messageToSend);
-    console.log("Waiting for other messages");
-  });
-
+     console.log(err);
+     var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+     fbMessage(sender,messageToSend);
+     console.log("Waiting for other messages");
+   });
    break;
 
-   //IF the intent is exam
-   case "exam":
-   var result = {};
-   nus.getModule(nus.findModule(msg)).then(function(res){
-    result = Object.assign(result,res);
-    var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
-    " and it will be held in " + result.ExamVenue + ".";
-    fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
-    console.log("Waiting for other messages");
 
-
-
-  }).then(function(){
-   delete sessions[sessionId];
- }).catch(function(err){
-   console.log(err);
-   var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
-   fbMessage(sender,messageToSend);
-   console.log("Waiting for other messages");
- });
-  break;
-
-
-  case "cors":
-  console.log("cors");
+   case "cors":
+   console.log("cors");
    nus.getCors(nus.findModule(msg)).then(function(res){
-    
+
     for (var i = 0; i < res.length; i++){
-        var messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
-        ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
-        fbMessage(sender,messageToSend);
-      };
-    
+      var messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
+      ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
+      fbMessage(sender,messageToSend);
+    };
+
     console.log("Waiting for other messages");
 
 
 
   }).then(function(){
    delete sessions[sessionId];
- }).catch(function(err){
+  }).catch(function(err){
    console.log(err);
    var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
    fbMessage(sender,messageToSend);
    console.log("Waiting for other messages");
- });
- 
+      });
 
 
-}
 
-//If there is intent
-} else if (sessions[sessionId].intent != null) {
-  switch(sessions[sessionId].intent){
-    case "help":
-    if (sessions[sessionId].fbid ===  '1139314066115187'){
-      fbMessage(sender,'Hi Boss Dao Truong Giang');
-    } else if (sessions[sessionId].fbid ===  '1340406605974646') {
-      fbMessage(sender,'Hi Boss Tran Viet Quang');
-    } else {
-    fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
-      "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
-      "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
-      "3. If you wish to know about cors bidding stats of any module, include 'cors <modulecode>'" + os.EOL +
-      "4. You can even ask me what's the meaning of life xD");
-    delete sessions[sessionId];
-   }
-    break;
+      }
+
+  //If there is intent
+  } else if (sessions[sessionId].intent != null) {
+    switch(sessions[sessionId].intent){
+      case "help":
+      if (sessions[sessionId].fbid ===  '1139314066115187'){
+        fbMessage(sender,'Hi Boss Dao Truong Giang');
+      } else if (sessions[sessionId].fbid ===  '1340406605974646') {
+        fbMessage(sender,'Hi Boss Tran Viet Quang');
+      } else {
+        fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
+          "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+          "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
+          "3. If you wish to know about cors bidding stats of any module, include 'cors <modulecode>'" + os.EOL +
+          "4. You can even ask me what's the meaning of life xD");
+        delete sessions[sessionId];
+      }
+      break;
 
 
-    case "module":
-    fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
-    break;
+      case "module":
+      fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
+      break;
 
-    case "intro":
-    fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
-      ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
-    break;
+      case "intro":
+      fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
+        ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
+      break;
 
-    case "delve":
-    fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
-      '.' + os.EOL +
-      '.' + os.EOL +
-      '.' + os.EOL +
-      '.' + os.EOL + 
-      '.' + os.EOL +
-      '.' + os.EOL +
-      'Just KIDDING LEL not gonna tell you xD');
-    break;
+      case "delve":
+      fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
+        '.' + os.EOL +
+        '.' + os.EOL +
+        '.' + os.EOL +
+        '.' + os.EOL + 
+        '.' + os.EOL +
+        '.' + os.EOL +
+        'Just KIDDING LEL not gonna tell you xD');
+      break;
 
-    default:
-    fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+      case "remind":
+      fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
+      break;
+
+      default:
+      fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+    }
   }
-}
 
-else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
-  //Wolfram API here
-  //id1: YRV6XE-V42GEH4RPY
-  //id2: KE8U2V-UGWP6UJQ6L
-  var date = new Date();
-  date = date.getDate();
-  if (date % 2 == 1)
-    var wolfram_key = "YRV6XE-V42GEH4RPY";
-  else 
-    var wolfram_key = "KE8U2V-UGWP6UJQ6L";
-  // LOL
-  
-  var wolfram = require('wolfram-alpha').createClient(wolfram_key);
-  
-  wolfram.query(sessions[sessionId].text, function (err, result) {
-    console.log("Getting answer from Wolfram ...");
-    if (err) throw err;
-    console.log(result);
-    if (result[1] != null){
-      fbMessage(sender, result[1].subpods[0].text);
-    }
-    else {
-      fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
-    }
-  });
-}
+  else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
+    //Wolfram API here
+    //id1: YRV6XE-V42GEH4RPY
+    //id2: KE8U2V-UGWP6UJQ6L
+    var date = new Date();
+    date = date.getDate();
+    if (date % 2 == 1)
+      var wolfram_key = "YRV6XE-V42GEH4RPY";
+    else 
+      var wolfram_key = "KE8U2V-UGWP6UJQ6L";
+    // LOL
+    
+    var wolfram = require('wolfram-alpha').createClient(wolfram_key);
+    
+    wolfram.query(sessions[sessionId].text, function (err, result) {
+      console.log("Getting answer from Wolfram ...");
+      if (err) throw err;
+      console.log(result);
+      if (result[1] != null){
+        fbMessage(sender, result[1].subpods[0].text);
+      }
+      else {
+        fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
+      }
+    });
+  }
+};
 
-}
+
 
 

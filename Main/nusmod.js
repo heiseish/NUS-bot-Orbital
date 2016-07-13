@@ -146,6 +146,8 @@ findKey: function(string){
     intent = "cors"
   else if (string.search("MODULE") != -1)
     intent = "module";
+  else if (string.search("REMIND ME") != 1)
+    intent = "remind";
   // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)
   //   intent = "no intent"
   console.log(intent);
