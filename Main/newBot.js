@@ -382,7 +382,7 @@ app.post('/fb', (req, res) => {
             } else {
               console.log('Removal Done');
               fbMessage(sender,"That's too bad then");
-              delete sessions[sessionId];
+              
             }
             //Close connection
             db.close();
@@ -412,7 +412,7 @@ app.post('/fb', (req, res) => {
             } else if (result.length) {
               console.log('Found:', result);
               fbMessage(sender,'You already asked me to remind you mate! Cheers!');
-              delete sessions[sessionId];
+              
             } else {
               console.log('No document(s) found with defined "find" criteria!');
               collection.insert([user], function (err, result) {
@@ -421,7 +421,7 @@ app.post('/fb', (req, res) => {
                 } else {
                   console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
                   fbMessage(sender,'Got it! Leave it to me');
-                  delete sessions[sessionId];
+                  
                 }
 
               });
@@ -434,6 +434,7 @@ app.post('/fb', (req, res) => {
         }
       });
     }
+    delete sessions[sessionId];
   }
 
     //Merge and Execute Text
