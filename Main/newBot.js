@@ -507,11 +507,11 @@ app.post('/fb', (req, res) => {
         // console.log('session terminated');
       } else {
 
-        fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
-      "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
-      "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
-      "3. If you wish to know about cors bidding stats of any module, include 'cors <modulecode>'" + os.EOL +
-      "4. You can even ask me what's the meaning of life xD");
+        fbMessage(sender,"Hi, I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
+          "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+          "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
+          "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
+          "4. Include 'remind me' to alert whe bidding round comes");
       }
     }
   }
@@ -666,17 +666,18 @@ function remind (date, msg){
   //If there is intent
   } else if (sessions[sessionId].intent != null) {
     switch(sessions[sessionId].intent){
+
       case "help":
       if (sessions[sessionId].fbid ===  '1139314066115187'){
         fbMessage(sender,'Hi Boss Dao Truong Giang');
       } else if (sessions[sessionId].fbid ===  '1340406605974646') {
         fbMessage(sender,'Hi Boss Tran Viet Quang');
       } else {
-        fbMessage(sender,"Hi, I am a NUS bot. Ask me anything with the following formats: " + os.EOL + 
-          "1. If you wish to know about class location of any module today, include 'class <modulecode>'" + os.EOL +
-          "2. If you wish to know about exam detail of any module, include 'exam <modulecode>'" + os.EOL +
-          "3. If you wish to know about cors bidding stats of any module, include 'cors <modulecode>'" + os.EOL +
-          "4. You can even ask me what's the meaning of life xD");
+        fbMessage(sender,"Hi, I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
+          "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+          "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
+          "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
+          "4. Include 'remind me' to alert whe bidding round comes");
         delete sessions[sessionId];
       }
       break;
