@@ -130,7 +130,7 @@ module.exports = {
 // find keyword in a string
 findKey: function(string){
   var intent;
-  if (string.search("REMIND ME") != 1)
+  if (string.search("REMIND ME") != -1)
     intent = "remind";
   else if ((string.search("WHO") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1))) || string.search("WHO ARE YOU") != -1 || string.search("WHAT ARE YOU") != -1)
     intent = "intro";
