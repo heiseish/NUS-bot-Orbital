@@ -716,7 +716,7 @@ function writeEmail(address)
 
       case "prof":
       var profName = nus.findProfName(msg);
-      console.log(profName);
+     
 
       	var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
 
@@ -725,12 +725,10 @@ function writeEmail(address)
       			console.log('requesting ...');
       			var $ = cheerio.load(html);
 
-      			// var title, release, rating;
-      			// var json = { title : "", release : "", rating : ""};
-      			var textToSend;
+      			
 
       			$('tr[height="20"]').filter(function(){
-      				console.log('in here');
+      				
       				var data = $(this);
       				var fullNameOfProf = data.next().children().first().text(); 
       				var designation = data.next().children().first().next().text();
@@ -739,13 +737,13 @@ function writeEmail(address)
       				console.log(emailcoded);
       				
       				var  emaildecoded = writeEmail(emailcoded);
+      				if (department){
+      					fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded); 
+      				} else {
+      					fbMessage(sender,'We cannot find the professor detail. Is it really ' + msg );
+      				} 
 
-      				fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded);  
-
-      				// release = data.children().last().children().text();
-
-      				// json.title = title;
-      				// json.release = release;
+      				
 
       			})
 
