@@ -9,6 +9,8 @@ var nus = require( path.resolve( __dirname, "./nusmod.js" ) );
 var os = require('os');
 const geocoder = require('geocoder');
 var schedule = require('node-schedule'); 
+const fs = require('fs');
+const cheerio = require('cheerio');
 // https://www.npmjs.com/package/node-schedule
 const MongoClient = require('mongodb').MongoClient;
 const mongourl = 'mongodb://giang:Madara04@ds035664.mlab.com:35664/heroku_85w00jl0';
@@ -569,6 +571,26 @@ function remind (date, msg){
 });
   });
 };
+//function decipher prof email
+function writeEmail(address)
+{		
+	var coded = address
+	const cipher = "aZbYcXdWeVfUgThSiRjQkPlOmNnMoLpKqJrIsHtGuFvEwDxCyBzA1234567890"
+	var shift = coded.length;
+	var link= "";
+	var ltr;
+	for (var i=0; i<shift; i++){
+		if (cipher.indexOf(coded.charAt(i))==-1){
+			ltr=coded.charAt(i)
+			link+=(ltr)
+		}
+		else {     
+			ltr = (cipher.indexOf(coded.charAt(i))-shift+cipher.length) % cipher.length
+			link+=(cipher.charAt(ltr))
+		}				
+	}
+	return link;
+}
 
 
 //Execute action based on context
@@ -690,6 +712,62 @@ function remind (date, msg){
       case "intro":
       fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
         ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
+      break;
+
+      case "prof":
+      var profName = nus.findProfName(msg);
+      console.log(profName);
+
+      	var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
+
+      	request(scrapeurl, function(error, response, html){
+      		if(!error){
+      			console.log('requesting ...');
+      			var $ = cheerio.load(html);
+
+      			// var title, release, rating;
+      			// var json = { title : "", release : "", rating : ""};
+      			var textToSend;
+
+      			$('tr[height="20"]').filter(function(){
+      				console.log('in here');
+      				var data = $(this);
+      				var fullNameOfProf = data.next().children().first().text(); 
+      				var designation = data.next().children().first().next().text();
+      				var department = data.next().children().first().next().next().text(); 
+      				var emailcoded = nus.trimCodedEmail(data.next().children().first().next().next().next().text());
+      				console.log(emailcoded);
+      				
+      				var  emaildecoded = writeEmail(emailcoded);
+
+      				fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded);  
+
+      				// release = data.children().last().children().text();
+
+      				// json.title = title;
+      				// json.release = release;
+
+      			})
+
+      			
+      		}
+
+// To write to the system we will use the built in 'fs' library.
+// In this example we will pass 3 parameters to the writeFile function
+// Parameter 1 :  output.json - this is what the created filename will be called
+// Parameter 2 :  JSON.stringify(json, null, 4) - the data to write, here we do an extra step by calling JSON.stringify to make our JSON easier to read
+// Parameter 3 :  callback function - a callback function to let us know the status of our function
+
+		// fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
+
+		// 	console.log('File successfully written! - Check your project directory for the output.json file');
+
+		// 	})
+
+
+
+		}) ;
+      
       break;
 
       case "delve":
