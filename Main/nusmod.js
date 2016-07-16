@@ -213,7 +213,7 @@ trimCodedEmail: function(str){
 },
 
 findProfName: function(str){
-  str = str.substring(str.indexOf("PROF") + 6)
+  str = str.substring(str.indexOf("PROF") + 5)
   console.log(str);
   return str;
 }
