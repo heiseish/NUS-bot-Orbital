@@ -716,6 +716,7 @@ function writeEmail(address)
 
       case "prof":
       var profName = nus.findProfName(msg);
+      console.log(profName);
      
 
       	var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;

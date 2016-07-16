@@ -214,6 +214,7 @@ trimCodedEmail: function(str){
 
 findProfName: function(str){
   str = str.substring(str.indexOf("PROF") + 6)
+  console.log(str);
   return str;
 }
 }
