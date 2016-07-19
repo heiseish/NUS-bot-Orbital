@@ -8,6 +8,12 @@ var userSchema = new Schema({
 });
 
 // User defined functions
+userSchema.statics.findAll = function(cb) {
+	this.find({}, function (err, users) {
+		cb(err, users);
+	})
+}
+
 userSchema.statics.addUser = function(Id, cb) {
 	newUser = new this();
 	newUser.fbId = Id;
