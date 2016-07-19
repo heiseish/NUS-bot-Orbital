@@ -20,24 +20,15 @@ userSchema.statics.deleteUser = function(Id, cb) {
 	this.findOne({fbId: Id}, function(err, user) {
 		if (err) 
 			cb(err);
-		else {
-			var ifExist = 0; 
-			for (i=0; i<user.modules.length; i++) {
-				if (user.modules[i].code == module) {
-					ifExist = 1;
-				}
-			}
-			if (ifExist) {
-				user.remove(function(err) {
-					cb(err);
-				});
-			}
-			else {
-				err = new Error("No such user");
-				cb(err, user);
-			}
+		if (user != null) {
+			user.remove(function(err) {
+				cb(err);
+			});
 		}
-
+		else {
+			err = new Error("No such user");
+			cb(err, user);
+		}
 	})
 }
 
