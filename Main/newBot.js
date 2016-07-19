@@ -741,7 +741,7 @@ function writeEmail(address)
       				if (department){
       					fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded); 
       				} else {
-      					fbMessage(sender,'We cannot find the professor detail. Is it really ' + msg );
+      					fbMessage(sender,'We cannot find the professor detail. Is it really professor' + profName + '?');
       				} 
 
       				
