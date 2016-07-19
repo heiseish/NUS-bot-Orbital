@@ -303,7 +303,7 @@ remind(roundopen3b,'Open Bidding Round 3B has started and it will end at 3pm lat
 var roundclosed3b = new Date(2016, 7, 10, 15, 0, 0);
 remind(roundclosed3b,'Closed Bidding Round 3B has started and it will end at 5pm later');
 
-var test = new Date(2016, 6, 19, 8, 45, 0);
+var test = new Date(2016, 6, 19, 8, 50, 0);
 remind(test,'Hi Boss');
 
 
@@ -475,7 +475,7 @@ function remind (date, msg){
       if (err) console.error(err);
       else {
         if (users.length>0) {
-          for (i=0; i<users.length; i++) {
+          for (var i=0; i<users.length; i++) {
             fbMessage(result[i].id,msg);
           }
         }
