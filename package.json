@@ -18,6 +18,7 @@
   "author": "Dao Truong Giang & Tran Viet Quang",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "cheerio": "latest",
     "express": "^4.14.0",
     "geocoder": "^0.2.2",
     "googlemaps": "^1.6.0",
@@ -27,8 +28,7 @@
     "node-schedule": "^1.1.1",
     "node-uuid": "^1.4.7",
     "request": "^2.72.0",
-    "wolfram-alpha": "^0.5.0",
-    "cheerio"    : "latest"
+    "wolfram-alpha": "^0.5.0"
   },
   "license": "MIT"
 }

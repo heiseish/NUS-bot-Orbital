@@ -1,6 +1,6 @@
 'use strict';
 
-
+var User = require('../models/model.js');
 const bodyParser = require('body-parser');
 const express = require('express');
 const request = require('request');
@@ -11,11 +11,6 @@ const geocoder = require('geocoder');
 var schedule = require('node-schedule'); 
 const fs = require('fs');
 const cheerio = require('cheerio');
-// https://www.npmjs.com/package/node-schedule
-const MongoClient = require('mongodb').MongoClient;
-const mongourl = 'mongodb://giang:Madara04@ds035664.mlab.com:35664/heroku_85w00jl0';
-// const assert = require('assert');
-
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
@@ -308,12 +303,8 @@ remind(roundopen3b,'Open Bidding Round 3B has started and it will end at 3pm lat
 var roundclosed3b = new Date(2016, 7, 10, 15, 0, 0);
 remind(roundclosed3b,'Closed Bidding Round 3B has started and it will end at 5pm later');
 
-var test = new Date(2016, 6, 13, 11, 53, 0);
-remind(test,'Hi Boss');
-
-
-
-
+var test = new Date(2016, 6, 19, 8, 52, 30);
+remind(test,'Hi Boss. Your reminder test is finally successful');
 
 
 
@@ -351,111 +342,54 @@ app.post('/fb', (req, res) => {
        let lat = event.message.attachments[0].payload.coordinates.lat
        let long = event.message.attachments[0].payload.coordinates.long
        geocoder.reverseGeocode( lat, long, function ( err, data ) {
-          fbMessage(sender,'I see that you are @ '+ data.results[0].formatted_address + ' right now!');
-          
+        fbMessage(sender,'I see that you are @ '+ data.results[0].formatted_address + ' right now!');
+
       });
 
         // console.log(event.message.attachments[0].payload.coordinates);
-      
+
       }
-    delete sessions[sessionId];
-    
-     
-   }
-   if (event.message && event.message.quick_reply){
-    if (event.message.quick_reply.payload === 'no'){
-      MongoClient.connect(mongourl, function (err, db) {
-        if (err) {
-          console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-          //HURRAY!! We are connected. :)
-          console.log('Connection established to', mongourl);
-
-          // Get the documents collection
-          var collection = db.collection('users');
-
-          //Create some users
-          var user = {id: sender, roles: ['user']};
-
-          // Insert some users
-          collection.remove({id: sender}, function (err, result) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log('Removal Done');
-              fbMessage(sender,"That's too bad then");
-              
-            }
-            //Close connection
-            db.close();
-          });
-        }
-      });
-      
-    } else {
-      MongoClient.connect(mongourl, function (err, db) {
-        if (err) {
-          console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-          //HURRAY!! We are connected. :)
-          console.log('Connection established to', mongourl);
-
-          // Get the documents collection
-          var collection = db.collection('users');
-
-          //Create some users
-          var user = {id: sender, roles: ['user']};
-
-          // Insert some users
-
-          collection.find({id: sender}).toArray(function (err, result) {
-            if (err) {
-              console.log(err);
-            } else if (result.length) {
-              console.log('Found:', result);
-              fbMessage(sender,'You already asked me to remind you mate! Cheers!');
-              
-            } else {
-              console.log('No document(s) found with defined "find" criteria!');
-              collection.insert([user], function (err, result) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
-                  fbMessage(sender,'Got it! Leave it to me');
-                  
-                }
-
-              });
-            }
-
-            db.close();
-          });
-
-          
-        }
-      });
+      delete sessions[sessionId];
     }
-    delete sessions[sessionId];
+
+   // Handle quick reply 
+   if (event.message && event.message.quick_reply){
+    // When intent is remind. Handle Yes/no reply
+    // if (sessions[sessionsId].intent === 'remind') {
+      if (event.message.quick_reply.payload === 'no'){
+        User.deleteUser(sender, function(err) {
+          if (err) {
+            fbMessage(sender,"Too bad. You are not in our database!");
+            console.error(err);
+          }
+          else 
+            fbMessage(sender,"You are removed from our databased!");
+        });      
+      } else {
+        User.addUser(sender, function(err, user) {
+          if (err) {
+            fbMessage(sender,"You already asked me to remind you mate! Cheers!");
+            console.error(err);
+          }
+          else 
+            fbMessage(sender,"Got it! Leave it to me");
+        });
+      }
+      delete sessions[sessionId];
+    // }
   }
 
     //Merge and Execute Text
     else if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
-     
      merge(sender, text, sessionId);
      execute(sender,text,sessionId);
-
-     
-    
    }
    
-
 
    // If user press a button. Merge and execute Postbacks
    if (event.postback) {
     let text = sessions[sessionId].text
-
 
     switch(sessions[sessionId].intent){
       case 'unsure':
@@ -486,8 +420,8 @@ app.post('/fb', (req, res) => {
         
       } else if (event.postback.payload === 'cors'){
         text += " CORS";
-          merge(sender,text, sessionId);
-          execute(sender,text,sessionId);
+        merge(sender,text, sessionId);
+        execute(sender,text,sessionId);
       }
       break;
 
@@ -520,11 +454,6 @@ app.post('/fb', (req, res) => {
   res.sendStatus(200);
 }
 
-
-
-
-
-// res.sendStatus(200);
 });
 
 //function to merge context, session
@@ -542,35 +471,19 @@ var merge = (sender, msg, sessionId) => {
 //function remind
 function remind (date, msg){
   var reminder = schedule.scheduleJob(date, function(){
-    MongoClient.connect(mongourl, function (err, db) {
-      if (err) {
-        console.log('Unable to connect to the mongoDB server. Error:', err);
-      } else {
-    //HURRAY!! We are connected. :)
-    console.log('Connection established to', mongourl);
-
-    // Get the documents collection
-    var collection = db.collection('users');
-
-    // Insert some users
-    collection.find({}).toArray(function (err, result) {
-      if (err) {
-        console.log(err);
-      } else if (result.length) {
-        for (var i = 0;  i < result.length; i++){
-          fbMessage(result[i].id,msg);
-
+    User.findAll(function (err, users) {
+      if (err) console.error(err);
+      else {
+        if (users.length>0) {
+          for (var i=0; i<users.length; i++) {
+            fbMessage(users[i].fbId,msg);
+          }
         }
-      } else {
-        console.log('No document(s) found with defined "find" criteria!');
       }
-      //Close connection
-      db.close();
-    });
-  }
-});
+    })
   });
 };
+
 //function decipher prof email
 function writeEmail(address)
 {		
@@ -594,12 +507,12 @@ function writeEmail(address)
 
 
 //Execute action based on context
-  var execute = (sender, msg , sessionId ) => {
+var execute = (sender, msg , sessionId ) => {
 
-    console.log("Executing ...");
-    console.log(msg);
-    console.log(sessions[sessionId]);
-    
+  console.log("Executing ...");
+  console.log(msg);
+  console.log(sessions[sessionId]);
+
     // If there is a module 
     if (sessions[sessionId].module !== -1) {
 
@@ -610,12 +523,6 @@ function writeEmail(address)
 
       break;
 
-  		// case "no intent":
-
-  		// fbMessage(sender,"We are not ready for this sh*t");
-  		// break;
-
-      //IF the intent is class
       case "class":	
       var result = {};
       nus.findClass(sessions[sessionId].module).then(function(res){
@@ -674,82 +581,85 @@ function writeEmail(address)
 
   }).then(function(){
    delete sessions[sessionId];
-  }).catch(function(err){
+ }).catch(function(err){
    console.log(err);
    var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
    fbMessage(sender,messageToSend);
    console.log("Waiting for other messages");
-      });
+ });
 
 
 
-      }
+}
 
   //If there is intent
-  } else if (sessions[sessionId].intent != null) {
-    switch(sessions[sessionId].intent){
+} else if (sessions[sessionId].intent != null) {
+  switch(sessions[sessionId].intent){
 
-      case "help":
-      if (sessions[sessionId].fbid ===  '1139314066115187'){
-        fbMessage(sender,'Hi Boss Dao Truong Giang');
-      } else if (sessions[sessionId].fbid ===  '1340406605974646') {
-        fbMessage(sender,'Hi Boss Tran Viet Quang');
-      } else {
-        fbMessage(sender,"Hi, I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
-          "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
-          "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
-          "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
-          "4. Include 'remind me' to alert whe bidding round comes");
-        delete sessions[sessionId];
-      }
-      break;
+    case "help":
+    if (sessions[sessionId].fbid ===  '1139314066115187'){
+      fbMessage(sender,'Hi Boss Dao Truong Giang');
+    } else if (sessions[sessionId].fbid ===  '1340406605974646') {
+      var date = new Date();
+      fbMessage(sender,'Hi Boss Tran Viet Quang' + date.toString());
+    } else {
+      fbMessage(sender,"Hi, I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
+        "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+        "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
+        "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
+        "4. Include 'remind me' to alert whe bidding round comes");
+      delete sessions[sessionId];
+    }
+    break;
 
 
-      case "module":
-      fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
-      break;
+    case "module":
+    fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
+    break;
 
-      case "intro":
-      fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
-        ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
-      break;
+    case "intro":
+    fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
+      ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
+    break;
 
-      case "prof":
-      var profName = nus.findProfName(msg);
-      console.log(profName);
-     
+    case "prof":
+    var profName = nus.findProfName(msg);
+    console.log(profName);
 
-      	var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
 
-      	request(scrapeurl, function(error, response, html){
-      		if(!error){
-      			console.log('requesting ...');
-      			var $ = cheerio.load(html);
+    var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
 
-      			
+    request(scrapeurl, function(error, response, html){
+      if(!error){
+       console.log('requesting ...');
+       var $ = cheerio.load(html);
 
-      			$('tr[height="20"]').filter(function(){
-      				
-      				var data = $(this);
-      				var fullNameOfProf = data.next().children().first().text(); 
-      				var designation = data.next().children().first().next().text();
-      				var department = data.next().children().first().next().next().text(); 
-      				var emailcoded = nus.trimCodedEmail(data.next().children().first().next().next().next().text());
-      				console.log(emailcoded);
-      				
-      				var  emaildecoded = writeEmail(emailcoded);
-      				if (department){
-      					fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded); 
-      				} else {
-      					fbMessage(sender,'We cannot find the professor detail. Is it really professor' + profName + '?');
-      				} 
 
-      				
 
-      			})
+       $('tr[height="20"]').filter(function(){
 
-      			
-      		}
+        var data = $(this);
+        var fullNameOfProf = data.next().children().first().text(); 
+        var designation = data.next().children().first().next().text();
+        var department = data.next().children().first().next().next().text(); 
+        var emailcoded = nus.trimCodedEmail(data.next().children().first().next().next().next().text());
+        console.log(emailcoded);
+
+
+        var  emaildecoded = writeEmail(emailcoded);
+        if (department){
+         fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded); 
+       } else {
+         fbMessage(sender,'We cannot find the professor detail. Is it really ' + msg );
+       } 
+
+
+
+
+     })
+
+
+     }
 
 // To write to the system we will use the built in 'fs' library.
 // In this example we will pass 3 parameters to the writeFile function
@@ -765,31 +675,31 @@ function writeEmail(address)
 
 
 
-		}) ;
-      
-      break;
+}) ;
 
-      case "delve":
-      fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
-        '.' + os.EOL +
-        '.' + os.EOL +
-        '.' + os.EOL +
-        '.' + os.EOL + 
-        '.' + os.EOL +
-        '.' + os.EOL +
-        'Just KIDDING LEL not gonna tell you xD');
-      break;
+break;
 
-      case "remind":
-      fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
-      break;
+case "delve":
+fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
+  '.' + os.EOL +
+  '.' + os.EOL +
+  '.' + os.EOL +
+  '.' + os.EOL + 
+  '.' + os.EOL +
+  '.' + os.EOL +
+  'Just KIDDING LEL not gonna tell you xD');
+break;
 
-      default:
-      fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
-    }
-  }
+case "remind":
+fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
+break;
 
-  else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
+default:
+fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+}
+}
+
+else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
     //Wolfram API here
     //id1: YRV6XE-V42GEH4RPY
     //id2: KE8U2V-UGWP6UJQ6L
