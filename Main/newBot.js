@@ -1,6 +1,6 @@
 'use strict';
 
-
+var User = require('../models/model.js');
 const bodyParser = require('body-parser');
 const express = require('express');
 const request = require('request');
@@ -364,77 +364,79 @@ app.post('/fb', (req, res) => {
    }
    if (event.message && event.message.quick_reply){
     if (event.message.quick_reply.payload === 'no'){
-      MongoClient.connect(mongourl, function (err, db) {
-        if (err) {
-          console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-          //HURRAY!! We are connected. :)
-          console.log('Connection established to', mongourl);
+      // MongoClient.connect(mongourl, function (err, db) {
+      //   if (err) {
+      //     console.log('Unable to connect to the mongoDB server. Error:', err);
+      //   } else {
+      //     //HURRAY!! We are connected. :)
+      //     console.log('Connection established to', mongourl);
 
-          // Get the documents collection
-          var collection = db.collection('users');
+      //     // Get the documents collection
+      //     var collection = db.collection('users');
 
-          //Create some users
-          var user = {id: sender, roles: ['user']};
+      //     //Create some users
+      //     var user = {id: sender, roles: ['user']};
 
-          // Insert some users
-          collection.remove({id: sender}, function (err, result) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log('Removal Done');
-              fbMessage(sender,"That's too bad then");
+      //     // Insert some users
+      //     collection.remove({id: sender}, function (err, result) {
+      //       if (err) {
+      //         console.log(err);
+      //       } else {
+      //         console.log('Removal Done');
+      //         fbMessage(sender,"That's too bad then");
               
-            }
-            //Close connection
-            db.close();
-          });
-        }
-      });
+      //       }
+      //       //Close connection
+      //       db.close();
+      //     });
+      //   }
+      // });
+      User.deleteUser(sender);
       
     } else {
-      MongoClient.connect(mongourl, function (err, db) {
-        if (err) {
-          console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-          //HURRAY!! We are connected. :)
-          console.log('Connection established to', mongourl);
+      // MongoClient.connect(mongourl, function (err, db) {
+      //   if (err) {
+      //     console.log('Unable to connect to the mongoDB server. Error:', err);
+      //   } else {
+      //     //HURRAY!! We are connected. :)
+      //     console.log('Connection established to', mongourl);
 
-          // Get the documents collection
-          var collection = db.collection('users');
+      //     // Get the documents collection
+      //     var collection = db.collection('users');
 
-          //Create some users
-          var user = {id: sender, roles: ['user']};
+      //     //Create some users
+      //     var user = {id: sender, roles: ['user']};
 
-          // Insert some users
+      //     // Insert some users
 
-          collection.find({id: sender}).toArray(function (err, result) {
-            if (err) {
-              console.log(err);
-            } else if (result.length) {
-              console.log('Found:', result);
-              fbMessage(sender,'You already asked me to remind you mate! Cheers!');
+      //     collection.find({id: sender}).toArray(function (err, result) {
+      //       if (err) {
+      //         console.log(err);
+      //       } else if (result.length) {
+      //         console.log('Found:', result);
+      //         fbMessage(sender,'You already asked me to remind you mate! Cheers!');
               
-            } else {
-              console.log('No document(s) found with defined "find" criteria!');
-              collection.insert([user], function (err, result) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
-                  fbMessage(sender,'Got it! Leave it to me');
+      //       } else {
+      //         console.log('No document(s) found with defined "find" criteria!');
+      //         collection.insert([user], function (err, result) {
+      //           if (err) {
+      //             console.log(err);
+      //           } else {
+      //             console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
+      //             fbMessage(sender,'Got it! Leave it to me');
                   
-                }
+      //           }
 
-              });
-            }
+      //         });
+      //       }
 
-            db.close();
-          });
+      //       db.close();
+      //     });
 
           
-        }
-      });
+      //   }
+      // });
+      User.addUser(sender);
     }
     delete sessions[sessionId];
   }

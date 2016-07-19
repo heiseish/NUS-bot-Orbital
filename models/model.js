@@ -7,11 +7,21 @@ var userSchema = new Schema({
 	modules: [{code: String}]
 });
 
+// User defined functions
+userSchema.statics.addUser = function(Id) {
+	newUser = new this();
+	newUser.fbId = Id;
+	newUser.save(function (err,user) {
+		if (err) return console.error(err);
+		console.log("New user added");
+	})
+}
+
 userSchema.statics.addModule = function(Id, module) {
 	this.findOne({fbId: Id}, function(err, user) {
 		if (err) return console.error(err);
 		user.modules.push({code:module});
-		user.save(function(err) {
+		user.save(function (err) {
 			if (err) throw err;
 			console.log(user.modules);
 		})
@@ -19,10 +29,10 @@ userSchema.statics.addModule = function(Id, module) {
 }
 
 userSchema.statics.deleteModule = function(Id, module) {
-	this.findOne({fbId: Id}, function(err, user) {
+	this.findOne({fbId: Id}, function (err, user) {
 		if (err) return console.error(err);
 		user.modules.push({code:module});
-		user.save(function(err) {
+		user.save(function (err) {
 			if (err) throw err;
 			console.log(user.modules);
 		})
@@ -39,6 +49,7 @@ userSchema.statics.deleteUser = function(Id) {
 	})
 }
 
+// Make the schema a model to export
 var User = mongoose.model('User', userSchema);
 
 module.exports = User;
