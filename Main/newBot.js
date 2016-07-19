@@ -303,7 +303,7 @@ remind(roundopen3b,'Open Bidding Round 3B has started and it will end at 3pm lat
 var roundclosed3b = new Date(2016, 7, 10, 15, 0, 0);
 remind(roundclosed3b,'Closed Bidding Round 3B has started and it will end at 5pm later');
 
-var test = new Date(2016, 6, 19, 16, 36, 0);
+var test = new Date(2016, 6, 19, 8, 45, 0);
 remind(test,'Hi Boss');
 
 
