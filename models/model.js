@@ -27,7 +27,7 @@ userSchema.statics.deleteUser = function(Id, cb) {
 					ifExist = 1;
 				}
 			}
-			if (!ifExist) {
+			if (ifExist) {
 				user.remove(function(err) {
 					cb(err);
 				});
