@@ -600,7 +600,8 @@ var execute = (sender, msg , sessionId ) => {
     if (sessions[sessionId].fbid ===  '1139314066115187'){
       fbMessage(sender,'Hi Boss Dao Truong Giang');
     } else if (sessions[sessionId].fbid ===  '1340406605974646') {
-      fbMessage(sender,'Hi Boss Tran Viet Quang');
+      var date = new Date();
+      fbMessage(sender,'Hi Boss Tran Viet Quang' + date.toString());
     } else {
       fbMessage(sender,"Hi, I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
         "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
