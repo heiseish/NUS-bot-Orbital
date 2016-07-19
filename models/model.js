@@ -8,44 +8,64 @@ var userSchema = new Schema({
 });
 
 // User defined functions
-userSchema.statics.addUser = function(Id) {
+userSchema.statics.addUser = function(Id, cb) {
 	newUser = new this();
 	newUser.fbId = Id;
 	newUser.save(function (err,user) {
-		if (err) return console.error(err);
-		console.log("New user added");
+		cb(err, user);
 	})
 }
 
-userSchema.statics.addModule = function(Id, module) {
+userSchema.statics.deleteUser = function(Id, cb) {
+	this.findOne({fbId: Id}, function(err, user) {
+		if (err) 
+			cb(err);
+		else
+			user.remove(function(err) {
+			cb(err);
+		})
+	})
+}
+
+userSchema.statics.addModule = function(Id, module, cb) {
 	this.findOne({fbId: Id}, function(err, user) {
 		if (err) return console.error(err);
-		user.modules.push({code:module});
-		user.save(function (err) {
-			if (err) throw err;
-			console.log(user.modules);
-		})
+		var ifExist = 0; 
+		for (i=0; i<user.modules.length; i++) {
+			if (user.modules[i].code == module) {
+				ifExist = 1;
+			}
+		}
+		if (!ifExist) {
+			user.modules.push({code:module});
+			user.save(function(err) {
+				cb(err, user);
+			});
+		}
+		else 
+			err = new Error("Module already exists");
+			cb(err, user);
 	})
 }
 
-userSchema.statics.deleteModule = function(Id, module) {
-	this.findOne({fbId: Id}, function (err, user) {
-		if (err) return console.error(err);
-		user.modules.push({code:module});
-		user.save(function (err) {
-			if (err) throw err;
-			console.log(user.modules);
-		})
-	})
-}
-
-userSchema.statics.deleteUser = function(Id) {
+userSchema.statics.deleteModule = function(Id, module, cb) {
 	this.findOne({fbId: Id}, function(err, user) {
 		if (err) return console.error(err);
-		user.remove(function(err) {
-			if (err) throw err;
-			console.log("User successfully deleted!");
-		})
+		var ifExist = 0; 
+		for (i=0; i<user.modules.length; i++) {
+			if (user.modules[i].code == module) {
+				ifExist = 1;
+				user.modules.splice(i, 1);
+			}
+		}
+		if (ifExist) {
+			user.save(function(err) {
+				cb(err, user);
+			});
+		}
+		else 
+			err = new Error("Module does not exist");
+			cb(err, user);
 	})
 }
 

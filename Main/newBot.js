@@ -391,7 +391,15 @@ app.post('/fb', (req, res) => {
       //     });
       //   }
       // });
-      User.deleteUser(sender);
+      User.deleteUser(sender, function(err) {
+        if (err) {
+          fbMessage(sender,"Too bad. You are not in our database!");
+          console.error(err);
+        }
+        else 
+          fbMessage(sender,"You are removed from our databased!");
+      });
+      
       
     } else {
       // MongoClient.connect(mongourl, function (err, db) {
@@ -436,7 +444,14 @@ app.post('/fb', (req, res) => {
           
       //   }
       // });
-      User.addUser(sender);
+      User.addUser(sender, function(err, user) {
+        if (err) {
+          fbMessage(sender,"You already asked me to remind you mate! Cheers!");
+          console.error(err);
+        }
+        else 
+          fbMessage(sender,"Got it! Leave it to me");
+      });
     }
     delete sessions[sessionId];
   }
