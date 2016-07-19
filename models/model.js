@@ -20,10 +20,24 @@ userSchema.statics.deleteUser = function(Id, cb) {
 	this.findOne({fbId: Id}, function(err, user) {
 		if (err) 
 			cb(err);
-		else
-			user.remove(function(err) {
-			cb(err);
-		})
+		else {
+			var ifExist = 0; 
+			for (i=0; i<user.modules.length; i++) {
+				if (user.modules[i].code == module) {
+					ifExist = 1;
+				}
+			}
+			if (!ifExist) {
+				user.remove(function(err) {
+					cb(err);
+				});
+			}
+			else {
+				err = new Error("No such user");
+				cb(err, user);
+			}
+		}
+
 	})
 }
 
@@ -44,7 +58,7 @@ userSchema.statics.addModule = function(Id, module, cb) {
 		}
 		else 
 			err = new Error("Module already exists");
-			cb(err, user);
+		cb(err, user);
 	})
 }
 
@@ -65,7 +79,7 @@ userSchema.statics.deleteModule = function(Id, module, cb) {
 		}
 		else 
 			err = new Error("Module does not exist");
-			cb(err, user);
+		cb(err, user);
 	})
 }
 
