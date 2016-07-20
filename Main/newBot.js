@@ -372,7 +372,7 @@ app.post('/fb', (req, res) => {
       } else {
         User.addUser(sender, function(err, user) {
           if (err) {
-            fbMessage(sender,"You already asked me to remind you mate! Cheers!" + sessions[sessionId].intent);
+            fbMessage(sender,"You already asked me to remind you mate! Cheers!" + sessions[sessionId]);
             console.error(err);
           }
           else 
