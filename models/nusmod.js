@@ -175,11 +175,6 @@ findKey: function(string){
     intent = "delve";
   else if ((string  === "HI")  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1 || string.search("WHAT DO YOU DO") != -1)
     intent = "help";
-  else if (string.search("DESCRIPTION") != -1 || string.search('CONTENT') != -1 || (string.search('TELL') || string.search('WHAT') && findModule(string) != -1))
-    intent = "description";
-  else if ((string.search("EXAM") != -1 && string.search("CLASS") != -1) || ((findModule(string) != -1) &&  (string.search("EXAM") === -1) && (string.search("CLASS") === -1) && (string.search("CORS") === -1))) // need to add more to prevent abuse
-    intent = "unsure";
-  
   else if (string.search("EXAM") != -1)
     intent = "exam";
   else if (string.search("CLASS") != -1 || string.search("LESSON") != -1)
@@ -188,6 +183,10 @@ findKey: function(string){
     intent = "cors"
   else if (string.search("MODULE") != -1)
     intent = "module";
+  else if (string.search("DESCRIPTION") != -1 || string.search('CONTENT') != -1 || ((string.search('TELL') || string.search('WHAT')) && findModule(string) != -1))
+    intent = "description";
+  else if ((string.search("EXAM") != -1 && string.search("CLASS") != -1) || ((findModule(string) != -1) &&  (string.search("EXAM") === -1) && (string.search("CLASS") === -1) && (string.search("CORS") === -1))) // need to add more to prevent abuse
+    intent = "unsure";
   else if (string.search("QUANG") != -1 || string.search("GIANG") != -1)
     intent = "boss";
   
