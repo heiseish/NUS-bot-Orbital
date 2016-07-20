@@ -396,7 +396,7 @@ app.post('/fb', (req, res) => {
         wolfram.query(sessions[sessionId].text, function (err, result) {
           console.log("Getting answer from Wolfram ...");
           if (err) throw err;
-          console.log(result);
+          console.log(result[1].subpods[0]);
           if (result[1] != null){
             fbMessage(sender, result[1].subpods[0].text);
           }
