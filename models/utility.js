@@ -51,4 +51,20 @@ module.exports = {
 		console.log(str);
 		return str;
 	},
+
+	splitString: function(s, cb){
+		var middle = Math.floor(s.length / 2);
+		var before = s.lastIndexOf('.', middle);
+		var after = s.indexOf('.', middle + 1);
+
+		if (middle - before < after - middle) {
+			middle = before;
+		} else {
+			middle = after;
+		}
+
+		var s1 = s.substr(0, middle);
+		var s2 = s.substr(middle + 1);
+		cb(s1, s2);
+	}
 }

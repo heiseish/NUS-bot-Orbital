@@ -163,7 +163,9 @@ module.exports = {
 // find keyword in a string
 findKey: function(string){
   var intent;
-  if (string.search("REMIND ME") != -1)
+  if (string.search("QUANG") != -1 || string.search("GIANG") != -1)
+    intent = "boss";
+  else if (string.search("REMIND ME") != -1)
     intent = "remind";
   else if (string.search("PROF") != -1)
     intent = "prof";
