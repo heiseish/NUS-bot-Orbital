@@ -673,7 +673,7 @@ var execute = (sender, msg , sessionId ) => {
 
         var data = $(this);
         var fullNameOfProf = data.next().children().first().text(); 
-        var designation = data.next().children().first().next().next();
+        var designation = data.next().children().first().next().text();
         var department = data.next().children().first().next().next().text(); 
         var emailcoded = utility.trimCodedEmail(data.next().children().first().next().next().next().text());
         // console.log(emailcoded);
