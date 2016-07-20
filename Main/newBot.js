@@ -153,7 +153,7 @@ const fbMessageWithButtons_TY = (recipientId, msg, val1, val2, cb) => {
   });
 };
 
-const fbMessageWithButtons_US = (recipientId, msg, val1, val2, val3, val4, cb) => {
+const fbMessageWithButtons_US1 = (recipientId, msg, val1, val2, cb) => {
   const opts = {
     form: {
       recipient: {
@@ -175,7 +175,34 @@ const fbMessageWithButtons_US = (recipientId, msg, val1, val2, val3, val4, cb) =
               'type': 'postback',
               'title': val2,
               'payload': 'class'
-            },
+            }
+
+            ]
+          }
+        },
+      },
+    },
+  };
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
+const fbMessageWithButtons_US2 = (recipientId, msg, val3, val4, cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'template',
+          'payload': {
+            'template_type': 'button',
+            'text': msg,
+            'buttons': [
             {
               'type': 'postback',
               'title': val3,
@@ -537,7 +564,8 @@ var execute = (sender, msg , sessionId ) => {
 
      switch(sessions[sessionId].intent){
       case 'unsure':
-      fbMessageWithButtons_US(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location', 'Description', 'Cors Bidding Stats');
+      fbMessageWithButtons_US1(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
+      fbMessageWithButtons_US2(sender,"Or?", 'Description', 'Cors Bidding Stats');
 
 
       break;
