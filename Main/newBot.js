@@ -379,7 +379,6 @@ app.post('/fb', (req, res) => {
             fbMessage(sender,"Got it! Leave it to me");
         });
       }
-      delete sessions[sessionId];
     // }
   }
 
