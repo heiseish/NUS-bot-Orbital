@@ -1,7 +1,8 @@
 var http = require('http');
 var path = require('path');
-var modules = path.resolve( __dirname, "./modules.json");
-var classroom = path.resolve( __dirname, "./classroom.json");
+var modules = path.resolve(__dirname, '../Resources/modules.json');
+var classroom = path.resolve(__dirname,'../Resources/classroom.json');
+var fs = require("fs");
 
 var d = new Date();
 var weekday = new Array(7);
@@ -45,7 +46,7 @@ module.exports = {
      //   });
 
      //   res.on('end', function(){
-      var fs = require("fs");
+      
       var body = fs.readFileSync(modules);
       var result = JSON.parse(body);
 
@@ -55,6 +56,38 @@ module.exports = {
 
           delete result[i].CorsBiddingStats;
           response(result[i]);
+        };
+        i++;
+      };
+      if (i === result.length){
+        reject(modulecode);
+      }
+    });
+
+
+  },
+
+  getDescription: function (modulecode){
+    return new Promise( function(response,reject){
+     // var url = 'http://api.nusmods.com/' + ay + '/1/modules.json';
+     // console.log("day");
+     // http.get(url, function(res){
+     //   var body = '';
+
+     //   res.on('data', function(chunk){
+     //     body += chunk;
+     //   });
+
+     //   res.on('end', function(){
+      
+      var body = fs.readFileSync(modules);
+      var result = JSON.parse(body);
+
+      var i = 0;
+      while (i < result.length){
+        if (result[i].ModuleCode === modulecode){
+          console.log(result[i].ModuleDescription);
+          response(result[i].ModuleDescription);
         };
         i++;
       };
@@ -140,8 +173,11 @@ findKey: function(string){
     intent = "delve";
   else if ((string  === "HI")  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1 || string.search("WHAT DO YOU DO") != -1)
     intent = "help";
+  else if (string.search("DESCRIPTION") != -1)
+    intent = "description";
   else if ((string.search("EXAM") != -1 && string.search("CLASS") != -1) || ((findModule(string) != -1) &&  (string.search("EXAM") === -1) && (string.search("CLASS") === -1) && (string.search("CORS") === -1))) // need to add more to prevent abuse
     intent = "unsure";
+  
   else if (string.search("EXAM") != -1)
     intent = "exam";
   else if (string.search("CLASS") != -1)
