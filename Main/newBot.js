@@ -488,7 +488,7 @@ app.post('/fb', (req, res) => {
         execute(sender,text,sessionId);
       }
       else if (event.postback.payload === 'description'){
-        text += " CORS";
+        text += " DESCRIPTION";
         merge(sender,text, sessionId);
         execute(sender,text,sessionId);
       }
@@ -659,7 +659,7 @@ var execute = (sender, msg , sessionId ) => {
 }
 
   //If there is intent
-} else if (sessions[sessionId].intent != null) {
+} else if (sessions[sessionId].intent != null && sessions[sessionId].module == -1) {
   switch(sessions[sessionId].intent){
 
     case "help":
