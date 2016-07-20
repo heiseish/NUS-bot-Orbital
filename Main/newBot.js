@@ -153,7 +153,7 @@ const fbMessageWithButtons_TY = (recipientId, msg, val1, val2, cb) => {
   });
 };
 
-const fbMessageWithButtons_US = (recipientId, msg, val1, val2, val3, cb) => {
+const fbMessageWithButtons_US = (recipientId, msg, val1, val2, val3, val4, cb) => {
   const opts = {
     form: {
       recipient: {
@@ -179,6 +179,11 @@ const fbMessageWithButtons_US = (recipientId, msg, val1, val2, val3, cb) => {
             {
               'type': 'postback',
               'title': val3,
+              'payload': 'description'
+            },
+            {
+              'type': 'postback',
+              'title': val4,
               'payload': 'cors'
             }
             ]
@@ -455,6 +460,11 @@ app.post('/fb', (req, res) => {
         merge(sender,text, sessionId);
         execute(sender,text,sessionId);
       }
+      else if (event.postback.payload === 'description'){
+        text += " CORS";
+        merge(sender,text, sessionId);
+        execute(sender,text,sessionId);
+      }
       break;
 
 
@@ -527,7 +537,7 @@ var execute = (sender, msg , sessionId ) => {
 
      switch(sessions[sessionId].intent){
       case 'unsure':
-      fbMessageWithButtons_US(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location','Cors Bidding Stats');
+      fbMessageWithButtons_US(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location', 'Description', 'Cors Bidding Stats');
 
 
       break;
@@ -604,8 +614,8 @@ var execute = (sender, msg , sessionId ) => {
   for (var i=0; i<strArray.length; i++) {
     fbMessage(sender, strArray[i]);
   }
-    fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
-    console.log("Waiting for other messages");
+  fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
+  console.log("Waiting for other messages");
 
 }).then(function(){
  delete sessions[sessionId];
