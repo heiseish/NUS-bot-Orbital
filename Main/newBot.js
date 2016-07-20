@@ -569,8 +569,11 @@ var execute = (sender, msg , sessionId ) => {
  case "description":
  nus.getDescription(nus.findModule(msg)).then(function(res){
   utility.splitString(res, function (s1, s2) {
-      fbMessage(sender,'Module ' + nus.findModule(msg) + s1);
-      fbMessage(sender, s2 + '. Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
+    console.log("s1 is " + s1);
+    console.log("s1 is " + s1);
+
+    fbMessage(sender,'Module ' + nus.findModule(msg) + s1);
+    fbMessage(sender, s2 + '. Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
 
   })
   fbMessage(sender,'Module ' + nus.findModule(msg) + res + '. Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
