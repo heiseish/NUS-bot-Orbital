@@ -691,7 +691,7 @@ var execute = (sender, msg , sessionId ) => {
     fbMessage(sender, "He is the creator of this bot. Gossshhh!");
     break;
 
-    case "location";
+    case "location":
     fbMessageQuickReply(sender,'Is it in NUS?');
 
 
