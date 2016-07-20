@@ -5,12 +5,14 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const request = require('request');
 var path = require('path');
-var nus = require( path.resolve( __dirname, "./nusmod.js" ) );
+var nus = require('../models/nusmod.js');
 var os = require('os');
 const geocoder = require('geocoder');
 var schedule = require('node-schedule'); 
 const fs = require('fs');
 const cheerio = require('cheerio');
+var utility = require('../models/utility.js');
+
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
@@ -426,15 +428,6 @@ app.post('/fb', (req, res) => {
       break;
 
 
-
-      // case 'class':
-      // if (event.postback.payload === 'yay' ) {
-      //   fbMessage(sender,'It is my pleasure!');
-      //   console.log('session terminated');
-      // }
-      // break;
-
-      // case 'exam':
       default:
 
       if (event.postback.payload === 'yay' ) {
@@ -485,25 +478,7 @@ function remind (date, msg){
 };
 
 //function decipher prof email
-function writeEmail(address)
-{		
-	var coded = address
-	const cipher = "aZbYcXdWeVfUgThSiRjQkPlOmNnMoLpKqJrIsHtGuFvEwDxCyBzA1234567890"
-	var shift = coded.length;
-	var link= "";
-	var ltr;
-	for (var i=0; i<shift; i++){
-		if (cipher.indexOf(coded.charAt(i))==-1){
-			ltr=coded.charAt(i)
-			link+=(ltr)
-		}
-		else {     
-			ltr = (cipher.indexOf(coded.charAt(i))-shift+cipher.length) % cipher.length
-			link+=(cipher.charAt(ltr))
-		}				
-	}
-	return link;
-}
+
 
 
 //Execute action based on context
@@ -528,7 +503,7 @@ var execute = (sender, msg , sessionId ) => {
       nus.findClass(sessions[sessionId].module).then(function(res){
         for (var i = 0; i < res.length; i++){
           var messageToSend = res[i].LessonType + ": STARTS AT " + res[i].StartTime + ' AND ENDS AT ' + res[i].EndTime + ' , @' + res[i].Venue;
-          fbMessageWithButtons_location(sender,messageToSend,nus.trimVenue(res[i].Venue));
+          fbMessageWithButtons_location(sender,messageToSend,utility.trimVenue(res[i].Venue));
         };
         console.log("Waiting for other messages");
 
@@ -547,7 +522,7 @@ var execute = (sender, msg , sessionId ) => {
      var result = {};
      nus.getModule(nus.findModule(msg)).then(function(res){
       result = Object.assign(result,res);
-      var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + nus.convertTime(result.ExamDate) + ", it will last for " + nus.convertPeriod(result.ExamDuration) +
+      var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ", it will last for " + utility.convertPeriod(result.ExamDuration) +
       " and it will be held in " + result.ExamVenue + ".";
       fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
       console.log("Waiting for other messages");
@@ -574,6 +549,27 @@ var execute = (sender, msg , sessionId ) => {
       ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
       fbMessage(sender,messageToSend);
     };
+
+    console.log("Waiting for other messages");
+
+
+
+  }).then(function(){
+   delete sessions[sessionId];
+ }).catch(function(err){
+   console.log(err);
+   var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+   fbMessage(sender,messageToSend);
+   console.log("Waiting for other messages");
+ });
+ break;
+
+ case "description":
+ console.log("Hi here");
+ nus.getDescription(nus.findModule(msg)).then(function(res){
+  console.log("found");
+
+    fbMessage(sender,'Module ' + nus.findModule(msg) + res + '. Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
 
     console.log("Waiting for other messages");
 
@@ -623,7 +619,7 @@ var execute = (sender, msg , sessionId ) => {
     break;
 
     case "prof":
-    var profName = nus.findProfName(msg);
+    var profName = utility.findProfName(msg);
     console.log(profName);
 
 
@@ -642,11 +638,11 @@ var execute = (sender, msg , sessionId ) => {
         var fullNameOfProf = data.next().children().first().text(); 
         var designation = data.next().children().first().next().text();
         var department = data.next().children().first().next().next().text(); 
-        var emailcoded = nus.trimCodedEmail(data.next().children().first().next().next().next().text());
-        console.log(emailcoded);
+        var emailcoded = utility.trimCodedEmail(data.next().children().first().next().next().next().text());
+        // console.log(emailcoded);
 
 
-        var  emaildecoded = writeEmail(emailcoded);
+        var  emaildecoded = utility.decodeemail(emailcoded);
         if (department){
          fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded); 
        } else {
