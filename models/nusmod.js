@@ -208,7 +208,6 @@ findLocation: function(string) {
   return location;
 },
 
-
 findClass: function(modulecode){
   return new Promise( function(response,reject){
     var fs = require("fs");

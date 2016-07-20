@@ -693,6 +693,7 @@ var execute = (sender, msg , sessionId ) => {
 
     case "location":
     fbMessageQuickReply(sender,'Is it in NUS?');
+    break;
 
 
     default:
