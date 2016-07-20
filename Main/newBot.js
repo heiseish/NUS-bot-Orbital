@@ -605,10 +605,7 @@ var execute = (sender, msg , sessionId ) => {
     fbMessage(sender, strArray[i]);
   }
     fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
-  })
-  console.log("Waiting for other messages");
-
-
+    console.log("Waiting for other messages");
 
 }).then(function(){
  delete sessions[sessionId];
