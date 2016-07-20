@@ -125,10 +125,10 @@ module.exports = {
               
               cors.splice(j, 1);
               i--;
-              };
+            };
           };
 
-         
+          
           
           response(cors);
         };
@@ -165,8 +165,6 @@ findKey: function(string){
   var intent;
   if (string.search("WHERE IS") != -1 || string.search("LOCATION OF") != -1)
     intent = "location";
-  else if (string.search("QUANG") != -1 || string.search("GIANG") != -1)
-    intent = "boss";
   else if (string.search("REMIND ME") != -1)
     intent = "remind";
   else if (string.search("PROF") != -1)
@@ -190,6 +188,8 @@ findKey: function(string){
     intent = "cors"
   else if (string.search("MODULE") != -1)
     intent = "module";
+  else if (string.search("QUANG") != -1 || string.search("GIANG") != -1)
+    intent = "boss";
   
   // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)
   //   intent = "no intent"
