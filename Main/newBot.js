@@ -13,6 +13,15 @@ const fs = require('fs');
 const cheerio = require('cheerio');
 var utility = require('../models/utility.js');
 
+//Get wolfram
+var date = new Date();
+date = date.getDate();
+if (date % 2 == 1)
+  var wolfram_key = "YRV6XE-V42GEH4RPY";
+else 
+  var wolfram_key = "KE8U2V-UGWP6UJQ6L";
+    // LOL
+    var wolfram = require('wolfram-alpha').createClient(wolfram_key);
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
@@ -383,9 +392,19 @@ app.post('/fb', (req, res) => {
     }
     else if (sessions[sessionId].intent === 'location') {
       if (event.message.quick_reply.payload === 'no'){
-        //query wolfram here  
+        //query wolfram here 
+        wolfram.query(sessions[sessionId].text, function (err, result) {
+          console.log("Getting answer from Wolfram ...");
+          if (err) throw err;
+          console.log(result);
+          if (result[1] != null){
+            fbMessage(sender, result[1].subpods[0].text);
+          }
+          else {
+            fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
+          }
+        }); 
       } else {
-        //fbmessage with location
         fbMessageWithButtons_location(sender, "Click on the button below to find location", sessions[sessionId].location);
       }
       delete sessions[sessionId];
@@ -702,19 +721,7 @@ var execute = (sender, msg , sessionId ) => {
 }
 
 else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
-    //Wolfram API here
-    //id1: YRV6XE-V42GEH4RPY
-    //id2: KE8U2V-UGWP6UJQ6L
-    var date = new Date();
-    date = date.getDate();
-    if (date % 2 == 1)
-      var wolfram_key = "YRV6XE-V42GEH4RPY";
-    else 
-      var wolfram_key = "KE8U2V-UGWP6UJQ6L";
-    // LOL
-    
-    var wolfram = require('wolfram-alpha').createClient(wolfram_key);
-    
+    //Wolfram API here    
     wolfram.query(sessions[sessionId].text, function (err, result) {
       console.log("Getting answer from Wolfram ...");
       if (err) throw err;
