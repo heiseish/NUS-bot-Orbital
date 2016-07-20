@@ -268,6 +268,8 @@ app.get('/fb', (req, res) => {
 
 // REMINDER HERE
 
+// NOTES: date is set in GMT 0+, not Singapore time
+
 var round0 = new Date(2016, 6, 21, 9, 0, 0);
 remind(round0,'Open Bidding Round 0 has started and it will end at 5pm tomorrow');
 var roundopen1a = new Date(2016, 6, 25, 9, 0, 0);
