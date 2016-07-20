@@ -206,7 +206,7 @@ findLocation: function(string) {
     location = location.slice(0, -1);
   console.log("location is " + location);
   return location;
-}
+},
 
 
 findClass: function(modulecode){
