@@ -359,7 +359,7 @@ app.post('/fb', (req, res) => {
    // Handle quick reply 
    if (event.message && event.message.quick_reply){
     // When intent is remind. Handle Yes/no reply
-    // if (sessions[sessionsId].intent === 'remind') {
+    if (sessions[sessionId].intent === 'remind') {
       if (event.message.quick_reply.payload === 'no'){
         User.deleteUser(sender, function(err) {
           if (err) {
@@ -372,14 +372,15 @@ app.post('/fb', (req, res) => {
       } else {
         User.addUser(sender, function(err, user) {
           if (err) {
-            fbMessage(sender,"You already asked me to remind you mate! Cheers!" + sessions[sessionId]);
+            fbMessage(sender,"You already asked me to remind you mate! Cheers!");
             console.error(err);
           }
           else 
             fbMessage(sender,"Got it! Leave it to me");
         });
       }
-    // }
+      delete sessions[sessionId];
+    }
   }
 
     //Merge and Execute Text
