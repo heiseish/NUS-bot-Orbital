@@ -647,12 +647,14 @@ var execute = (sender, msg , sessionId ) => {
         var emailcoded = nus.trimCodedEmail(data.next().children().first().next().next().next().text());
         console.log(emailcoded);
 
+
         var  emaildecoded = writeEmail(emailcoded);
         if (department){
          fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded); 
        } else {
-         fbMessage(sender,'We cannot find the professor detail. Is it really ' + msg );
+         fbMessage(sender,'We cannot find the professor detail. Is it really professor' + profName + '?');
        } 
+
 
 
 
