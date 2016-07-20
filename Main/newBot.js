@@ -381,6 +381,15 @@ app.post('/fb', (req, res) => {
       }
       delete sessions[sessionId];
     }
+    else if (sessions[sessionId].intent === 'location') {
+      if (event.message.quick_reply.payload === 'no'){
+        //query wolfram here  
+      } else {
+        //fbmessage with location
+        fbMessageWithButtons_location(sender, "Click on the button below to find location", sessions[sessionId].location);
+      }
+      delete sessions[sessionId];
+    }
   }
 
     //Merge and Execute Text
@@ -456,10 +465,14 @@ var merge = (sender, msg, sessionId) => {
   console.log("Merging ...");
   var intent = nus.findKey(msg);
   var module = nus.findModule(msg);
+  var location = nus.findLocation(msg);
   if (intent != null)
     sessions[sessionId].intent = intent;
   if (module != null)
     sessions[sessionId].module = module;
+  if (location != null)
+    sessions[sessionId].location = location;
+
   sessions[sessionId].text = msg;
 };
 
@@ -576,8 +589,6 @@ var execute = (sender, msg , sessionId ) => {
     fbMessage(sender, s2 + '. Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
 
   })
-  fbMessage(sender,'Module ' + nus.findModule(msg) + res + '. Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
-
   console.log("Waiting for other messages");
 
 
@@ -675,6 +686,14 @@ var execute = (sender, msg , sessionId ) => {
     case "remind":
     fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
     break;
+
+    case "boss":
+    fbMessage(sender, "He is the creator of this bot. Gossshhh!");
+    break;
+
+    case "location";
+    fbMessageQuickReply(sender,'Is it in NUS?');
+
 
     default:
     fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');

@@ -163,7 +163,9 @@ module.exports = {
 // find keyword in a string
 findKey: function(string){
   var intent;
-  if (string.search("QUANG") != -1 || string.search("GIANG") != -1)
+  if (string.search("WHERE IS") || string.search("LOCATION OF"))
+    intent = "location";
+  else if (string.search("QUANG") != -1 || string.search("GIANG") != -1)
     intent = "boss";
   else if (string.search("REMIND ME") != -1)
     intent = "remind";
@@ -182,7 +184,7 @@ findKey: function(string){
   
   else if (string.search("EXAM") != -1)
     intent = "exam";
-  else if (string.search("CLASS") != -1)
+  else if (string.search("CLASS") != -1 || string.search("LESSON") != -1)
     intent = "class";
   else if (string.search("CORS") != -1)
     intent = "cors"
@@ -195,21 +197,17 @@ findKey: function(string){
   return intent;
 },
 
+findLocation: function(string) {
+  var location;
+  var strToFind = "WHERE IS";
+  var n = string.lastIndexOf(strToFind) + strToFind.length;
+  location = string.slice(n);
+  if (location.slice(-1) === '?')
+    location = location.slice(0, -1);
+  console.log("location is " + location);
+  return location;
+}
 
-convertPeriod: function(str){
-  if (str.search("M") != -1)
-    return str[str.indexOf("M") - 4 ] + ' hours and ' + str[str.indexOf("M") - 2 ]+ str[str.indexOf("M") - 1 ] + ' minutes';
-  else
-    return str[str.indexOf("H") - 1 ] + ' hours';
-
-},
-
-convertTime: function(str){
-  console.log(str);
-  var date = str.substring(0 , str.indexOf("T"));
-  var time = str.substring(str.indexOf("T") + 1 , str.indexOf("T") + 6 );
-  return time + ' on ' + date;
-},
 
 findClass: function(modulecode){
   return new Promise( function(response,reject){
@@ -236,18 +234,6 @@ findClass: function(modulecode){
     else
       reject(Error("There is no class or lecture today. Chill mate"));
   })
-},
-
-trimVenue: function(str){
-  if (str.search('-') !== -1)
-    return str.substring(0, str.indexOf("-"));
-  else
-    return str;
-},
-
-trimCodedEmail: function(str){
-  str = str.substring(str.indexOf("'") + 1 ,str.length - 5)
-  return str;
 },
 
 findProfName: function(str){
