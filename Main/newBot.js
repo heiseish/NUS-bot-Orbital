@@ -339,7 +339,7 @@ app.post('/fb', (req, res) => {
 
       switch (event.message.attachments[0].type){
         case 'image':
-        fbMessageWithPicture(sender);
+        fbMessageWithPicture(sender, 'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
         break;
 
         case 'video':
@@ -673,7 +673,7 @@ var execute = (sender, msg , sessionId ) => {
 
         var data = $(this);
         var fullNameOfProf = data.next().children().first().text(); 
-        var designation = data.next().children().first().next().text();
+        var designation = data.next().children().first().next().teamxt();
         var department = data.next().children().first().next().next().text(); 
         var emailcoded = utility.trimCodedEmail(data.next().children().first().next().next().next().text());
         // console.log(emailcoded);
