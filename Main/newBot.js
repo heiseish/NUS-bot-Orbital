@@ -372,7 +372,7 @@ app.post('/fb', (req, res) => {
       } else {
         User.addUser(sender, function(err, user) {
           if (err) {
-            fbMessage(sender,"You already asked me to remind you mate! Cheers!" + sessions[sessionId].intent);
+            fbMessage(sender,"You already asked me to remind you mate! Cheers!" + sessionId);
             console.error(err);
           }
           else 
@@ -571,20 +571,20 @@ var execute = (sender, msg , sessionId ) => {
  nus.getDescription(nus.findModule(msg)).then(function(res){
   console.log("found");
 
-    fbMessage(sender,'Module ' + nus.findModule(msg) + res + '. Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
+  fbMessage(sender,'Module ' + nus.findModule(msg) + res + '. Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
 
-    console.log("Waiting for other messages");
+  console.log("Waiting for other messages");
 
 
 
-  }).then(function(){
-   delete sessions[sessionId];
- }).catch(function(err){
-   console.log(err);
-   var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
-   fbMessage(sender,messageToSend);
-   console.log("Waiting for other messages");
- });
+}).then(function(){
+ delete sessions[sessionId];
+}).catch(function(err){
+ console.log(err);
+ var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+ fbMessage(sender,messageToSend);
+ console.log("Waiting for other messages");
+});
 
 
 
@@ -650,51 +650,30 @@ var execute = (sender, msg , sessionId ) => {
        } else {
          fbMessage(sender,'We cannot find the professor detail. Is it really professor' + profName + '?');
        } 
-
-
-
-
      })
-
-
      }
+   }) ;
 
-// To write to the system we will use the built in 'fs' library.
-// In this example we will pass 3 parameters to the writeFile function
-// Parameter 1 :  output.json - this is what the created filename will be called
-// Parameter 2 :  JSON.stringify(json, null, 4) - the data to write, here we do an extra step by calling JSON.stringify to make our JSON easier to read
-// Parameter 3 :  callback function - a callback function to let us know the status of our function
+    break;
 
-		// fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
+    case "delve":
+    fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL + 
+      '.' + os.EOL +
+      '.' + os.EOL +
+      'Just KIDDING LEL not gonna tell you xD');
+    break;
 
-		// 	console.log('File successfully written! - Check your project directory for the output.json file');
+    case "remind":
+    fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
+    break;
 
-		// 	})
-
-
-
-}) ;
-
-break;
-
-case "delve":
-fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
-  '.' + os.EOL +
-  '.' + os.EOL +
-  '.' + os.EOL +
-  '.' + os.EOL + 
-  '.' + os.EOL +
-  '.' + os.EOL +
-  'Just KIDDING LEL not gonna tell you xD');
-break;
-
-case "remind":
-fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
-break;
-
-default:
-fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
-}
+    default:
+    fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+  }
 }
 
 else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
