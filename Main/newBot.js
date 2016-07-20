@@ -86,7 +86,7 @@ const fbMessage = (recipientId, msg, cb) => {
   });
 };
 
-const fbMessageWithPicture = (recipientId, cb) => {
+const fbMessageWithPicture = (recipientId, url, cb) => {
   const opts = {
     form: {
       recipient: {
@@ -96,7 +96,7 @@ const fbMessageWithPicture = (recipientId, cb) => {
         'attachment': {
           'type': 'image',
           'payload': {
-            "url": "http://memesvault.com/wp-content/uploads/What-Meme-Face-06.jpg",
+            "url": url,
           }
           // 'stickerID': '144885022352431'
         },
@@ -398,7 +398,7 @@ app.post('/fb', (req, res) => {
           if (err) throw err;
           console.log(result[1].subpods[0]);
           if (result[1] != null){
-            fbMessage(sender, result[1].subpods[0].text);
+            fbMessageWithPicture(sender, result[1].subpods[0].image)
           }
           else {
             fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
