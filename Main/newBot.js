@@ -564,8 +564,8 @@ var execute = (sender, msg , sessionId ) => {
 
      switch(sessions[sessionId].intent){
       case 'unsure':
-      fbMessageWithButtons_US1(sender,"Or do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
-      fbMessageWithButtons_US2(sender,"Do you wish to find description or cors stat?", 'Description', 'Cors Bidding Stats');
+      fbMessageWithButtons_US1(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
+      fbMessageWithButtons_US2(sender,"Or do you wish to find description or cors stat?", 'Description', 'Cors Bidding Stats');
 
 
       break;
