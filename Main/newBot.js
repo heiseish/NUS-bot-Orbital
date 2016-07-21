@@ -729,11 +729,16 @@ var execute = (sender, msg , sessionId ) => {
     case "thanks":
     fbMessage(sender,'It is my pleasure as always');
     delete sessions[sessionId];
+    break;
 
     case "phuc":
     fbMessage(sender,'Phuc confirm gay lah. True whatt');
     fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
     delete sessions[sessionId];
+    break;
+
+    case "commend":
+    fbMessage(sender,'Thanks mate. I really appreciate it');
     break;
 
     case "delve":
