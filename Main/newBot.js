@@ -756,6 +756,8 @@ var execute = (sender, msg , sessionId ) => {
     fbMessage(sender, "He is the creator of this bot. Gossshhh!");
     delete sessions[sessionId];
 
+    case "filler":
+    break;
 
 
     break;

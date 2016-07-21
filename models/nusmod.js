@@ -163,15 +163,18 @@ module.exports = {
 // find keyword in a string
 findKey: function(string){
   var intent;
+
   if (string.search("THANK YOU") != -1 || string.search("THANKS") != -1 || string.search("TY") != -1)
     intent = "thanks" 
+  else if (string === "OH" || string === "EH" || string === "AH" || string == "OK")
+    intent = "filler"
   else if (string.search("WHERE IS") != -1 || string.search("LOCATION OF") != -1)
     intent = "location";
   else if (string.search("REMIND ME") != -1)
     intent = "remind";
   else if (string.search("PROF") != -1)
     intent = "prof";
-  else if ((string.search("WHO") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1))) || string.search("WHO ARE YOU") != -1 || string.search("WHAT ARE YOU") != -1)
+  else if ((string.search("WHO") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1))) || string.search("WHO ARE YOU") != -1 || string.search("WHAT ARE YOU") != -1 || string.search("YOUR BOSS") != -1)
     intent = "intro";
   else if (string.search("HOW") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1) || (string.search('YOU CREATED') != -1)))
     intent = "delve";
