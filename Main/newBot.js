@@ -741,6 +741,8 @@ var execute = (sender, msg , sessionId ) => {
 
     case "boss":
     fbMessage(sender, "He is the creator of this bot. Gossshhh!");
+    delete sessions[sessionId];
+
     break;
 
     case "location":
