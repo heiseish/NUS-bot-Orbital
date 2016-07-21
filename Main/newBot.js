@@ -13,6 +13,8 @@ var schedule = require('node-schedule');
 const fs = require('fs');
 const cheerio = require('cheerio');
 var utility = require('../models/utility.js');
+var LanguageDetect = require('languagedetect');
+var lngDetector = new LanguageDetect();
 
 //Get wolfram
 var date = new Date();
@@ -447,8 +449,13 @@ app.post('/fb', (req, res) => {
     //Merge and Execute Text
     else if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
-     merge(sender, text, sessionId);
-     execute(sender,text,sessionId);
+     let lng = lngDetector.detect(text)
+     if (lng[0][0] === 'english') {
+       merge(sender, text, sessionId);
+       execute(sender,text,sessionId);
+     } else{
+      fbMessage(sender,'Are you speaking' + lang[0][0] + ' ? Sorry we are only able to handle English for now. Apology for any inconvenience caused!');
+     }
    }
    
 
