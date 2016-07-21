@@ -738,6 +738,11 @@ var execute = (sender, msg , sessionId ) => {
 
     break;
 
+    case "insult":
+    fbMessage(sender,"So sad... I'm starting to like you :'(")
+    delete sessions[sessionId];
+    break;
+
     case "thanks":
     fbMessage(sender,'It is my pleasure as always');
     delete sessions[sessionId];
@@ -774,6 +779,7 @@ var execute = (sender, msg , sessionId ) => {
     delete sessions[sessionId];
 
     case "filler":
+    delete sessions[sessionId];
     break;
 
 
