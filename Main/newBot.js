@@ -686,8 +686,8 @@ var execute = (sender, msg , sessionId ) => {
         "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
         "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
         "4. Include 'remind me' to alert whe bidding round comes");
-      delete sessions[sessionId];
     }
+    delete sessions[sessionId];
     break;
 
 
