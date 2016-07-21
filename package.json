@@ -24,6 +24,7 @@
     "googlemaps": "^1.6.0",
     "mongodb": "^2.2.1",
     "mongoose": "^4.5.4",
+    "newrelic": "^1.28.3",
     "node-fetch": "^1.5.3",
     "node-schedule": "^1.1.1",
     "node-uuid": "^1.4.7",

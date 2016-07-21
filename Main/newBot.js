@@ -1,5 +1,6 @@
 'use strict';
 
+require('newrelic');
 var User = require('../models/model.js');
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -648,6 +649,7 @@ var execute = (sender, msg , sessionId ) => {
     case "intro":
     fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
       ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
+    delete sessions[sessionId];
     break;
 
     case "prof":
@@ -686,6 +688,14 @@ var execute = (sender, msg , sessionId ) => {
 
     break;
 
+    case "thanks":
+    fbMessage(sender,'It is my pleasure as always');
+    delete sessions[sessionId];
+
+    case "phuc":
+    fbMessage(sender,'Phuc confirm gay lah. True whatt');
+    fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
+
     case "delve":
     fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
       '.' + os.EOL +
@@ -695,6 +705,7 @@ var execute = (sender, msg , sessionId ) => {
       '.' + os.EOL +
       '.' + os.EOL +
       'Just KIDDING LEL not gonna tell you xD');
+    delete sessions[sessionId];
     break;
 
     case "remind":
@@ -703,6 +714,7 @@ var execute = (sender, msg , sessionId ) => {
 
     case "boss":
     fbMessage(sender, "He is the creator of this bot. Gossshhh!");
+    delete sessions[sessionId];
     break;
 
     case "location":
