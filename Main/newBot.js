@@ -605,8 +605,9 @@ var execute = (sender, msg , sessionId ) => {
      nus.getModule(nus.findModule(msg)).then(function(res){
       result = Object.assign(result,res);
       console.log(result);
-      var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ", it will last for " + utility.convertPeriod(result.ExamDuration) +
-      " and it will be held in " + result.ExamVenue + ".";
+      // var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ", it will last for " + utility.convertPeriod(result.ExamDuration) +
+      // " and it will be held in " + result.ExamVenue + ".";
+      var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ". Location is not yet known. Will update you someday :))";
       fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
       console.log("Waiting for other messages");
 
