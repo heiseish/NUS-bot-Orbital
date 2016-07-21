@@ -514,9 +514,8 @@ app.post('/fb', (req, res) => {
     }
   }
   res.sendStatus(200);
-}
-
 });
+
 
 //function to merge context, session
 var merge = (sender, msg, sessionId) => {
