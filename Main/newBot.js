@@ -451,7 +451,7 @@ app.post('/fb', (req, res) => {
      let text = event.message.text.toUpperCase();
      // console.log(lngDetector.detect('This is a test.')[0][0]);
      // console.log(lngDetector.detect(text,1));
-
+     console.log("text is " + text)
     // lang detector cannot handle small words??!! Xin chao bannot be handled.
     // Check to see if array is empty
 
