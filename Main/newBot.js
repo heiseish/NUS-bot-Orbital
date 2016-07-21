@@ -658,12 +658,14 @@ var execute = (sender, msg , sessionId ) => {
     if (i<strArray.length) {
       recursiveMessage();
     }
+    else if (i==strArray.length) {
+      fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
+    }
   });
 }
 recursiveMessage();
 
 
-fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
 console.log("Waiting for other messages");
 
 }).then(function(){
