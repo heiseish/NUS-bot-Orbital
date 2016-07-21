@@ -4,7 +4,7 @@ var lngDetector = new LanguageDetect();
 // OR
 // var lngDetector = new (require('languagedetect'));
 
-console.log(lngDetector.detect('This is a test.'));
+console.log(lngDetector.detect('This is a test.')[0][0]);
 
 /*
   [ [ 'english', 0.5969230769230769 ],
