@@ -608,12 +608,12 @@ var execute = (sender, msg , sessionId ) => {
       // var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ", it will last for " + utility.convertPeriod(result.ExamDuration) +
       // " and it will be held in " + result.ExamVenue + ".";
       var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ". Location is not yet known. Will update you someday :))";
-      fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
-      console.log("Waiting for other messages");
+     fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
+     console.log("Waiting for other messages");
 
 
 
-    }).then(function(){
+   }).then(function(){
      delete sessions[sessionId];
    }).catch(function(err){
      console.log(err);
@@ -653,7 +653,10 @@ var execute = (sender, msg , sessionId ) => {
  nus.getDescription(nus.findModule(msg)).then(function(res){
   var strArray = res.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
   for (var i=0; i<strArray.length; i++) {
-    setTimeout(fbMessage(sender, strArray[i]), 2000);
+    fbMessage(sender, strArray[i]);
+    console.log("before");
+    setTimeOut(function () {},500);
+    console.log("after");
   }
   fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
   console.log("Waiting for other messages");
@@ -740,64 +743,64 @@ var execute = (sender, msg , sessionId ) => {
 
     case "insult":
     fbMessage(sender,"So sad... I'm starting to like you :'(")
-    delete sessions[sessionId];
-    break;
+      delete sessions[sessionId];
+      break;
 
-    case "thanks":
-    fbMessage(sender,'It is my pleasure as always');
-    delete sessions[sessionId];
-    break;
+      case "thanks":
+      fbMessage(sender,'It is my pleasure as always');
+      delete sessions[sessionId];
+      break;
 
-    case "phuc":
-    fbMessage(sender,'Phuc confirm gay lah. True whatt');
-    fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
-    delete sessions[sessionId];
-    break;
+      case "phuc":
+      fbMessage(sender,'Phuc confirm gay lah. True whatt');
+      fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
+      delete sessions[sessionId];
+      break;
 
-    case "commend":
-    fbMessage(sender,'Thanks mate. I really appreciate it');
-    break;
+      case "commend":
+      fbMessage(sender,'Thanks mate. I really appreciate it');
+      break;
 
-    case "delve":
-    fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
-      '.' + os.EOL +
-      '.' + os.EOL +
-      '.' + os.EOL +
-      '.' + os.EOL + 
-      '.' + os.EOL +
-      '.' + os.EOL +
-      'Just KIDDING LEL not gonna tell you xD');
-    delete sessions[sessionId];
-    break;
+      case "delve":
+      fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
+        '.' + os.EOL +
+        '.' + os.EOL +
+        '.' + os.EOL +
+        '.' + os.EOL + 
+        '.' + os.EOL +
+        '.' + os.EOL +
+        'Just KIDDING LEL not gonna tell you xD');
+      delete sessions[sessionId];
+      break;
 
-    case "remind":
-    fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
-    break;
+      case "remind":
+      fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
+      break;
 
-    case "boss":
-    fbMessage(sender, "He is the creator of this bot. Gossshhh!");
-    delete sessions[sessionId];
+      case "boss":
+      fbMessage(sender, "He is the creator of this bot. Gossshhh!");
+      delete sessions[sessionId];
 
-    case "filler":
-    delete sessions[sessionId];
-    break;
-
-
-    break;
-
-    case "location":
-    fbMessageQuickReply(sender,'Is it in NUS?');
-    break;
+      case "filler":
+      delete sessions[sessionId];
+      break;
 
 
-    default:
-    fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+      break;
+
+      case "location":
+      fbMessageQuickReply(sender,'Is it in NUS?');
+      break;
+
+
+      default:
+      fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+    }
   }
-}
 
-else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
-  if (lngDetector.detect(sessions[sessionId].text).length > 0){
-    if (lngDetector.detect(sessions[sessionId].text)[0][0] === 'english') {
+  else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
+    if (lngDetector.detect(sessions[sessionId].text).length > 0){
+      if (lngDetector.detect(sessions[sessionId].text)[0][0] === 'english') {
     //Wolfram API here    
     wolfram.query(sessions[sessionId].text, function (err, result) {
       console.log("Getting answer from Wolfram ...");
