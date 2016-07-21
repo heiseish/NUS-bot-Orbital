@@ -653,13 +653,13 @@ var execute = (sender, msg , sessionId ) => {
  nus.getDescription(nus.findModule(msg)).then(function(res){
   var strArray = res.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
   var i = 0;
-  recursiveMessage = () => { fbMessage(sender, strArray[i], cb(err, data) {
+  recursiveMessage = () => { fbMessage(sender, strArray[i], function (err, data) {
     i++;
     if (i<strArray.length) {
       recursiveMessage();
     }
   });
-}
+};
 
   
   fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
