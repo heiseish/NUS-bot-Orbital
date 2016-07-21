@@ -168,7 +168,7 @@ findKey: function(string){
     intent = "thanks" 
   else if (string === "OH" || string === "EH" || string === "AH" || string == "OK")
     intent = "filler"
-  else if ((string.search("FUCK") != -1 || string.search("STUPID") != -1 || string.search("CHEAPO") != -1 || string.search("NOOB") != -1) && (string.search("YOU") != -1 || string.search("BOT") != -1))
+  else if ((string.search("FUCK") != -1 || string.search("STUPID") != -1 || string.search("CHEAPO") != -1 || string.search("NOOB") != -1) && (string.search("YOU") != -1 || string.search("BOT") != -1) || string.search("FUCK") == 0 || string.search("STUPID") == 0 || string.search("NOOB") == 0)
     intent = "insult"
   else if (string === "AWESOME" || string === "NICE" || string === "SMART" || ((string.search("AWESOME") != -1 || string.search("SMART") != -1 || string.search("NICE") != -1) && (string.search("BOT") != -1  || string.search("YOU") != -1)))
     intent = "commend";
