@@ -653,7 +653,7 @@ var execute = (sender, msg , sessionId ) => {
  nus.getDescription(nus.findModule(msg)).then(function(res){
   var strArray = res.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
   for (var i=0; i<strArray.length; i++) {
-    setTimeout(fbMessage(sender, strArray[i]), 500);
+    setTimeout(fbMessage(sender, strArray[i]), 2000);
   }
   fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
   console.log("Waiting for other messages");
