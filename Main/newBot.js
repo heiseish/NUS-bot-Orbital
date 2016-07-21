@@ -733,6 +733,8 @@ var execute = (sender, msg , sessionId ) => {
     case "phuc":
     fbMessage(sender,'Phuc confirm gay lah. True whatt');
     fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
+    delete sessions[sessionId];
+    break;
 
     case "delve":
     fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
