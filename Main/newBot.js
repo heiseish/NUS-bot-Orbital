@@ -449,12 +449,13 @@ app.post('/fb', (req, res) => {
     //Merge and Execute Text
     else if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
+     console.log(lngDetector.detect(text)[0][0]);
      
-     if (lngDetector(text)[0][0] === 'english') {
+     if (lngDetector.detect(text)[0][0] === 'english') {
        merge(sender, text, sessionId);
        execute(sender,text,sessionId);
      } else{
-      fbMessage(sender,'Are you speaking' + lngDetector(text)[0][0] + ' ? Sorry we are only able to handle English for now. Apology for any inconvenience caused!');
+      fbMessage(sender,'Are you speaking' + lngDetector.detect(text)[0][0] + ' ? Sorry we are only able to handle English for now. Apology for any inconvenience caused!');
      }
    }
    
