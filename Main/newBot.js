@@ -652,12 +652,16 @@ var execute = (sender, msg , sessionId ) => {
  case "description":
  nus.getDescription(nus.findModule(msg)).then(function(res){
   var strArray = res.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
-  for (var i=0; i<strArray.length; i++) {
-    fbMessage(sender, strArray[i]);
-    console.log("before");
-    setTimeOut(function () {},500);
-    console.log("after");
-  }
+  var i = 0;
+  recursiveMessage = () => { fbMessage(sender, strArray[i], cb(err, data) {
+    i++;
+    if (i<strArray.length) {
+      recursiveMessage();
+    }
+  });
+}
+
+  
   fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
   console.log("Waiting for other messages");
 
