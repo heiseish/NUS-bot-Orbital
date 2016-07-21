@@ -448,7 +448,7 @@ app.post('/fb', (req, res) => {
 
     //Merge and Execute Text
     else if (event.message && event.message.text) {
-     let text = event.message.text.toUpperCase()
+     let text = event.message.text.toUpperCase();
      // console.log(lngDetector.detect('This is a test.')[0][0]);
      // console.log(lngDetector.detect(text,1));
 
@@ -456,7 +456,7 @@ app.post('/fb', (req, res) => {
     // Check to see if array is empty
 
     merge(sender, text, sessionId);
-    execute(sender,text,sessionId);
+    execute(sender, text,sessionId);
     
   }
 
@@ -604,6 +604,7 @@ var execute = (sender, msg , sessionId ) => {
      var result = {};
      nus.getModule(nus.findModule(msg)).then(function(res){
       result = Object.assign(result,res);
+      console.log(result);
       var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ", it will last for " + utility.convertPeriod(result.ExamDuration) +
       " and it will be held in " + result.ExamVenue + ".";
       fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
@@ -615,7 +616,8 @@ var execute = (sender, msg , sessionId ) => {
      delete sessions[sessionId];
    }).catch(function(err){
      console.log(err);
-     var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+     var messageToSend = "Sorry we cannot find your module or the data of the exam is not yet updated.";
+     delete sessions[sessionId];
      fbMessage(sender,messageToSend);
      console.log("Waiting for other messages");
    });
@@ -801,7 +803,7 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
         fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
       }
     });
-    
+
   } else{
     fbMessage(sender,'Are you speaking ' + lngDetector.detect(text)[0][0] + ' ? Sorry we are only able to handle English for now. Apology for any inconvenience caused!');
   }
