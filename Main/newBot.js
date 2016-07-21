@@ -449,9 +449,24 @@ app.post('/fb', (req, res) => {
     //Merge and Execute Text
     else if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase()
+     // console.log(lngDetector.detect('This is a test.')[0][0]);
+     // console.log(lngDetector.detect(text,1));
 
-
-
+    // lang detector cannot handle small words??!! Xin chao bannot be handled.
+    // Check to see if array is empty
+    if (lngDetector.detect(text).length > 0){
+      if (lngDetector.detect(text)[0][0] === 'english') {
+        merge(sender, text, sessionId);
+        execute(sender,text,sessionId);
+      } else{
+      fbMessage(sender,'Are you speaking ' + lngDetector.detect(text)[0][0] + ' ? Sorry we are only able to handle English for now. Apology for any inconvenience caused!');
+      }
+    } else{
+      merge(sender, text, sessionId);
+      execute(sender,text,sessionId);
+    }
+   }
+   
 
    // If user press a button. Merge and execute Postbacks
    if (event.postback) {
@@ -514,8 +529,9 @@ app.post('/fb', (req, res) => {
     }
   }
   res.sendStatus(200);
-});
+}
 
+});
 
 //function to merge context, session
 var merge = (sender, msg, sessionId) => {
@@ -778,27 +794,20 @@ var execute = (sender, msg , sessionId ) => {
 }
 
 else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
-  if (lngDetector.detect(text).length > 0){
-    if (lngDetector.detect(text)[0][0] === 'english') {
-      wolfram.query(sessions[sessionId].text, function (err, result) {
-        console.log("Getting answer from Wolfram ...");
-        if (err) throw err;
-        console.log(result);
-        if (result[1] != null){
-          fbMessage(sender, result[1].subpods[0].text);
-        }
-        else {
-          fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
-        }
-      });
-    } else{
-      fbMessage(sender,'Are you speaking ' + lngDetector.detect(text)[0][0] + ' ? Sorry we are only able to handle English for now. Apology for any inconvenience caused!');
-    }
-  } else{
-    merge(sender, text, sessionId);
-    execute(sender,text,sessionId);
+    //Wolfram API here    
+    wolfram.query(sessions[sessionId].text, function (err, result) {
+      console.log("Getting answer from Wolfram ...");
+      if (err) throw err;
+      console.log(result);
+      if (result[1] != null){
+        fbMessage(sender, result[1].subpods[0].text);
+      }
+      else {
+        fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
+      }
+    });
   }
-}
+};
 
 
 
