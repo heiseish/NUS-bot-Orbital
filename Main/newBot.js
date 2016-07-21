@@ -789,8 +789,8 @@ var execute = (sender, msg , sessionId ) => {
 }
 
 else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
-  if (lngDetector.detect(text).length > 0){
-    if (lngDetector.detect(text)[0][0] === 'english') {
+  if (lngDetector.detect(sessions[sessionId].text).length > 0){
+    if (lngDetector.detect(sessions[sessionId].text)[0][0] === 'english') {
     //Wolfram API here    
     wolfram.query(sessions[sessionId].text, function (err, result) {
       console.log("Getting answer from Wolfram ...");
@@ -805,7 +805,7 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
     });
 
   } else{
-    fbMessage(sender,'Are you speaking ' + lngDetector.detect(text)[0][0] + ' ? Sorry we are only able to handle English for now. Apology for any inconvenience caused!');
+    fbMessage(sender,'Are you speaking ' + lngDetector.detect(sessions[sessionId].text)[0][0] + ' ? Sorry we are only able to handle English for now. Apology for any inconvenience caused!');
   }
 }
 
