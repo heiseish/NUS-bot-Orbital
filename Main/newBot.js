@@ -154,7 +154,7 @@ const fbMessageWithButtons_TY = (recipientId, msg, val1, val2, cb) => {
   });
 };
 
-const fbMessageWithButtons_US = (recipientId, msg, val1, val2, val3, cb) => {
+const fbMessageWithButtons_US1 = (recipientId, msg, val1, val2, cb) => {
   const opts = {
     form: {
       recipient: {
@@ -176,10 +176,42 @@ const fbMessageWithButtons_US = (recipientId, msg, val1, val2, val3, cb) => {
               'type': 'postback',
               'title': val2,
               'payload': 'class'
-            },
+            }
+
+            ]
+          }
+        },
+      },
+    },
+  };
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
+const fbMessageWithButtons_US2 = (recipientId, msg, val3, val4, cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'template',
+          'payload': {
+            'template_type': 'button',
+            'text': msg,
+            'buttons': [
             {
               'type': 'postback',
               'title': val3,
+              'payload': 'description'
+            },
+            {
+              'type': 'postback',
+              'title': val4,
               'payload': 'cors'
             }
             ]
@@ -282,7 +314,7 @@ app.get('/fb', (req, res) => {
 
 // NOTES: date is set in GMT 0+, not Singapore time
 
-var round0 = new Date(2016, 6, 21, 9, 0, 0);
+var round0 = new Date(2016, 6, 21, 9, 15, 0);
 remind(round0,'Open Bidding Round 0 has started and it will end at 5pm tomorrow');
 var roundopen1a = new Date(2016, 6, 25, 9, 0, 0);
 remind(roundopen1a,'Open Bidding Round 1A has started and it will end at 1pm tomorrow');
@@ -456,6 +488,11 @@ app.post('/fb', (req, res) => {
         merge(sender,text, sessionId);
         execute(sender,text,sessionId);
       }
+      else if (event.postback.payload === 'description'){
+        text += " DESCRIPTION";
+        merge(sender,text, sessionId);
+        execute(sender,text,sessionId);
+      }
       break;
 
 
@@ -528,7 +565,8 @@ var execute = (sender, msg , sessionId ) => {
 
      switch(sessions[sessionId].intent){
       case 'unsure':
-      fbMessageWithButtons_US(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location','Cors Bidding Stats');
+      fbMessageWithButtons_US1(sender,"Do you wish to find class location or examination detail?", 'Exam Detail', 'Class Location');
+      fbMessageWithButtons_US2(sender,"Do you wish to find description or cors stat?", 'Description', 'Cors Bidding Stats');
 
 
       break;
@@ -605,8 +643,8 @@ var execute = (sender, msg , sessionId ) => {
   for (var i=0; i<strArray.length; i++) {
     fbMessage(sender, strArray[i]);
   }
-    fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
-    console.log("Waiting for other messages");
+  fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
+  console.log("Waiting for other messages");
 
 }).then(function(){
  delete sessions[sessionId];
@@ -622,7 +660,7 @@ var execute = (sender, msg , sessionId ) => {
 }
 
   //If there is intent
-} else if (sessions[sessionId].intent != null) {
+} else if (sessions[sessionId].intent != null && sessions[sessionId].module == -1) {
   switch(sessions[sessionId].intent){
 
     case "help":
@@ -715,6 +753,9 @@ var execute = (sender, msg , sessionId ) => {
     case "boss":
     fbMessage(sender, "He is the creator of this bot. Gossshhh!");
     delete sessions[sessionId];
+
+
+
     break;
 
     case "location":

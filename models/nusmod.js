@@ -185,7 +185,7 @@ findKey: function(string){
     intent = "cors"
   else if (string.search("MODULE") != -1)
     intent = "module";
-  else if (string.search("DESCRIPTION") != -1 || string.search('CONTENT') != -1 || ((string.search('TELL') || string.search('WHAT')) && findModule(string) != -1))
+  else if (string.search("DESCRIPTION") != -1 || string.search('CONTENT') != -1 || ((string.search('TELL') != -1 || string.search('WHAT') != -1) && findModule(string) != -1))
     intent = "description";
   else if ((string.search("EXAM") != -1 && string.search("CLASS") != -1) || ((findModule(string) != -1) &&  (string.search("EXAM") === -1) && (string.search("CLASS") === -1) && (string.search("CORS") === -1))) // need to add more to prevent abuse
     intent = "unsure";
