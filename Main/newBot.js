@@ -732,8 +732,9 @@ console.log("Waiting for other messages");
   	break;
 
     case "help":
-    utility.getUserName(sessions[sessionId].fbId).then(function(res){
-	
+    utility.getUserName(sender).then(function(res){
+		console.log(res);
+		console.log("here");
       fbMessage(sender,"Hi " + res);
       	// ", I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
        //  "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
