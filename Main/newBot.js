@@ -728,7 +728,7 @@ console.log("Waiting for other messages");
 
     case "prof":
 
-    if (sessions[sessionId].module == null) {
+    if (sessions[sessionId].module == -1) {
       var profName = utility.findProfName(msg);
       console.log(profName);
 
