@@ -20,6 +20,7 @@
     "body-parser": "^1.15.2",
     "cheerio": "latest",
     "express": "^4.14.0",
+    "fbgraph": "^1.2.0",
     "geocoder": "^0.2.2",
     "googlemaps": "^1.6.0",
     "languagedetect": "^1.1.1",
