@@ -664,6 +664,7 @@ var execute = (sender, msg , sessionId ) => {
 
     var messageToSend;
     var i = 0;
+    console.log(res);
     function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
       messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
     ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
