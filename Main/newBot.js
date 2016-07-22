@@ -15,6 +15,12 @@ const cheerio = require('cheerio');
 var utility = require('../models/utility.js');
 var LanguageDetect = require('languagedetect');
 var lngDetector = new LanguageDetect();
+var graph = require('fbgraph');
+graph.setAccessToken(FB_PAGE_TOKEN);
+graph.setVersion("2.6");
+
+
+
 
 //Get wolfram
 var date = new Date();
@@ -367,7 +373,10 @@ app.post('/fb', (req, res) => {
     let event = req.body.entry[0].messaging[i]
     let sender = event.sender.id
     const sessionId = findOrCreateSession(sender);
-    // console.log(event);
+    console.log(event);
+    graph.get(sender, function(err, res) {
+  		console.log(res); 
+	});
     
 
     //handle attachment
