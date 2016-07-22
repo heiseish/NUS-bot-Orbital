@@ -1,5 +1,19 @@
 // console.log("require utility successfully");
+var graph = require('fbgraph');
+const FB_PAGE_TOKEN = 'EAAQQyI1rDcUBAFzB4pMIYOBnQbFIuJvlmV68jqxithqRgoaYP90ZBZC629JezhLF57eSMew6PPtx8qv6DdelrLSAryPeZAIiGFz93ylWZB7yoJFQJZAQFZBxdZB5c57ZArcq0aJ5VS2qbokFE9nEsZBusdHsLumgHVmA34EzN2mQwawZDZD';
+graph.setAccessToken(FB_PAGE_TOKEN);
+graph.setVersion("2.6");
+
 module.exports = {
+	getUserName: function(sender){
+		return new Promise( function(response){
+			graph.get(sender, function(err, res) {
+				var name = res.first_name + ' ' + res.last_name;
+				response(name);
+			});
+		});
+	},
+
 	decodeemail: function(address)
 	{		
 		var coded = address

@@ -15,11 +15,7 @@ const cheerio = require('cheerio');
 var utility = require('../models/utility.js');
 var LanguageDetect = require('languagedetect');
 var lngDetector = new LanguageDetect();
-var graph = require('fbgraph');
 
-
-
-graph.setVersion("2.6");
 
 
 
@@ -377,9 +373,7 @@ app.post('/fb', (req, res) => {
     let sender = event.sender.id
     const sessionId = findOrCreateSession(sender);
     console.log(event);
-    graph.get(sender, function(err, res) {
-      console.log(res); 
-    });
+    
     
 
     //handle attachment
@@ -738,19 +732,17 @@ console.log("Waiting for other messages");
   	break;
 
     case "help":
-    if (sessions[sessionId].fbid ===  '1139314066115187'){
-      fbMessage(sender,'Hi Boss Dao Truong Giang');
-    } else if (sessions[sessionId].fbid ===  '1340406605974646') {
-      var date = new Date();
-      fbMessage(sender,'Hi Boss Tran Viet Quang' + date.toString());
-    } else {
-      fbMessage(sender,"Hi, I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
+    utility.getUserName(sessions[sessionId].fbId).then(function(res){
+	
+      fbMessage(sender,"Hi " + res + ", I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
         "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
         "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
         "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
         "4. Include 'remind me' to alert whe bidding round comes");
-    }
-    delete sessions[sessionId];
+    }).then(function(){
+    	delete sessions[sessionId];
+    })
+    
     break;
 
 
