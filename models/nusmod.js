@@ -1,4 +1,4 @@
-...var http = require('http');
+var http = require('http');
 var path = require('path');
 var modules = path.resolve(__dirname, '../Resources/modules.json');
 var classroom = path.resolve(__dirname,'../Resources/classroom.json');
