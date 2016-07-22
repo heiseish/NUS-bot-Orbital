@@ -367,7 +367,8 @@ app.post('/fb', (req, res) => {
     let event = req.body.entry[0].messaging[i]
     let sender = event.sender.id
     const sessionId = findOrCreateSession(sender);
-    console.log(event);
+    // console.log(event);
+    
 
     //handle attachment
     if (event.message && event.message.attachments) {
@@ -449,9 +450,12 @@ app.post('/fb', (req, res) => {
     //Merge and Execute Text
     else if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase();
+     if (event.message.From.Name){
+    	console.log(event.message.From.Name);
+    }
      // console.log(lngDetector.detect('This is a test.')[0][0]);
      // console.log(lngDetector.detect(text,1));
-     console.log("text is " + text)
+     
     // lang detector cannot handle small words??!! Xin chao bannot be handled.
     // Check to see if array is empty
 
@@ -688,10 +692,10 @@ console.log("Waiting for other messages");
   	case "tell":
   	if (sessions[sessionId].fbid === '1139314066115187'){
   		fbMessage(sender,'Got it!');
-  		fbMessage('1340406605974646',"Giang says ' " + nus.findMessage(msg) + "'.")
+  		fbMessage('1340406605974646',"Giang says '" + nus.findMessage(msg.toLowerCase()) + "'.")
   	} else if (sessions[sessionId].fbid === '1340406605974646'){
   		fbMessage(sender,'Alrighty!');
-  		fbMessage('1139314066115187', "Quang says ' " + nus.findMessage(msg) + "'.")
+  		fbMessage('1139314066115187', "Quang says '" + nus.findMessage(msg.toLowerCase()) + "'.")
   	}
   	break;
 

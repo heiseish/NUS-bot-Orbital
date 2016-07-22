@@ -217,7 +217,7 @@ findLocation: function(string) {
   location = string.slice(n);
   if (location.slice(-1) === '?')
     location = location.slice(0, -1);
-  console.log("location is " + location);
+  // console.log("location is " + location);
   return location;
 },
 
