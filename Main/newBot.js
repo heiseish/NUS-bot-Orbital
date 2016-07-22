@@ -727,7 +727,7 @@ console.log("Waiting for other messages");
     break;
 
     case "prof":
-
+    console.log(sessions[sessionId].module);
     if (sessions[sessionId].module != -1)
     {
       console.log("getting lecturers for " + sessions[sessionId].module);
