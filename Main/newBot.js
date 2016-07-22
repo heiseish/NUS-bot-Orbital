@@ -686,7 +686,7 @@ console.log("Waiting for other messages");
 }
 
   //If there is intent
-} else if (sessions[sessionId].intent != null && sessions[sessionId].module == -1) {
+} else if (sessions[sessionId].intent != null) {
   switch(sessions[sessionId].intent){
 
   	case "tell":
