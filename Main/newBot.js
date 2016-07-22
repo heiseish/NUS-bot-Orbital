@@ -660,7 +660,7 @@ var execute = (sender, msg , sessionId ) => {
 
    case "cors":
    console.log("cors");
-   nus.getCors(nus.findModule(msg)).then(function(res){
+   nus.getCors(nus.findModule(msg), "School Of Computing").then(function(res){
 
     for (var i = 0; i < res.length; i++){
       var messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 

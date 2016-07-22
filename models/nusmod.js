@@ -1,4 +1,4 @@
-var http = require('http');
+...var http = require('http');
 var path = require('path');
 var modules = path.resolve(__dirname, '../Resources/modules.json');
 var classroom = path.resolve(__dirname,'../Resources/classroom.json');
@@ -109,7 +109,7 @@ module.exports = {
 
   },
 
-  getCors: function (modulecode){
+  getCors: function (modulecode, faculty){
     return new Promise( function(response,reject){
 
       var fs = require("fs");
@@ -128,7 +128,11 @@ module.exports = {
               i--;
             };
           };
-
+          for (var k = 0; k < cors.length; k++) {
+            if (cors[k].Faculty !== faculty){
+              cors.splice(k, 1);
+            }
+          }
 
           
           response(cors);
