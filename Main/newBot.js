@@ -759,6 +759,7 @@ console.log("Waiting for other messages");
      }) ;
     }
     else {
+      console.log("getting lecturers for " + sessions[sessionId].module);
       nus.getLecturers(sessions[sessionId].module).then(function(res, rej) {
         //send fb message here
       })
