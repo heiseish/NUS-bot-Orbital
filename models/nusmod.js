@@ -261,6 +261,7 @@ findProfName: function(str){
 
 findMessage: function(str){
   str = str.substring(str.indexOf("THAT") + 5);
+  console.log(str);
   return str;
 }
 }

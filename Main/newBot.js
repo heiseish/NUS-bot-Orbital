@@ -733,40 +733,40 @@ console.log("Waiting for other messages");
 
     case "help":
     utility.getUserName(sender).then(function(res){
-		console.log(res);
-		console.log("here");
+      console.log(res);
+      console.log("here");
       fbMessage(sender,"Hi " + res);
       	// ", I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
        //  "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
        //  "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
        //  "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
        //  "4. Include 'remind me' to alert whe bidding round comes");
-    }).then(function(){
-    	delete sessions[sessionId];
-    })
-    
-    break;
+     }).then(function(){
+       delete sessions[sessionId];
+     })
+     
+     break;
 
 
-    case "module":
-    fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
-    break;
+     case "module":
+     fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
+     break;
 
-    case "intro":
-    fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
+     case "intro":
+     fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
       ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
-    delete sessions[sessionId];
-    break;
+     delete sessions[sessionId];
+     break;
 
-    case "prof":
+     case "prof":
 
-    var profName = utility.findProfName(msg);
-    console.log(profName);
+     var profName = utility.findProfName(msg);
+     console.log(profName);
 
 
-    var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
+     var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
 
-    request(scrapeurl, function(error, response, html){
+     request(scrapeurl, function(error, response, html){
       if(!error){
        console.log('requesting ...');
        var $ = cheerio.load(html);
@@ -792,71 +792,71 @@ console.log("Waiting for other messages");
      })
      }
    }) ;
-    delete sessions[sessionId];
+     delete sessions[sessionId];
 
 
-    break;
+     break;
 
-    case "insult":
-    fbMessage(sender,"So sad... I'm starting to like you :'(")
-      delete sessions[sessionId];
-      break;
+     case "insult":
+     fbMessage(sender,"So sad... I'm starting to like you :'(")
+     delete sessions[sessionId];
+     break;
 
-      case "thanks":
-      fbMessage(sender,'It is my pleasure as always');
-      delete sessions[sessionId];
-      break;
+     case "thanks":
+     fbMessage(sender,'It is my pleasure as always');
+     delete sessions[sessionId];
+     break;
 
-      case "phuc":
-      fbMessage(sender,'Phuc confirm gay lah. True whatt');
-      fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
-      delete sessions[sessionId];
-      break;
+     case "phuc":
+     fbMessage(sender,'Phuc confirm gay lah. True whatt');
+     fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
+     delete sessions[sessionId];
+     break;
 
-      case "commend":
-      fbMessage(sender,'Thanks mate. I really appreciate it');
-      break;
+     case "commend":
+     fbMessage(sender,'Thanks mate. I really appreciate it');
+     break;
 
-      case "delve":
-      fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
-        '.' + os.EOL +
-        '.' + os.EOL +
-        '.' + os.EOL +
-        '.' + os.EOL + 
-        '.' + os.EOL +
-        '.' + os.EOL +
-        'Just KIDDING LEL not gonna tell you xD');
-      delete sessions[sessionId];
-      break;
+     case "delve":
+     fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL + 
+      '.' + os.EOL +
+      '.' + os.EOL +
+      'Just KIDDING LEL not gonna tell you xD');
+     delete sessions[sessionId];
+     break;
 
-      case "remind":
-      fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
-      break;
+     case "remind":
+     fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
+     break;
 
-      case "boss":
-      fbMessage(sender, "He is the creator of this bot. Gossshhh!");
-      delete sessions[sessionId];
+     case "boss":
+     fbMessage(sender, "He is the creator of this bot. Gossshhh!");
+     delete sessions[sessionId];
 
-      case "filler":
-      delete sessions[sessionId];
-      break;
-
-
-      break;
-
-      case "location":
-      fbMessageQuickReply(sender,'Is it in NUS?');
-      break;
+     case "filler":
+     delete sessions[sessionId];
+     break;
 
 
-      default:
-      fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
-    }
-  }
+     break;
 
-  else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
-    if (lngDetector.detect(sessions[sessionId].text).length > 0){
-      if (lngDetector.detect(sessions[sessionId].text)[0][0] === 'english') {
+     case "location":
+     fbMessageQuickReply(sender,'Is it in NUS?');
+     break;
+
+
+     default:
+     fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+   }
+ }
+
+ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
+  if (lngDetector.detect(sessions[sessionId].text).length > 0){
+    if (lngDetector.detect(sessions[sessionId].text)[0][0] === 'english') {
     //Wolfram API here    
     wolfram.query(sessions[sessionId].text, function (err, result) {
       console.log("Getting answer from Wolfram ...");
