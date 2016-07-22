@@ -662,10 +662,11 @@ var execute = (sender, msg , sessionId ) => {
    console.log("cors");
    nus.getCors(nus.findModule(msg), "Science").then(function(res){
 
-    var messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
-    ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
+    var messageToSend;
     var i = 0;
     function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
+      messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
+    ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
       i++;
       if (i<res.length) {
         corsRecursiveMessage();
