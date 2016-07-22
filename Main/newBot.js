@@ -378,8 +378,8 @@ app.post('/fb', (req, res) => {
     const sessionId = findOrCreateSession(sender);
     console.log(event);
     graph.get(sender, function(err, res) {
-  		console.log(res); 
-	});
+      console.log(res); 
+    });
     
 
     //handle attachment
@@ -660,30 +660,36 @@ var execute = (sender, msg , sessionId ) => {
 
    case "cors":
    console.log("cors");
-   nus.getCors(nus.findModule(msg), "School Of Computing").then(function(res){
+   nus.getCors(nus.findModule(msg), "Science").then(function(res){
 
-    for (var i = 0; i < res.length; i++){
-      var messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
-      ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
-      fbMessage(sender,messageToSend);
-    };
+    var messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
+    ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
 
-    console.log("Waiting for other messages");
+    function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
+      i++;
+      if (i<res.length) {
+        corsRecursiveMessage();
+      }
+    });
+  }
+  corsRecursiveMessage();
+
+  console.log("Waiting for other messages");
 
 
 
-  }).then(function(){
-   delete sessions[sessionId];
- }).catch(function(err){
-   console.log(err);
-   var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
-   fbMessage(sender,messageToSend);
-   console.log("Waiting for other messages");
- });
- break;
+}).then(function(){
+ delete sessions[sessionId];
+}).catch(function(err){
+ console.log(err);
+ var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+ fbMessage(sender,messageToSend);
+ console.log("Waiting for other messages");
+});
+break;
 
- case "description":
- nus.getDescription(nus.findModule(msg)).then(function(res){
+case "description":
+nus.getDescription(nus.findModule(msg)).then(function(res){
   var strArray = res.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
   var i = 0;
   function recursiveMessage() { fbMessage(sender, strArray[i], function (err, data) {
