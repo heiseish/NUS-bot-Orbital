@@ -570,7 +570,6 @@ function remind (date, msg){
 var execute = (sender, msg , sessionId ) => {
 
   console.log("Executing ...");
-  console.log(msg);
   console.log(sessions[sessionId]);
 
     // If there is a module 
@@ -626,6 +625,15 @@ var execute = (sender, msg , sessionId ) => {
      fbMessage(sender,messageToSend);
      console.log("Waiting for other messages");
    });
+   break;
+
+   case "prof":
+   console.log("getting lecturers for " + sessions[sessionId].module);
+   nus.getLecturers(sessions[sessionId].module).then(function(res, rej) {
+    for (var i=0; i<res.length; i++) {
+     fbMessage(sender,res[i]);
+   }
+ })
    break;
 
 
@@ -686,7 +694,7 @@ console.log("Waiting for other messages");
 }
 
   //If there is intent
-} else if (sessions[sessionId].intent != null) {
+} else if (sessions[sessionId].intent != null && sessions[sessionId].module == -1) {
   switch(sessions[sessionId].intent){
 
   	case "tell":
@@ -727,17 +735,7 @@ console.log("Waiting for other messages");
     break;
 
     case "prof":
-    console.log(sessions[sessionId].module);
-    if (sessions[sessionId].module != -1)
-    {
-      console.log("getting lecturers for " + sessions[sessionId].module);
-      nus.getLecturers(sessions[sessionId].module).then(function(res, rej) {
-        for (var i=0; i<res.length; i++) {
-         fbMessage(sender,res[i]);
-       }
-     })
-    }
-    else {
+
       var profName = utility.findProfName(msg);
       console.log(profName);
 
