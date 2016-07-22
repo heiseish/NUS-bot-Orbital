@@ -734,11 +734,12 @@ console.log("Waiting for other messages");
     case "help":
     utility.getUserName(sessions[sessionId].fbId).then(function(res){
 	
-      fbMessage(sender,"Hi " + res + ", I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
-        "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
-        "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
-        "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
-        "4. Include 'remind me' to alert whe bidding round comes");
+      fbMessage(sender,"Hi " + res);
+      	// ", I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
+       //  "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+       //  "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
+       //  "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
+       //  "4. Include 'remind me' to alert whe bidding round comes");
     }).then(function(){
     	delete sessions[sessionId];
     })
