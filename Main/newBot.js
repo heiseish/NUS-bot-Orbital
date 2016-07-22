@@ -685,6 +685,16 @@ console.log("Waiting for other messages");
 } else if (sessions[sessionId].intent != null && sessions[sessionId].module == -1) {
   switch(sessions[sessionId].intent){
 
+  	case "tell":
+  	if (sessions[sessionId].fbid === '1139314066115187'){
+  		fbMessage(sender,'Got it!');
+  		fbMessage('1340406605974646',"Giang says ' " + nus.findMessage(msg) + "'.")
+  	} else if (sessions[sessionId].fbid === '1340406605974646'){
+  		fbMessage(sender,'Alrighty!');
+  		fbMessage('1139314066115187', "Quang says ' " + nus.findMessage(msg) + "'.")
+  	}
+  	break;
+
     case "help":
     if (sessions[sessionId].fbid ===  '1139314066115187'){
       fbMessage(sender,'Hi Boss Dao Truong Giang');
