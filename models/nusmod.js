@@ -164,7 +164,9 @@ module.exports = {
 findKey: function(string){
   var intent;
 
-  if (string.search("THANK YOU") != -1 || string.search("THANKS") != -1 || string.search("TY") != -1)
+  if (string.search("TELL") != -1 && string.search("THAT") != -1)
+    intent = "tell"
+  else if (string.search("THANK YOU") != -1 || string.search("THANKS") != -1 || string.search("TY") != -1)
     intent = "thanks" 
   else if (string === "OH" || string === "EH" || string === "AH" || string == "OK")
     intent = "filler"
@@ -200,8 +202,7 @@ findKey: function(string){
     intent = "boss";
   else if (string.search("PHUC") != -1)
     intent = "phuc"
-  else if (string.search("TELL") != -1 && string.search("THAT") != -1)
-    intent = "tell"
+  
   
   // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)
   //   intent = "no intent"
@@ -254,7 +255,7 @@ findProfName: function(str){
 },
 
 findMessage: function(str){
-  str = str.substring(string.indexOf("THAT") + 5);
+  str = str.substring(str.indexOf("THAT") + 5);
   return str;
 }
 }
