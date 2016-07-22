@@ -629,11 +629,19 @@ var execute = (sender, msg , sessionId ) => {
 
    case "prof":
    console.log("getting lecturers for " + sessions[sessionId].module);
-   nus.getLecturers(sessions[sessionId].module).then(function(res, rej) {
-    for (var i=0; i<res.length; i++) {
-     fbMessage(sender,res[i]);
-   }
- })
+   fbMessage(sender, "Lectures for module " + sessions[sessionId].module, function(err, data) {
+     nus.getLecturers(sessions[sessionId].module).then(function(res, rej) {
+      for (var i=0; i<res.length; i++) {
+       fbMessage(sender,res[i]);
+     }
+     if (res.length == 0) {
+       fbMessage(sender,"Sorry dude. Can't find any lecturers.");
+     }
+   })
+   });
+
+   delete sessions[sessionId];
+
    break;
 
 
@@ -736,26 +744,26 @@ console.log("Waiting for other messages");
 
     case "prof":
 
-      var profName = utility.findProfName(msg);
-      console.log(profName);
+    var profName = utility.findProfName(msg);
+    console.log(profName);
 
 
-      var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
+    var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
 
-      request(scrapeurl, function(error, response, html){
-        if(!error){
-         console.log('requesting ...');
-         var $ = cheerio.load(html);
+    request(scrapeurl, function(error, response, html){
+      if(!error){
+       console.log('requesting ...');
+       var $ = cheerio.load(html);
 
 
 
-         $('tr[height="20"]').filter(function(){
+       $('tr[height="20"]').filter(function(){
 
-          var data = $(this);
-          var fullNameOfProf = data.next().children().first().text(); 
-          var designation = data.next().children().first().next().text();
-          var department = data.next().children().first().next().next().text(); 
-          var emailcoded = utility.trimCodedEmail(data.next().children().first().next().next().next().text());
+        var data = $(this);
+        var fullNameOfProf = data.next().children().first().text(); 
+        var designation = data.next().children().first().next().text();
+        var department = data.next().children().first().next().next().text(); 
+        var emailcoded = utility.trimCodedEmail(data.next().children().first().next().next().next().text());
         // console.log(emailcoded);
 
 
@@ -766,9 +774,10 @@ console.log("Waiting for other messages");
          fbMessage(sender,'We cannot find the professor detail. Is it really professor' + profName + '?');
        } 
      })
-       }
-     }) ;
-    
+     }
+   }) ;
+    delete sessions[sessionId];
+
 
     break;
 
