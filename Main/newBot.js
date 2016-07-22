@@ -728,7 +728,16 @@ console.log("Waiting for other messages");
 
     case "prof":
 
-    if (sessions[sessionId].module == -1) {
+    if (sessions[sessionId].module != -1)
+    {
+      console.log("getting lecturers for " + sessions[sessionId].module);
+      nus.getLecturers(sessions[sessionId].module).then(function(res, rej) {
+        for (var i=0; i<res.length; i++) {
+         fbMessage(sender,res[i]);
+       }
+     })
+    }
+    else {
       var profName = utility.findProfName(msg);
       console.log(profName);
 
@@ -761,14 +770,6 @@ console.log("Waiting for other messages");
      })
        }
      }) ;
-    }
-    else {
-      console.log("getting lecturers for " + sessions[sessionId].module);
-      nus.getLecturers(sessions[sessionId].module).then(function(res, rej) {
-        for (var i=0; i<res.length; i++) {
-         fbMessage(sender,res[i]);
-       }
-     })
     }
 
     break;
