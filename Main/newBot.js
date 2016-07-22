@@ -637,10 +637,11 @@ var execute = (sender, msg , sessionId ) => {
      if (res.length == 0) {
        fbMessage(sender,"Sorry dude. Can't find any lecturers.");
      }
+     delete sessions[sessionId];
    })
    });
 
-   delete sessions[sessionId];
+
 
    break;
 
