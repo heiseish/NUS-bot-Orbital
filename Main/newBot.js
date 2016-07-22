@@ -16,7 +16,9 @@ var utility = require('../models/utility.js');
 var LanguageDetect = require('languagedetect');
 var lngDetector = new LanguageDetect();
 var graph = require('fbgraph');
-graph.setAccessToken(FB_PAGE_TOKEN);
+
+
+
 graph.setVersion("2.6");
 
 
@@ -44,6 +46,7 @@ const FB_PAGE_TOKEN = process.env.FB_PAGE_TOKEN;
 if (!FB_PAGE_TOKEN) {
   throw new Error('missing FB_PAGE_TOKEN');
 }
+graph.setAccessToken(FB_PAGE_TOKEN);
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 
 //Create Session
