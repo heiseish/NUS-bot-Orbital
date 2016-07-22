@@ -666,12 +666,12 @@ var execute = (sender, msg , sessionId ) => {
     var i = 0;
     console.log(res);
     function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
-      messageToSend = "AcadYear: " + res[i].AcadYear + ", S: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
-    ", LB: " + res[i].LowestBid + ", LSB: " + res[i].LowestSuccessfulBid + ", HB: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
-      i++;
+      messageToSend = "Year: " + res[i].AcadYear + ", Sem: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
+      ", Low: " + res[i].LowestBid + ", Success: " + res[i].LowestSuccessfulBid + ", High: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
       if (i<res.length) {
         corsRecursiveMessage();
       }
+      i++;
     });
   }
   corsRecursiveMessage();
@@ -695,13 +695,14 @@ nus.getDescription(nus.findModule(msg)).then(function(res){
   var strArray = res.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
   var i = 0;
   function recursiveMessage() { fbMessage(sender, strArray[i], function (err, data) {
-    i++;
     if (i<strArray.length) {
       recursiveMessage();
     }
     else if (i==strArray.length) {
       fbMessage(sender, 'Find out more @ https://nusmods.com/modules/' + nus.findModule(msg));
     }
+    i++;
+
   });
 }
 recursiveMessage();
