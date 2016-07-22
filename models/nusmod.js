@@ -200,6 +200,8 @@ findKey: function(string){
     intent = "boss";
   else if (string.search("PHUC") != -1)
     intent = "phuc"
+  else if (string.search("TELL") != -1 && string.search("THAT") != -1)
+    intent = "tell"
   
   // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)
   //   intent = "no intent"
@@ -246,8 +248,13 @@ findClass: function(modulecode){
 },
 
 findProfName: function(str){
-  str = str.substring(str.indexOf("PROF") + 5)
+  str = str.substring(str.indexOf("PROF") + 5);
   console.log(str);
+  return str;
+},
+
+findMessage: function(str){
+  str = str.substring(string.indexOf("THAT") + 5);
   return str;
 }
 }
