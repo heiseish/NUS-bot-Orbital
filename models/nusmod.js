@@ -254,10 +254,5 @@ findClass: function(modulecode){
 },
 
 
-findMessage: function(str){
-  console.log(str);
-  str = str.substring(str.indexOf("THAT") + 5);
-  console.log(str);
-  return str;
-}
+
 }

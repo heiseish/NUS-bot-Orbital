@@ -25,8 +25,11 @@
 // 		}
 // 	}
 // })
-var utility = require('../models/utility.js');
+// var utility = require('../models/utility.js');
 
-utility.getUserName('1139314066115187').then(function(res){
-	console.log(res);
-})
+// utility.getUserName('1139314066115187').then(function(res){
+// 	console.log(res);
+// })
+str = "tell quang that bobo";
+str = str.substring(str.indexOf("THAT")+5);
+console.log(str);

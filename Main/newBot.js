@@ -724,10 +724,10 @@ console.log("Waiting for other messages");
   	case "tell":
   	if (sessions[sessionId].fbid === '1139314066115187'){
   		fbMessage(sender,'Got it!');
-  		fbMessage('1340406605974646',"Giang says '" + nus.findMessage(msg.toLowerCase()) + "'.")
+  		fbMessage('1340406605974646',"Giang says '" + utility.findMessage(msg.toLowerCase()) + "'.")
   	} else if (sessions[sessionId].fbid === '1340406605974646'){
   		fbMessage(sender,'Alrighty!');
-  		fbMessage('1139314066115187', "Quang says '" + nus.findMessage(msg.toLowerCase()) + "'.")
+  		fbMessage('1139314066115187', "Quang says '" + utility.findMessage(msg.toLowerCase()) + "'.")
   	}
   	break;
 
@@ -744,7 +744,7 @@ console.log("Waiting for other messages");
      }).then(function(){
        delete sessions[sessionId];
      })
-     
+
      break;
 
 

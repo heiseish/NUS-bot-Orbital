@@ -65,6 +65,12 @@ module.exports = {
 		console.log(str);
 		return str;
 	},
+	findMessage: function(str){
+		console.log(str);
+		str = str.substring(str.indexOf("that") + 5);
+		console.log(str);
+		return str;
+	},
 
 	splitString: function(s, cb){
 		
