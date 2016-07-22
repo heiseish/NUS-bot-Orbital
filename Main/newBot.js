@@ -450,9 +450,9 @@ app.post('/fb', (req, res) => {
     //Merge and Execute Text
     else if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase();
-     if (event.message.From.Name){
-    	console.log(event.message.From.Name);
-    }
+    //  if (event.message.From.Name){
+    // 	console.log(event.message.From.Name);
+    // }
      // console.log(lngDetector.detect('This is a test.')[0][0]);
      // console.log(lngDetector.detect(text,1));
      
