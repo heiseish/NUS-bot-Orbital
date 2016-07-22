@@ -2,6 +2,7 @@ var http = require('http');
 var path = require('path');
 var modules = path.resolve(__dirname, '../Resources/modules.json');
 var classroom = path.resolve(__dirname,'../Resources/classroom.json');
+var moduleInfo = path.resolve(__dirname,'../Resources/moduleInformation.json');
 var fs = require("fs");
 
 var d = new Date();
@@ -63,22 +64,31 @@ module.exports = {
         reject(modulecode);
       }
     });
+  },
+
+  getLecturers: function (modulecode){
+    return new Promise( function(response,reject){
 
 
+      var body = fs.readFileSync(moduleInfo);
+      var result = JSON.parse(body);
+
+      var i = 0;
+      while (i < result.length){
+        if (result[i].ModuleCode === modulecode){
+          console.log(result[i].Lecturers)
+          response(result[i].Lecturers);
+        };
+        i++;
+      };
+      if (i === result.length){
+        reject(modulecode);
+      }
+    });
   },
 
   getDescription: function (modulecode){
     return new Promise( function(response,reject){
-     // var url = 'http://api.nusmods.com/' + ay + '/1/modules.json';
-     // console.log("day");
-     // http.get(url, function(res){
-     //   var body = '';
-
-     //   res.on('data', function(chunk){
-     //     body += chunk;
-     //   });
-
-     //   res.on('end', function(){
 
       var body = fs.readFileSync(modules);
       var result = JSON.parse(body);
@@ -101,16 +111,7 @@ module.exports = {
 
   getCors: function (modulecode){
     return new Promise( function(response,reject){
-     // var url = 'http://api.nusmods.com/' + ay + '/1/modules.json';
-     // console.log("day");
-     // http.get(url, function(res){
-     //   var body = '';
 
-     //   res.on('data', function(chunk){
-     //     body += chunk;
-     //   });
-
-     //   res.on('end', function(){
       var fs = require("fs");
       var body = fs.readFileSync(modules);
       var result = JSON.parse(body);
