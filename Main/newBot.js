@@ -333,6 +333,11 @@ const fbMessageWithSchool3 = (recipientId, msg, cb) => {
               'type': 'postback',
               'title': 'Arts & Social Sciences',
               'payload': 'Arts & Social Sciences'
+            },
+            {
+              'type': 'postback',
+              'title': 'School Of Computing',
+              'payload': 'School Of Computing'
             }
 
             ]
@@ -801,9 +806,9 @@ var execute = (sender, msg , sessionId ) => {
    case "cors":
    console.log("cors");
    fbMessage(sender, "Which faculty are you from?", function(err, data) {
-      fbMessageWithSchool1(sender, 'These');
-      fbMessageWithSchool2(sender, 'or these?');
-      fbMessageWithSchool3(sender, 'or this?');
+      fbMessageWithSchool1(sender, 'These?');
+      fbMessageWithSchool2(sender, 'These?');
+      fbMessageWithSchool3(sender, 'These?');
 
    });
    
