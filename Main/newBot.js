@@ -800,7 +800,7 @@ var execute = (sender, msg , sessionId ) => {
 
    case "cors":
    console.log("cors");
-   fbMessage(sender, "Which faculty are you from?", cb(err, data) {
+   fbMessage(sender, "Which faculty are you from?", function(err, data) {
       fbMessageWithSchool1(sender, '');
       fbMessageWithSchool2(sender, '');
       fbMessageWithSchool3(sender, '');
