@@ -925,7 +925,7 @@ var execute = (sender, msg , sessionId ) => {
         if (department){
          fbMessage(sender,'Full Name: ' + fullNameOfProf + ', ' + designation + ', Department: ' + department + ', Email: ' + emaildecoded); 
        } else {
-         fbMessage(sender,'We cannot find the professor detail. Is it really professor' + profName + '?');
+         fbMessage(sender,'We cannot find the professor detail. Is it really professor ' + profName + '?');
        } 
      })
    }
@@ -1004,7 +1004,7 @@ else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1)
         fbMessage(sender, result[1].subpods[0].text);
       }
       else {
-        fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
+        fbMessage(sender, "Hmmm interesting. Let me google that for you http://lmgtfy.com/?q=" + sessions[sessionId].text +  " You can always type --help for help.");
       }
     });
 
