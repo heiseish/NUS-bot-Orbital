@@ -646,9 +646,9 @@ app.post('/fb', (req, res) => {
           function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
             messageToSend = "Year: " + res[i].AcadYear + ", Sem: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
             ", Low: " + res[i].LowestBid + ", Success: " + res[i].LowestSuccessfulBid + ", High: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
-            if (i<res.length) {
-              corsRecursiveMessage();
+            if (i<res.length-1) {
               i++;
+              corsRecursiveMessage();
             }
 
           });
