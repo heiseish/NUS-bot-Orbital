@@ -659,7 +659,7 @@ app.post('/fb', (req, res) => {
         fbMessage(sender, "Sorry. I cannot find any data for your faculty");
       }}).catch(function(err){
        console.log(err);
-       var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+       var messageToSend = "Sorry we cannot find your module or there is no data for your faculty. Re-enter the module?";
        fbMessage(sender,messageToSend);
        console.log("Waiting for other messages");
      });
