@@ -642,8 +642,9 @@ app.post('/fb', (req, res) => {
           ", Low: " + res[i].LowestBid + ", Success: " + res[i].LowestSuccessfulBid + ", High: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
           if (i<res.length) {
             corsRecursiveMessage();
+            i++;
           }
-          i++;
+          
         });
       }
       corsRecursiveMessage();
@@ -799,12 +800,13 @@ var execute = (sender, msg , sessionId ) => {
 
    case "cors":
    console.log("cors");
-   fbMessageWithSchool1(sender, "Which faculty are you from?", function(err, data) {
-    fbMessageWithSchool2(sender, "", function(err, data) {
-      fbMessageWithSchool3(sender, "");
-    });
-  });
+   fbMessage(sender, "Which faculty are you from?", cb(err, data) {
+      fbMessageWithSchool1(sender, '');
+      fbMessageWithSchool2(sender, '');
+      fbMessageWithSchool3(sender, '');
 
+   });
+   
 
 
 
