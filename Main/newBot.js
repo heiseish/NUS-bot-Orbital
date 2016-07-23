@@ -234,7 +234,7 @@ const fbMessageWithButtons_US2 = (recipientId, msg, val3, val4, cb) => {
   });
 };
 
-const fbMessageWithSchool1 = (recipientId, msg, "School Of Business", "Engineering", "Science", cb) => {
+const fbMessageWithSchool1 = (recipientId, msg, cb) => {
   const opts = {
     form: {
       recipient: {
@@ -275,7 +275,7 @@ const fbMessageWithSchool1 = (recipientId, msg, "School Of Business", "Engineeri
   });
 };
 
-const fbMessageWithSchool2 = (recipientId, msg, "Law", "Joint Multi-Disciplinary Programmes", "School Of Design And Environment", cb) => {
+const fbMessageWithSchool2 = (recipientId, msg, cb) => {
   const opts = {
     form: {
       recipient: {
@@ -316,7 +316,7 @@ const fbMessageWithSchool2 = (recipientId, msg, "Law", "Joint Multi-Disciplinary
   });
 };
 
-const fbMessageWithSchool3 = (recipientId, msg, "Arts & Social Sciences", cb) => {
+const fbMessageWithSchool3 = (recipientId, msg, cb) => {
   const opts = {
     form: {
       recipient: {
