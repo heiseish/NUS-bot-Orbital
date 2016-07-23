@@ -642,23 +642,28 @@ app.post('/fb', (req, res) => {
         var messageToSend;
         var i = 0;
         console.log(res);
-        function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
-          messageToSend = "Year: " + res[i].AcadYear + ", Sem: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
-          ", Low: " + res[i].LowestBid + ", Success: " + res[i].LowestSuccessfulBid + ", High: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
-          if (i<res.length) {
-            corsRecursiveMessage();
-            i++;
-          }
-          
-        });
+        if (res[i] != null) {
+          function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
+            messageToSend = "Year: " + res[i].AcadYear + ", Sem: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
+            ", Low: " + res[i].LowestBid + ", Success: " + res[i].LowestSuccessfulBid + ", High: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
+            if (i<res.length) {
+              corsRecursiveMessage();
+              i++;
+            }
+
+          });
+        }
+        corsRecursiveMessage();
       }
-      corsRecursiveMessage();
-    }).catch(function(err){
-     console.log(err);
-     var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
-     fbMessage(sender,messageToSend);
-     console.log("Waiting for other messages");
-   });
+      else {;
+        fbMessage(sender, "Sorry. I cannot find any data for your faculty");
+      }}).catch(function(err){
+       console.log(err);
+       var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+       fbMessage(sender,messageToSend);
+       console.log("Waiting for other messages");
+     });
+
 
     delete sessions[sessionId];
 
@@ -806,11 +811,11 @@ var execute = (sender, msg , sessionId ) => {
    case "cors":
    console.log("cors");
    fbMessage(sender, "Which faculty are you from?", function(err, data) {
-      fbMessageWithSchool1(sender, 'These?');
-      fbMessageWithSchool2(sender, 'These?');
-      fbMessageWithSchool3(sender, 'These?');
+    fbMessageWithSchool1(sender, 'These?');
+    fbMessageWithSchool2(sender, 'These?');
+    fbMessageWithSchool3(sender, 'These?');
 
-   });
+  });
    
 
 
