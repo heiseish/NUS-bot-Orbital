@@ -647,6 +647,7 @@ app.post('/fb', (req, res) => {
         });
       }
       corsRecursiveMessage();
+    });
 
       delete sessions[sessionId];
 
