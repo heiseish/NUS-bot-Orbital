@@ -238,6 +238,120 @@ const fbMessageWithButtons_US2 = (recipientId, msg, val3, val4, cb) => {
   });
 };
 
+const fbMessageWithSchool1 = (recipientId, msg, "School Of Business", "Engineering", "Science", cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'template',
+          'payload': {
+            'template_type': 'button',
+            'text': msg,
+            'buttons': [
+            {
+              'type': 'postback',
+              'title': 'School Of Business',
+              'payload': 'School Of Business'
+            },
+            {
+              'type': 'postback',
+              'title': 'Engineering',
+              'payload': 'Engineering'
+            },
+            {
+              'type': 'postback',
+              'title': 'Science',
+              'payload': 'Science'
+            }
+            ]
+          }
+        },
+      },
+    },
+  };
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
+const fbMessageWithSchool2 = (recipientId, msg, "Law", "Joint Multi-Disciplinary Programmes", "School Of Design And Environment", cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'template',
+          'payload': {
+            'template_type': 'button',
+            'text': msg,
+            'buttons': [
+            {
+              'type': 'postback',
+              'title': 'Law',
+              'payload': 'Law'
+            },
+            {
+              'type': 'postback',
+              'title': 'Joint Multi-Disciplinary Programmes',
+              'payload': 'Joint Multi-Disciplinary Programmes'
+            },
+            {
+              'type': 'postback',
+              'title': 'School Of Design And Environment',
+              'payload': 'School Of Design And Environment'
+            }
+            ]
+          }
+        },
+      },
+    },
+  };
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
+const fbMessageWithSchool3 = (recipientId, msg, "Arts & Social Sciences", cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'template',
+          'payload': {
+            'template_type': 'button',
+            'text': msg,
+            'buttons': [
+            {
+              'type': 'postback',
+              'title': 'Arts & Social Sciences',
+              'payload': 'Arts & Social Sciences'
+            }
+
+            ]
+          }
+        },
+      },
+    },
+  };
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
 const fbMessageWithButtons_location = (recipientId, msg, location, cb) => {
   const opts = {
     form: {
@@ -520,6 +634,31 @@ app.post('/fb', (req, res) => {
       }
       break;
 
+      case 'cors':
+      var userFaculty = event.postback.payload;
+      console.log("User faculty is " + userFaculty);
+
+      nus.getCors(sessions[sessionId].module, userFaculty).then(function(res){
+
+        var messageToSend;
+        var i = 0;
+        console.log(res);
+        function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
+          messageToSend = "Year: " + res[i].AcadYear + ", Sem: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
+          ", Low: " + res[i].LowestBid + ", Success: " + res[i].LowestSuccessfulBid + ", High: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
+          if (i<res.length) {
+            corsRecursiveMessage();
+          }
+          i++;
+        });
+      }
+      corsRecursiveMessage();
+
+      delete sessions[sessionId];
+
+      console.log("Waiting for other messages");
+
+      break;
 
       default:
 
@@ -660,38 +799,26 @@ var execute = (sender, msg , sessionId ) => {
 
    case "cors":
    console.log("cors");
-   nus.getCors(nus.findModule(msg), "Science").then(function(res){
-
-    var messageToSend;
-    var i = 0;
-    console.log(res);
-    function corsRecursiveMessage() { fbMessage(sender, messageToSend, function (err, data) {
-      messageToSend = "Year: " + res[i].AcadYear + ", Sem: " + res[i].Semester + ", Round: " + res[i].Round + ", Quota: " + res[i].Quota + ", Bidders: " + res[i].Bidders + 
-      ", Low: " + res[i].LowestBid + ", Success: " + res[i].LowestSuccessfulBid + ", High: " + res[i].HighestBid + ", Type: " + res[i].StudentAcctType;
-      if (i<res.length) {
-        corsRecursiveMessage();
-      }
-      i++;
+   fbMessageWithSchool1(sender, "Which faculty are you from?", function(err, data) {
+    fbMessageWithSchool2(sender, "", function(err, data) {
+      fbMessageWithSchool3(sender, "");
     });
-  }
-  corsRecursiveMessage();
-
-  console.log("Waiting for other messages");
+  });
 
 
 
-}).then(function(){
- delete sessions[sessionId];
-}).catch(function(err){
- console.log(err);
- var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
- fbMessage(sender,messageToSend);
- console.log("Waiting for other messages");
-});
-break;
+ }).then(function(){
+   delete sessions[sessionId];
+ }).catch(function(err){
+   console.log(err);
+   var messageToSend = "Sorry we cannot find your module. Re-enter the module?";
+   fbMessage(sender,messageToSend);
+   console.log("Waiting for other messages");
+ });
+ break;
 
-case "description":
-nus.getDescription(nus.findModule(msg)).then(function(res){
+ case "description":
+ nus.getDescription(nus.findModule(msg)).then(function(res){
   var strArray = res.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
   var i = 0;
   function recursiveMessage() { fbMessage(sender, strArray[i], function (err, data) {
