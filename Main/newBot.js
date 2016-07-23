@@ -801,9 +801,9 @@ var execute = (sender, msg , sessionId ) => {
    case "cors":
    console.log("cors");
    fbMessage(sender, "Which faculty are you from?", function(err, data) {
-      fbMessageWithSchool1(sender, '');
-      fbMessageWithSchool2(sender, '');
-      fbMessageWithSchool3(sender, '');
+      fbMessageWithSchool1(sender, 'faculty');
+      fbMessageWithSchool2(sender, 'faculty');
+      fbMessageWithSchool3(sender, 'faculty');
 
    });
    
