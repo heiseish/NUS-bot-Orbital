@@ -209,7 +209,7 @@ findKey: function(string){
     intent = "phuc";
   else if (string.search("TELL ME A JOKE") != -1)
     intent = "joke";
-  else if (string.search("HTTP") != -1)
+  else if (string.search("HTTP") != -1 || string.search("www") != -1)
     intent = "url";
   
   

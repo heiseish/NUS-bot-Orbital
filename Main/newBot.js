@@ -753,7 +753,7 @@ function remind (date, msg){
   });
 };
 
-//function decipher prof email
+
 
 
 
@@ -820,7 +820,7 @@ var execute = (sender, msg , sessionId ) => {
 
    case "prof":
    console.log("getting lecturers for " + sessions[sessionId].module);
-   fbMessage(sender, "Lectures for module " + sessions[sessionId].module, function(err, data) {
+   fbMessage(sender, "Lecturers for module " + sessions[sessionId].module, function(err, data) {
      nus.getLecturers(sessions[sessionId].module).then(function(res, rej) {
       for (var i=0; i<res.length; i++) {
        fbMessage(sender,res[i]);
@@ -1009,6 +1009,7 @@ var execute = (sender, msg , sessionId ) => {
     else fbMessage(sender,results);
 
   });
+  delete sessions[sessionId];
   break;
 
    case "delve":
@@ -1029,6 +1030,7 @@ var execute = (sender, msg , sessionId ) => {
 
    case "url":
    fbMessage(sender,'Sorry mate. I cannot handle URLs for now');
+   delete sessions[sessionId];
    break;
 
    case "boss":
@@ -1044,6 +1046,7 @@ var execute = (sender, msg , sessionId ) => {
 
    case "location":
    fbMessageQuickReply(sender,'Is it in NUS?');
+   delete sessions[sessionId];
    break;
 
 
