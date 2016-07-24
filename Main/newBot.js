@@ -802,12 +802,12 @@ var execute = (sender, msg , sessionId ) => {
       // var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ", it will last for " + utility.convertPeriod(result.ExamDuration) +
       // " and it will be held in " + result.ExamVenue + ".";
       var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ". Location is not yet known. Will update you someday :))";
-     fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
-     console.log("Waiting for other messages");
+      fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
+      console.log("Waiting for other messages");
 
 
 
-   }).then(function(){
+    }).then(function(){
      delete sessions[sessionId];
    }).catch(function(err){
      console.log(err);
@@ -908,46 +908,46 @@ var execute = (sender, msg , sessionId ) => {
        //  "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
        //  "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
        //  "4. Include 'remind me' to alert whe bidding round comes");
-  }).then(function(){
-   delete sessions[sessionId];
- })
+     }).then(function(){
+       delete sessions[sessionId];
+     })
 
-  break;
-
-
-  case "module":
-  fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
-  delete sessions[sessionId];
-  break;
-
-  case "intro":
-  fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
-    ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
-  delete sessions[sessionId];
-  break;
-
-  case "prof":
-
-  var profName = utility.findProfName(msg);
-  console.log(profName);
+     break;
 
 
-  var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
+     case "module":
+     fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
+     delete sessions[sessionId];
+     break;
 
-  request(scrapeurl, function(error, response, html){
-    if(!error){
-     console.log('requesting ...');
-     var $ = cheerio.load(html);
+     case "intro":
+     fbMessage(sender,'My name is N.A.B bot (not-a-bot Bot). I was created by Orbital project team Vietboi, which comprises masters Giang and Quang. I was created to serve you. Yes YOU!' + 
+      ' Try to ask questions as specific as you can. Thank you and I wish you a nice day:)');
+     delete sessions[sessionId];
+     break;
+
+     case "prof":
+
+     var profName = utility.findProfName(msg);
+     console.log(profName);
+
+
+     var scrapeurl = 'https://myaces.nus.edu.sg/staffsearch/search?actionParam=staff&SearchValue=' + profName;
+
+     request(scrapeurl, function(error, response, html){
+      if(!error){
+       console.log('requesting ...');
+       var $ = cheerio.load(html);
 
 
 
-     $('tr[height="20"]').filter(function(){
+       $('tr[height="20"]').filter(function(){
 
-      var data = $(this);
-      var fullNameOfProf = data.next().children().first().text(); 
-      var designation = data.next().children().first().next().text();
-      var department = data.next().children().first().next().next().text(); 
-      var emailcoded = utility.trimCodedEmail(data.next().children().first().next().next().next().text());
+        var data = $(this);
+        var fullNameOfProf = data.next().children().first().text(); 
+        var designation = data.next().children().first().next().text();
+        var department = data.next().children().first().next().next().text(); 
+        var emailcoded = utility.trimCodedEmail(data.next().children().first().next().next().next().text());
         // console.log(emailcoded);
 
 
@@ -958,51 +958,53 @@ var execute = (sender, msg , sessionId ) => {
          fbMessage(sender,'We cannot find the professor detail. Is it really professor ' + profName + '?');
        } 
      })
-   }
- }) ;
-  delete sessions[sessionId];
+     }
+   }) ;
+     delete sessions[sessionId];
+     break;
 
+     case "insult":
+     fbMessage(sender,"So sad... I'm starting to like you :'(")
+     delete sessions[sessionId];
+     break;
 
-  break;
+     case "insult2":
+     var warningLines = ["Last warning ", "Watch your language or I'm gonna ban you for good ","Don't mess with me ", "??! ", "How about NO??! ", "You went too far ", "Why are you so spiteful? Why can't you just be nice to people?", "You're pitiful ", "I pity you "];
+     utility.getUserName(sender).then(function(res){
+      fbMessage(sender,warningLines[(Math.floor(Math.random() * 9))] + res);
 
-  case "insult":
-  fbMessage(sender,"So sad... I'm starting to like you :'(")
-   delete sessions[sessionId];
-   break;
+    }).then(function(){
+     delete sessions[sessionId];
+   })
+    break;
 
-   case "insult2":
-   var warningLines = ["Last warning ", "Watch your language or I'm gonna ban you for good ","Don't mess with me ", "??! ", "How about NO??! "];
-   utility.getUserName(sender).then(function(res){
-      fbMessage(sender,warningLines[(Math.floor(Math.random() * 5))] + res);
-     
-  }).then(function(){
-   delete sessions[sessionId];
- })
-   break;
+    case "sorry":
+    fbMessage(sender,'Alright, I forgive you. But dont take my kindness for granted');
+    break;
 
-   case "thanks":
-   fbMessage(sender,'It is my pleasure as always');
-   delete sessions[sessionId];
-   break;
+    case "thanks":
+    fbMessage(sender,'It is my pleasure as always');
+    delete sessions[sessionId];
+    break;
 
-   case "phuc":
-   fbMessage(sender,'Phuc confirm gay lah. True whatt');
-   fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
-   delete sessions[sessionId];
-   break;
+    case "phuc":
+    fbMessage(sender,'Phuc confirm gay lah. True whatt');
+    fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
+    delete sessions[sessionId];
+    break;
 
-   case "commend":
-   fbMessage(sender,'Thanks mate. I really appreciate it');
-   delete sessions[sessionId];
-   break;
+    case "commend":
+    fbMessage(sender,'Thanks mate. I really appreciate it');
+    delete sessions[sessionId];
+    break;
 
-   case "joke":
-   var jokeurl = {
-    'url': 'http://www.ajokeaday.com/jokes/random'
-  }
-  async.retry(5,function(cb,results){
-    request(this.url, function(error, response, html){
-      if(!error){
+    case "joke":
+    var jokeurl = {
+      'url': 'http://www.ajokeaday.com/jokes/random'
+    }
+    async.retry(5,function(cb,results){
+      request(this.url, function(error, response, html){
+        if(!error){
         // fbMessage(sender,'Alright here goes')
         var $ = cheerio.load(html);
         $('.jd-body').filter(function(){
@@ -1016,53 +1018,53 @@ var execute = (sender, msg , sessionId ) => {
         })
       }
     }) 
-  }.bind(jokeurl),function(err,results){
-    if (err) fbMessage(sender,'Hmm I am not in the mood to tell a joke right now. Come back later.')
-    else fbMessage(sender,results);
+    }.bind(jokeurl),function(err,results){
+      if (err) fbMessage(sender,'Hmm I am not in the mood to tell a joke right now. Come back later.')
+        else fbMessage(sender,results);
 
-  });
-  delete sessions[sessionId];
-  break;
+    });
+    delete sessions[sessionId];
+    break;
 
-   case "delve":
-   fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
-    '.' + os.EOL +
-    '.' + os.EOL +
-    '.' + os.EOL +
-    '.' + os.EOL + 
-    '.' + os.EOL +
-    '.' + os.EOL +
-    'Just KIDDING LEL not gonna tell you xD');
-   delete sessions[sessionId];
-   break;
+    case "delve":
+    fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL +
+      '.' + os.EOL + 
+      '.' + os.EOL +
+      '.' + os.EOL +
+      'Just KIDDING LEL not gonna tell you xD');
+    delete sessions[sessionId];
+    break;
 
-   case "remind":
-   fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
-   break;
+    case "remind":
+    fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
+    break;
 
-   case "url":
-   fbMessage(sender,'Sorry mate. I cannot handle URLs for now');
-   delete sessions[sessionId];
-   break;
+    case "url":
+    fbMessage(sender,'Sorry mate. I cannot handle URLs for now');
+    delete sessions[sessionId];
+    break;
 
-   case "boss":
-   fbMessage(sender, "He is the creator of this bot. Gossshhh!");
-   delete sessions[sessionId];
+    case "boss":
+    fbMessage(sender, "He is the creator of this bot. Gossshhh!");
+    delete sessions[sessionId];
 
-   case "filler":
-   delete sessions[sessionId];
-   break;
-
-
-   case "location":
-   fbMessageQuickReply(sender,'Is it in NUS?');
-   delete sessions[sessionId];
-   break;
+    case "filler":
+    delete sessions[sessionId];
+    break;
 
 
-   default:
-   fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
- }
+    case "location":
+    fbMessageQuickReply(sender,'Is it in NUS?');
+    delete sessions[sessionId];
+    break;
+
+
+    default:
+    fbMessage(sender,'There is either no module indicated or we cannot find that module. Please try again');
+  }
 }
 
 else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
