@@ -980,6 +980,7 @@ var execute = (sender, msg , sessionId ) => {
 
     case "sorry":
     fbMessage(sender,'Alright, I forgive you. But dont take my kindness for granted');
+    delete sessions[sessionId];
     break;
 
     case "thanks":
