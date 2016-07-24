@@ -209,6 +209,8 @@ findKey: function(string){
     intent = "phuc";
   else if (string.search("TELL ME A JOKE") != -1)
     intent = "joke";
+  else if (string.search("HTTP") != -1)
+    intent = "url";
   
   
   // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)

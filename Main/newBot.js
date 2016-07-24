@@ -95,6 +95,31 @@ const fbMessage = (recipientId, msg, cb) => {
   });
 };
 
+const fbMessageWithFile = (recipientId, url, cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'file',
+          'payload': {
+            "url": url,
+          }
+          
+        },
+      },
+    },
+  };
+  
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
 const fbMessageWithPicture = (recipientId, url, cb) => {
   const opts = {
     form: {
@@ -198,6 +223,8 @@ const fbMessageWithButtons_US1 = (recipientId, msg, val1, val2, cb) => {
     }
   });
 };
+
+
 
 const fbMessageWithButtons_US2 = (recipientId, msg, val3, val4, cb) => {
   const opts = {
@@ -563,11 +590,12 @@ app.post('/fb', (req, res) => {
             fbMessageWithPicture(sender, result[1].subpods[0].image)
           }
           else {
-            fbMessage(sender, "Hmmm interesting. Let me think about it. You can always type --help for help.");
+            fbMessage(sender, "I have no idea where that is X_X");
           }
         }); 
       } else {
         fbMessageWithButtons_location(sender, "Click on the button below to find location", sessions[sessionId].location);
+        fbMessageWithFile(sender,'http://www.nus.edu.sg/campusmap/pdf/nus_kent_ridge_coloured.pdf')
       }
       delete sessions[sessionId];
     }
@@ -963,7 +991,7 @@ var execute = (sender, msg , sessionId ) => {
   async.retry(5,function(cb,results){
     request(this.url, function(error, response, html){
       if(!error){
-        fbMessage(sender,'Alright here goes')
+        // fbMessage(sender,'Alright here goes')
         var $ = cheerio.load(html);
         $('.jd-body').filter(function(){
 
@@ -997,6 +1025,10 @@ var execute = (sender, msg , sessionId ) => {
 
    case "remind":
    fbMessageQuickReply(sender,'Do you wish me to remind you when each bidding round starts?');
+   break;
+
+   case "url":
+   fbMessage(sender,'Sorry mate. I cannot handle URLs for now');
    break;
 
    case "boss":
