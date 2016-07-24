@@ -206,7 +206,9 @@ findKey: function(string){
   else if (string.search("QUANG") != -1 || string.search("GIANG") != -1)
     intent = "boss";
   else if (string.search("PHUC") != -1)
-    intent = "phuc"
+    intent = "phuc";
+  else if (string.search("TELL ME A JOKE") != -1)
+    intent = "joke";
   
   
   // else if (string.search("EXAM") == -1 && string.search("CLASS") == -1)

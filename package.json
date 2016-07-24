@@ -17,6 +17,7 @@
   "repository": "https://github.com/heiseish/Orbital2",
   "author": "Dao Truong Giang & Tran Viet Quang",
   "dependencies": {
+    "async": "^2.0.1",
     "body-parser": "^1.15.2",
     "cheerio": "latest",
     "express": "^4.14.0",

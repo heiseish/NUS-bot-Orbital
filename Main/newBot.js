@@ -15,6 +15,7 @@ const cheerio = require('cheerio');
 var utility = require('../models/utility.js');
 var LanguageDetect = require('languagedetect');
 var lngDetector = new LanguageDetect();
+const async = require('async');
 
 
 
@@ -954,6 +955,33 @@ var execute = (sender, msg , sessionId ) => {
    case "commend":
    fbMessage(sender,'Thanks mate. I really appreciate it');
    break;
+
+   case "joke":
+   var jokeurl = {
+    'url': 'http://www.ajokeaday.com/jokes/random'
+  }
+  async.retry(5,function(cb,results){
+    request(this.url, function(error, response, html){
+      if(!error){
+        fbMessage(sender,'Alright here goes')
+        var $ = cheerio.load(html);
+        $('.jd-body').filter(function(){
+
+          var data = $(this);
+          var joke = data.text();
+          joke = joke.substring(20,joke.length - 19);
+          if (joke.length < 320) cb(null,joke);
+          else cb(new Error("Text longer than 320 characters"));
+
+        })
+      }
+    }) 
+  }.bind(jokeurl),function(err,results){
+    if (err) fbMessage(sender,'Hmm I am not in the mood to tell a joke right now. Come back later.')
+    else fbMessage(sender,results);
+
+  });
+  break;
 
    case "delve":
    fbMessage(sender,'I was created by programming language PASCAL.' + os.EOL +
