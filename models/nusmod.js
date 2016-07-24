@@ -170,13 +170,15 @@ findKey: function(string){
   var intent;
 
   if (string.search("TELL") != -1 && string.search("THAT") != -1)
-    intent = "tell"
+    intent = "tell";
   else if (string.search("THANK YOU") != -1 || string.search("THANKS") != -1 || string.search("TY") != -1)
-    intent = "thanks" 
+    intent = "thanks";
   else if (string === "OH" || string === "EH" || string === "AH" || string == "OK")
-    intent = "filler"
-  else if ((string.search("FUCK") != -1 || string.search("STUPID") != -1 || string.search("CHEAPO") != -1 || string.search("NOOB") != -1) && (string.search("YOU") != -1 || string.search("BOT") != -1) || string.search("FUCK") == 0 || string.search("STUPID") == 0 || string.search("NOOB") == 0)
-    intent = "insult"
+    intent = "filler";
+  else if ((string.search("IDIOT") != -1 || string.search("STUPID") != -1 || string.search("CHEAPO") != -1 || string.search("NOOB") != -1) && (string.search("YOU") != -1 || string.search("BOT") != -1) || string.search("FUCK") == 0 || string.search("STUPID") == 0 || string.search("NOOB") == 0)
+    intent = "insult";
+  else if (string.search("FUCK") != -1 || string.search("STFU") != -1 || string.search("SHUT THE FUCK UP") != -1 || string.search("DKM") != -1 )
+    intent = "insult2";
   else if (string === "AWESOME" || string === "NICE" || string === "SMART" || ((string.search("AWESOME") != -1 || string.search("SMART") != -1 || string.search("NICE") != -1) && (string.search("BOT") != -1  || string.search("YOU") != -1)))
     intent = "commend";
   else if (string.search("WHERE IS") != -1 || string.search("LOCATION OF") != -1)
@@ -189,7 +191,7 @@ findKey: function(string){
     intent = "intro";
   else if (string.search("HOW") != -1 && (string.search('MADE YOU') != -1 || (string.search('CREATED YOU') != -1) || (string.search('YOU CREATED') != -1)))
     intent = "delve";
-  else if (string === "HI" || string.search("HI BOT") != -1  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1 || string.search("WHAT DO YOU DO") != -1)
+  else if (string === "HI" || string.search("HI BOT") != -1  || string.search("HELLO") != -1 || string.search("--HELP") != -1 || string.search("WHAT CAN YOU DO") !== -1 || string.search("WHAT DO YOU DO") != -1 || string === "YO")
     intent = "help";
   else if (string.search("EXAM") != -1)
     intent = "exam";

@@ -917,6 +917,7 @@ var execute = (sender, msg , sessionId ) => {
 
   case "module":
   fbMessage(sender,"Which module are you referring to and what do you want to know about it ( exam / class). You can always type --help for help <3");
+  delete sessions[sessionId];
   break;
 
   case "intro":
@@ -969,6 +970,16 @@ var execute = (sender, msg , sessionId ) => {
    delete sessions[sessionId];
    break;
 
+   case "insult2":
+   var warningLines = ["Last warning ", "Watch your language or I'm gonna ban you for good ","Don't mess with me ", "??! ", "How about NO??! "];
+   utility.getUserName(sender).then(function(res){
+      fbMessage(sender,warningLines[(Math.floor(Math.random() * 5))] + res);
+     
+  }).then(function(){
+   delete sessions[sessionId];
+ })
+   break;
+
    case "thanks":
    fbMessage(sender,'It is my pleasure as always');
    delete sessions[sessionId];
@@ -982,6 +993,7 @@ var execute = (sender, msg , sessionId ) => {
 
    case "commend":
    fbMessage(sender,'Thanks mate. I really appreciate it');
+   delete sessions[sessionId];
    break;
 
    case "joke":
@@ -1041,8 +1053,6 @@ var execute = (sender, msg , sessionId ) => {
    delete sessions[sessionId];
    break;
 
-
-   break;
 
    case "location":
    fbMessageQuickReply(sender,'Is it in NUS?');
