@@ -1,5 +1,5 @@
 # NUS-Convenient Facebook Bot
-[![Our Facebook Page](http://1.bp.blogspot.com/-8HRjfKK-isU/T2TsOxi-PqI/AAAAAAAABZ0/vrhtQz80Fzs/s200/how+to+add+facebook+like+button+for+blogger+just+under+below+blogger+blogspot+titles.jpg)](https://www.facebook.com/nusfunbot)
+[![Our Facebook Page](http://imgh.us/facebook-app-logo.svg)](https://www.facebook.com/nusfunbot)
 
 
 ## Who will benefit from our project?
