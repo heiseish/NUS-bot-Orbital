@@ -16,6 +16,7 @@ Update 1: Basic requests about modules, classes, and location in NUS have been h
 
 Update 2: Bot is online with an online mongodb database.
           Requests about modules: classes, exam, description, cors history, lectures are handled.
+          Requests about location inside and outside NUS are handled.
           Requests about professors' details and emails are handled.
           Reminder for CORS bidding is integrated.
 
