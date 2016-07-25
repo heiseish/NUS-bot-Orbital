@@ -1,4 +1,4 @@
-# Orbital-Convenient Facebook Bot
+# NUS-Convenient Facebook Bot
 
 # Who will benefit from our project?
 Nus Students and maybe others.
@@ -14,13 +14,22 @@ At first, for our MVP, we will just create a facebook bot that is able to handle
 
 Update 1: Basic requests about modules, classes, and location in NUS have been handled. Our next improved MVP will be able to search for teachers' info (eg. modules taught and email), and maybe bidding queries
 
+Update 2: Bot is online with an online mongodb database.
+          Requests about modules: classes, exam, description, cors history, lectures are handled.
+          Requests about location inside and outside NUS are handled.
+          Requests about professors' details and emails are handled.
+          Reminder for CORS bidding is integrated.
+
 # How you plan to achieve the end product through the remaining sprints:
 We have the echo bot and the AI engine. Next step should be to connect them with nusmods api to get the modules database.
 
 Update 1: Module database has been retrieved from nusmods and basic modules queries have been handle. By the next milestone, hopefully we can finish the MVP
 
+Update 2: We are thinking of a new way of doing confessions. Users will be able to anonymously message any fb account through our bot. They can also broadcast the message to anyone who subscribed to our bot
 # Draft out a clear plan for satisfying the Orbital requirements in terms of time contributed for the remaining sprints.
 After finishing the MVP, we will test our bot with students from NUS. Only then we'll know what to do to perfect our product.
+
+Update: We have already launch our test with the nus students. Bugs are identified and fixed everyday and we are intensively working on new features. I think we are on a good track
 
 
 
