@@ -14,8 +14,8 @@ At first, for our MVP, we will just create a facebook bot that is able to handle
 
 Update 1: Basic requests about modules, classes, and location in NUS have been handled. Our next improved MVP will be able to search for teachers' info (eg. modules taught and email), and maybe bidding queries
 
-Update 2: Bot is online with an online mongodb database
-          Requests about modules: classes, exam, description, cors history, lectures are handled
+Update 2: Bot is online with an online mongodb database.
+          Requests about modules: classes, exam, description, cors history, lectures are handled.
           Requests about professors' details and emails are handled.
           Reminder for CORS bidding is integrated.
 
