@@ -1,7 +1,11 @@
 # NUS-Convenient Facebook Bot
+[![Our Facebook Page](https://www.facebook.com/nusfunbot/)](http://imgh.us/facebook-app-logo.svg)
+
 
 ## Who will benefit from our project?
+```
 Nus Students and maybe others.
+```
 
 ## Define what is the problem you are solving?
 Thousands of basic requests are sent to nus teachers and offices everyday though some of the info can certainly be found on the nus website. This creates a wastage of time and effort of the teachers and offices even when the same question is repeated by different student. Hence, using NLP and modern messaging platform, this bot we are creating will be able to answer these requests and automatically respond to the sender saving time for offices and teacher to respond to more personal questions.
