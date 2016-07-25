@@ -503,13 +503,13 @@ remind(roundopen3b,'Open Bidding Round 3B has started and it will end at 3pm lat
 var roundclosed3b = new Date(2016, 7, 10, 15, 0, 0);
 remind(roundclosed3b,'Closed Bidding Round 3B has started and it will end at 5pm later');
 
-var test = new Date(2016, 6, 24, 23, 40, 0);
-remind(test,'Hi Boss. Your reminder test is finally successful');
-var reminderTest = schedule.scheduleJob(test, function(){
-  fbMessage('1139314066115187','Hi bosses, reminder test is successful. Im gonna remind everyone tmr');
-  fbMessage('1340406605974646','Hi bosses, reminder test is successful. Im gonna remind everyone tmr');
+// var test = new Date(2016, 6, 24, 23, 40, 0);
 
-});
+// var reminderTest = schedule.scheduleJob(test, function(){
+//   fbMessage('1139314066115187','Hi bosses, reminder test is successful. Im gonna remind everyone tmr');
+//   fbMessage('1340406605974646','Hi bosses, reminder test is successful. Im gonna remind everyone tmr');
+
+// });
 
 
 

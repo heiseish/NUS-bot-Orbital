@@ -171,7 +171,7 @@ findKey: function(string){
 
   if (string.search("TELL") != -1 && string.search("THAT") != -1)
     intent = "tell";
-  else if (string.search("THANK YOU") != -1 || string.search("THANKS") != -1 || string.search("TY") != -1)
+  else if (string.search("THANK YOU") != -1 || string.search("THANKS") != -1 || string === "TY" || string.search("TKS") != -1)
     intent = "thanks";
   else if (string === "OH" || string === "EH" || string === "AH" || string == "OK")
     intent = "filler";
@@ -179,7 +179,7 @@ findKey: function(string){
     intent = "insult";
   else if (string.search("FUCK") != -1 || string.search("STFU") != -1 || string.search("SHUT THE FUCK UP") != -1 || string.search("DKM") != -1 )
     intent = "insult2";
-  else if (string === "AWESOME" || string === "NICE" || string === "SMART" || ((string.search("AWESOME") != -1 || string.search("SMART") != -1 || string.search("NICE") != -1) && (string.search("BOT") != -1  || string.search("YOU") != -1)))
+  else if (string === "AWESOME" || string === "NICE" || string.search("GOOD JOB") != -1 || string === "SMART" || ((string.search("AWESOME") != -1 || string.search("SMART") != -1 || string.search("NICE") != -1) && (string.search("BOT") != -1  || string.search("YOU") != -1)))
     intent = "commend";
   else if (string.search("SORRY") != -1)
     intent = "sorry";
