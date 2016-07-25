@@ -801,13 +801,14 @@ var execute = (sender, msg , sessionId ) => {
      //IF the intent is exam
      case "exam":
      var result = {};
-     nus.getModule(nus.findModule(msg)).then(function(res){
-      result = Object.assign(result,res);
-      console.log(result);
+     nus.getModuleExam(nus.findModule(msg)).then(function(res){
+      // result = Object.assign(result,res);
+      // console.log(result);
       // var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ", it will last for " + utility.convertPeriod(result.ExamDuration) +
       // " and it will be held in " + result.ExamVenue + ".";
-      var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ". Location is not yet known. Will update you someday :))";
-      fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
+      // var messageToSend = "The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(result.ExamDate) + ". Location is not yet known. Will update you someday :))";
+      // fbMessageWithButtons_TY(sender,messageToSend,'Thank you', 'Help me');
+      fbMessage(sender,"The time of examination of module " + nus.findModule(msg) + " is at " + utility.convertTime(res) + '. Venue will be updated later. Please by patient');
       console.log("Waiting for other messages");
 
 

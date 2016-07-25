@@ -3,6 +3,7 @@ var path = require('path');
 var modules = path.resolve(__dirname, '../Resources/modules.json');
 var classroom = path.resolve(__dirname,'../Resources/classroom.json');
 var moduleInfo = path.resolve(__dirname,'../Resources/moduleInformation.json');
+var moduleExam = path.resolve(__dirname,'../Resources/moduleExamDates.json');
 var fs = require("fs");
 
 var d = new Date();
@@ -35,7 +36,7 @@ var findModule =function(string){
 };
 
 module.exports = {
-  getModule: function (modulecode){
+  getModuleExam: function (modulecode){
     return new Promise( function(response,reject){
      // var url = 'http://api.nusmods.com/' + ay + '/1/modules.json';
      // console.log("day");
@@ -48,15 +49,15 @@ module.exports = {
 
      //   res.on('end', function(){
 
-      var body = fs.readFileSync(modules);
+      var body = fs.readFileSync(moduleExam);
       var result = JSON.parse(body);
 
       var i = 0;
       while (i < result.length){
         if (result[i].ModuleCode === modulecode){
 
-          delete result[i].CorsBiddingStats;
-          response(result[i]);
+          
+          response(result[i].ExamDate);
         };
         i++;
       };
