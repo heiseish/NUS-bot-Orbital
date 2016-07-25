@@ -1,5 +1,5 @@
 # NUS-Convenient Facebook Bot
-[![Our Facebook Page](http://imgh.us/facebook-app-logo.svg)](https://www.facebook.com/nusfunbot)
+[![Our Facebook Page](http://leoraw.com/zib/wp-content/uploads/2010/08/like_fb.gif)](https://www.facebook.com/nusfunbot)
 
 
 ## Who will benefit from our project?
