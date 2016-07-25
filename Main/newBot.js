@@ -70,7 +70,7 @@ const findOrCreateSession = (fbid) => {
 // See the Send API reference
 // https://developers.facebook.com/docs/messenger-platform/send-api-reference
 const fbReq = request.defaults({
-  uri: 'https://graph.facebook.com/me/messages',
+  uri: 'https://graph.facebook.com/v2.6/me/messages',
   method: 'POST',
   json: true,
   qs: { access_token: FB_PAGE_TOKEN },
@@ -86,7 +86,9 @@ const fbMessage = (recipientId, msg, cb) => {
       message: {
         text: msg,
       },
+      // "sender_action":"typing_on"
     },
+
   };
   fbReq(opts, (err, resp, data) => {
     if (cb) {
@@ -105,7 +107,7 @@ const fbMessageWithFile = (recipientId, url, cb) => {
         'attachment': {
           'type': 'file',
           'payload': {
-            "url": url,
+            'url': url,
           }
           
         },
@@ -120,7 +122,34 @@ const fbMessageWithFile = (recipientId, url, cb) => {
   });
 };
 
-const fbMessageWithPicture = (recipientId, url, cb) => {
+const fbMessageWithPictureMap = (recipientId, url, cb) => {
+  const opts = {
+    form: {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        'attachment': {
+          'type': 'image',
+          'payload': {
+            "url": url,
+          }
+          // 'stickerID': '144885022352431'
+        },
+      },
+    },
+  };
+  
+
+ 
+  fbReq(opts, (err, resp, data) => {
+    if (cb) {
+      cb(err || data.error && data.error.message, data);
+    }
+  });
+};
+
+const fbMessageWithPictureRandom = (recipientId, url, cb) => {
   const opts = {
     form: {
       recipient: {
@@ -442,6 +471,73 @@ const fbMessageQuickReply = (recipientId, msg, cb) => {
     }
   });
 };
+const fbReqWelcome = request.defaults({
+  uri: 'https://graph.facebook.com/v2.6/me/thread_settings',
+  method: 'POST',
+  json: true,
+  qs: { access_token: FB_PAGE_TOKEN },
+  headers: {'Content-Type': 'application/json'},
+});
+
+// const fbWelcomeText = (cb) => {
+//   const opts = {
+//     form: {
+//       "setting_type":"greeting",
+//       "greeting":{
+//         "text":"Hello there!"
+//       },
+//     }
+//   };
+
+//   fbReqWelcome(opts, (err, resp, data) => {
+//     if (cb) {
+//       cb(err || data.error && data.error.message, data);
+//     }
+//   });
+// };
+
+// fbWelcomeText(function(err,res){
+//   if (err) console.log(err);
+//     // else console.log("done");
+// });
+
+// const fbPersistentMenu = (cb) => {
+//   const opts = {
+//     form: {
+//       "setting_type" : "call_to_actions",
+//       "thread_state" : "existing_thread",
+//       "call_to_actions":[
+//       {
+//         "type":"postback",
+//         "title":"Help",
+//         "payload":"nay"
+//       },
+//       {
+//         "type":"web_url",
+//         "title":"Visit page",
+//         "payload":"https://www.facebook.com/nusfunbot/"
+//       },
+//       {
+//         "type":"web_url",
+//         "title":"Ask admin",
+//         "url":"https://www.facebook.com/vietquang.tran/"
+//       }
+//       ]
+//     }
+//   };
+
+//   fbReqWelcome(opts, (err, resp, data) => {
+//     if (cb) {
+//       cb(err || data.error && data.error.message, data);
+//     }
+//   });
+// };
+
+// fbPersistentMenu(function(err,res){
+//   if (err) console.log(err);
+//     else console.log(res);
+// });
+
 //---> End Messenger API code
 
 // Starting our webserver and putting it all together
@@ -533,7 +629,7 @@ app.post('/fb', (req, res) => {
 
       switch (event.message.attachments[0].type){
         case 'image':
-        fbMessageWithPicture(sender, 'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
+        fbMessageWithPictureRandom(sender, 'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
         break;
 
         case 'video':
@@ -590,9 +686,9 @@ app.post('/fb', (req, res) => {
         wolfram.query(sessions[sessionId].text, function (err, result) {
           console.log("Getting answer from Wolfram ...");
           if (err) throw err;
-          console.log(result[1].subpods[0]);
+          // console.log(result[1].subpods[0]);
           if (result[1] != null){
-            fbMessageWithPicture(sender, result[1].subpods[0].image)
+            fbMessageWithPictureMap(sender, result[1].subpods[0].image)
           }
           else {
             fbMessage(sender, "I have no idea where that is X_X");
@@ -600,7 +696,7 @@ app.post('/fb', (req, res) => {
         }); 
       } else {
         fbMessageWithButtons_location(sender, "Click on the button below to find location", sessions[sessionId].location);
-        fbMessageWithFile(sender,'http://www.nus.edu.sg/campusmap/pdf/nus_kent_ridge_coloured.pdf')
+        fbMessageWithPictureMap(sender,'http://i.imgur.com/B64fp8L.jpg')
       }
       delete sessions[sessionId];
     }
@@ -609,14 +705,13 @@ app.post('/fb', (req, res) => {
     //Merge and Execute Text
     else if (event.message && event.message.text) {
      let text = event.message.text.toUpperCase();
-    //  if (event.message.From.Name){
-    // 	console.log(event.message.From.Name);
+    // check if intent is location
+    // if (sessions[sessionId].intent === "location" || sessions[sessionId].intent === "remind"){
+    //   delete sessions[sessionId];
     // }
-     // console.log(lngDetector.detect('This is a test.')[0][0]);
-     // console.log(lngDetector.detect(text,1));
-     
-    // lang detector cannot handle small words??!! Xin chao bannot be handled.
-    // Check to see if array is empty
+      
+    // const sessionId = findOrCreateSession(sender);
+
 
     merge(sender, text, sessionId);
     execute(sender, text,sessionId);
@@ -996,7 +1091,7 @@ var execute = (sender, msg , sessionId ) => {
 
     case "phuc":
     fbMessage(sender,'Phuc confirm gay lah. True whatt');
-    fbMessageWithPicture(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
+    fbMessageWithPictureRandom(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
     delete sessions[sessionId];
     break;
 
@@ -1065,7 +1160,6 @@ var execute = (sender, msg , sessionId ) => {
 
     case "location":
     fbMessageQuickReply(sender,'Is it in NUS?');
-    delete sessions[sessionId];
     break;
 
 
