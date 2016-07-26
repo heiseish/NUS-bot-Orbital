@@ -27,6 +27,7 @@
     "languagedetect": "^1.1.1",
     "mongodb": "^2.2.1",
     "mongoose": "^4.5.4",
+    "natural": "^0.4.0",
     "newrelic": "^1.28.3",
     "node-fetch": "^1.5.3",
     "node-schedule": "^1.1.1",
