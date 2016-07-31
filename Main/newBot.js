@@ -998,8 +998,16 @@ var execute = (sender, msg , sessionId ) => {
   		fbMessage('1139314066115187', "Quang says '" + utility.findMessage(msg.toLowerCase()) + "'.")
   	}
   	break;
-
     case "help":
+    fbMessage(sender,"Hi, I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
+        "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+        "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
+        "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
+        "4. Include 'remind me' to alert whe bidding round comes");
+    delete sessions[sessionId];
+    break;
+
+    case "greeting":
     utility.getUserName(sender).then(function(res){
       console.log(res);
       console.log("here");
