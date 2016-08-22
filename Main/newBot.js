@@ -1145,28 +1145,21 @@ var execute = (sender, msg , sessionId ) => {
     fbMessageWithPictureRandom(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
     delete sessions[sessionId];
     break;
-    
-    case "cs1010":
-    if (msg.search("ASK") === 0) {
-      console.log("inside loop:" + msg);
-      fbMessage(sender, "What question would you like to ask about CS1010?")
-    }
-    else {
-      getAnswer(msg, function(err, answer) {
-        if (err) {
-          console.log(err);
-          fbMessage(sender, err.message);
-          Question.createQuestion(sessions[sessionId].text, function(err) {
-            if (err) console.log(err);
-          })
-        } else {
-          fbMessage(sender, answer,function(){
-            fbMessageQuickReply(sender,'Is this the answer your looking for?');
-          });
-        }
-      })
-    }
 
+    case "cs1010":
+    getAnswer(msg, function(err, answer) {
+      if (err) {
+        console.log(err);
+        fbMessage(sender, err.message);
+        Question.createQuestion(sessions[sessionId].text, function(err) {
+          if (err) console.log(err);
+        })
+      } else {
+        fbMessage(sender, answer,function(){
+          fbMessageQuickReply(sender,'Is this the answer your looking for?');
+        });
+      }
+    })
     break;
 
 
