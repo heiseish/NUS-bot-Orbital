@@ -820,27 +820,7 @@ app.post('/fb', (req, res) => {
 
       break;
 
-      case 'cs1010':
-      if (msg.search(" ASK ") != -1) {
-        fbMessage(sender, "What question would you like to ask about CS1010?")
-      }
-      else {
-        getAnswer(msg, function(err, answer) {
-          if (err) {
-            console.log(err);
-            fbMessage(sender, err.message);
-            Question.createQuestion(sessions[sessionId].text, function(err) {
-              if (err) console.log(err);
-            })
-          } else {
-            fbMessage(sender, answer,function(){
-              fbMessageQuickReply(sender,'Is this the answer your looking for?');
-            });
-          }
-        })
-      }
-
-      break;
+      
 
       default:
 
@@ -1143,6 +1123,28 @@ var execute = (sender, msg , sessionId ) => {
     fbMessage(sender,'Phuc confirm gay lah. True whatt');
     fbMessageWithPictureRandom(sender,'http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg?1296494117');
     delete sessions[sessionId];
+    break;
+
+    case 'cs1010':
+    if (msg.search(" ASK ") != -1) {
+      fbMessage(sender, "What question would you like to ask about CS1010?")
+    }
+    else {
+      getAnswer(msg, function(err, answer) {
+        if (err) {
+          console.log(err);
+          fbMessage(sender, err.message);
+          Question.createQuestion(sessions[sessionId].text, function(err) {
+            if (err) console.log(err);
+          })
+        } else {
+          fbMessage(sender, answer,function(){
+            fbMessageQuickReply(sender,'Is this the answer your looking for?');
+          });
+        }
+      })
+    }
+
     break;
 
     case "commend":
