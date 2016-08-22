@@ -1126,7 +1126,7 @@ var execute = (sender, msg , sessionId ) => {
     break;
 
     case 'cs1010':
-    if (msg.search(" ASK ") != -1) {
+    if (msg.search("ASK ") === 0) {
       fbMessage(sender, "What question would you like to ask about CS1010?")
     }
     else {
