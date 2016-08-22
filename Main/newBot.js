@@ -979,6 +979,7 @@ var execute = (sender, msg , sessionId ) => {
       if (err) {
         console.log(err);
         fbMessage(sender, err.message);
+        fbMessage(sender, "We will send this question to the professors")
         Question.createQuestion(sessions[sessionId].text, function(err) {
           if (err) console.log(err);
         })
