@@ -1126,7 +1126,8 @@ var execute = (sender, msg , sessionId ) => {
     break;
 
     case 'cs1010':
-    if (msg.search("ASK ") === 0) {
+    if (msg.search("ASK") === 0) {
+      console.log("inside loop:" + msg);
       fbMessage(sender, "What question would you like to ask about CS1010?")
     }
     else {
