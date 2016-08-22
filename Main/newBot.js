@@ -1,6 +1,6 @@
 'use strict';
 
-require('newrelic');
+// require('newrelic');
 var User = require('../models/model.js');
 const bodyParser = require('body-parser');
 const express = require('express');
