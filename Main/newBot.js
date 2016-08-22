@@ -15,6 +15,9 @@ const cheerio = require('cheerio');
 var utility = require('../models/utility.js');
 var LanguageDetect = require('languagedetect');
 var lngDetector = new LanguageDetect();
+var updateQuestionArray = require('../updateQuestionArray.js');
+var getAnswer = require('../getAnswer.js');
+var Question = require('../models/Question.js');
 const async = require('async');
 
 
@@ -141,7 +144,7 @@ const fbMessageWithPictureMap = (recipientId, url, cb) => {
   };
   
 
- 
+
   fbReq(opts, (err, resp, data) => {
     if (cb) {
       cb(err || data.error && data.error.message, data);
@@ -564,40 +567,40 @@ app.get('/fb', (req, res) => {
 
 // NOTES: date is set in GMT 0+, not Singapore time
 
-var round0 = new Date(2016, 6, 21, 9, 15, 0);
-remind(round0,'Open Bidding Round 0 has started and it will end at 5pm tomorrow');
-var roundopen1a = new Date(2016, 6, 25, 9, 0, 0);
-remind(roundopen1a,'Open Bidding Round 1A has started and it will end at 1pm tomorrow');
-var roundclosed1a = new Date(2016, 6, 26, 13, 0, 0);
-remind(roundclosed1a,'Closed Bidding Round 1A has started and it will end at 5pm later');
-var roundopen1b = new Date(2016, 6, 27, 8, 30, 0);
-remind(roundopen1b,'Open Bidding Round 1B will be starting in 30 mins and it will end at 3pm later');
-var roundclosed1b = new Date(2016, 6, 27, 14, 30, 0);
-remind(roundclosed1b,'Closed Bidding Round 1B will be starting in 30 mins and it will end at 5pm later');
-var roundopen1c = new Date(2016, 6, 28, 8, 30, 0);
-remind(roundopen1c,'Open Bidding Round 1C will be starting in 30 mins and it will end at 3pm tomorrow');
-var roundclosed1c = new Date(2016, 6, 29, 12, 30, 0);
-remind(roundclosed1c,'Closed Bidding Round 1C will be starting in 30 mins and it will end at 5pm later');
+// var round0 = new Date(2016, 6, 21, 9, 15, 0);
+// remind(round0,'Open Bidding Round 0 has started and it will end at 5pm tomorrow');
+// var roundopen1a = new Date(2016, 6, 25, 9, 0, 0);
+// remind(roundopen1a,'Open Bidding Round 1A has started and it will end at 1pm tomorrow');
+// var roundclosed1a = new Date(2016, 6, 26, 13, 0, 0);
+// remind(roundclosed1a,'Closed Bidding Round 1A has started and it will end at 5pm later');
+// var roundopen1b = new Date(2016, 6, 27, 8, 30, 0);
+// remind(roundopen1b,'Open Bidding Round 1B will be starting in 30 mins and it will end at 3pm later');
+// var roundclosed1b = new Date(2016, 6, 27, 14, 30, 0);
+// remind(roundclosed1b,'Closed Bidding Round 1B will be starting in 30 mins and it will end at 5pm later');
+// var roundopen1c = new Date(2016, 6, 28, 8, 30, 0);
+// remind(roundopen1c,'Open Bidding Round 1C will be starting in 30 mins and it will end at 3pm tomorrow');
+// var roundclosed1c = new Date(2016, 6, 29, 12, 30, 0);
+// remind(roundclosed1c,'Closed Bidding Round 1C will be starting in 30 mins and it will end at 5pm later');
 
-var roundopen2a1 = new Date(2016, 7, 1, 8, 30, 0);
-remind(roundopen2a1,'Open Bidding Round 2A will be starting in 30 mins and it will end at 8.59am tomorrow');
-var roundopen2a2 = new Date(2016, 7, 3, 8, 30, 0);
-remind(roundopen2a2,'Open Bidding Round 2A will be starting in 30 mins and it will end at 1pm later');
-var roundclosed2a = new Date(2016, 7, 3, 12, 30, 0);
-remind(roundclosed2a,'Closed Bidding Round 2A will be starting in 30 mins and it will end at 5pm later');
-var roundopen2b = new Date(2016, 7, 4, 8, 30, 0);
-remind(roundopen2b,'Open Bidding Round 2B will be starting in 30 mins and it will end at 3pm later');
-var roundclosed2b = new Date(2016, 7, 4, 14, 30, 0);
-remind(roundclosed2b,'Closed Bidding Round 2B will be starting in 30 mins and it will end at 5pm tomorrow');
+// var roundopen2a1 = new Date(2016, 7, 1, 8, 30, 0);
+// remind(roundopen2a1,'Open Bidding Round 2A will be starting in 30 mins and it will end at 8.59am tomorrow');
+// var roundopen2a2 = new Date(2016, 7, 3, 8, 30, 0);
+// remind(roundopen2a2,'Open Bidding Round 2A will be starting in 30 mins and it will end at 1pm later');
+// var roundclosed2a = new Date(2016, 7, 3, 12, 30, 0);
+// remind(roundclosed2a,'Closed Bidding Round 2A will be starting in 30 mins and it will end at 5pm later');
+// var roundopen2b = new Date(2016, 7, 4, 8, 30, 0);
+// remind(roundopen2b,'Open Bidding Round 2B will be starting in 30 mins and it will end at 3pm later');
+// var roundclosed2b = new Date(2016, 7, 4, 14, 30, 0);
+// remind(roundclosed2b,'Closed Bidding Round 2B will be starting in 30 mins and it will end at 5pm tomorrow');
 
-var roundopen3a = new Date(2016, 7, 8, 8, 30, 0);
-remind(roundopen3a,'Open Bidding Round 3A will be starting in 30 mins and it will end at 3pm later');
-var roundclosed3a = new Date(2016, 7, 8, 14, 30, 0);
-remind(roundclosed3a,'Closed Bidding Round 3A will be starting in 30 mins and it will end at 5pm later');
-var roundopen3b = new Date(2016, 7, 10, 8, 30, 0);
-remind(roundopen3b,'Open Bidding Round 3B will be starting in 30 mins and it will end at 3pm later');
-var roundclosed3b = new Date(2016, 7, 10, 14, 30, 0);
-remind(roundclosed3b,'Closed Bidding Round 3B will be starting in 30 mins and it will end at 5pm later');
+// var roundopen3a = new Date(2016, 7, 8, 8, 30, 0);
+// remind(roundopen3a,'Open Bidding Round 3A will be starting in 30 mins and it will end at 3pm later');
+// var roundclosed3a = new Date(2016, 7, 8, 14, 30, 0);
+// remind(roundclosed3a,'Closed Bidding Round 3A will be starting in 30 mins and it will end at 5pm later');
+// var roundopen3b = new Date(2016, 7, 10, 8, 30, 0);
+// remind(roundopen3b,'Open Bidding Round 3B will be starting in 30 mins and it will end at 3pm later');
+// var roundclosed3b = new Date(2016, 7, 10, 14, 30, 0);
+// remind(roundclosed3b,'Closed Bidding Round 3B will be starting in 30 mins and it will end at 5pm later');
 
 // var test = new Date(2016, 6, 24, 23, 40, 0);
 
@@ -700,6 +703,23 @@ app.post('/fb', (req, res) => {
       }
       delete sessions[sessionId];
     }
+    else if (sessions[sessionId].intent === 'cs1010'){
+      if (event.message.quick_reply.payload === 'yes') {
+        fbMessage(sender,'Great',updateQuestionArray(sessions[sessionId].text,function(err){
+          if (err) console.log(err);
+        }))
+        delete sessions[sessionId];
+      } else {
+        fbMessage(sender,'We will redirect this question to a professor. Please wait and check back for answer again',Question.createQuestion(sessions[sessionId].text,function(err){
+          if (err) {
+            console.log(err);
+            delete sessions[sessionId];
+          }
+          else delete sessions[sessionId];
+
+        }))
+      }
+    }
   }
 
     //Merge and Execute Text
@@ -709,7 +729,7 @@ app.post('/fb', (req, res) => {
     // if (sessions[sessionId].intent === "location" || sessions[sessionId].intent === "remind"){
     //   delete sessions[sessionId];
     // }
-      
+
     // const sessionId = findOrCreateSession(sender);
 
 
@@ -794,16 +814,38 @@ app.post('/fb', (req, res) => {
      });
 
 
-    delete sessions[sessionId];
+      delete sessions[sessionId];
 
-    console.log("Waiting for other messages");
+      console.log("Waiting for other messages");
 
-    break;
+      break;
 
-    default:
+      case 'cs1010':
+      if (msg.search(" ASK ") != -1) {
+        fbMessage(sender, "What question would you like to ask about CS1010?")
+      }
+      else {
+        getAnswer(msg, function(err, answer) {
+          if (err) {
+            console.log(err);
+            fbMessage(sender, err.message);
+            Question.createQuestion(sessions[sessionId].text, function(err) {
+              if (err) console.log(err);
+            })
+          } else {
+            fbMessage(sender, answer,function(){
+              fbMessageQuickReply(sender,'Is this the answer your looking for?');
+            });
+          }
+        })
+      }
 
-    if (event.postback.payload === 'yay' ) {
-      fbMessage(sender,'It is my pleasure!');
+      break;
+
+      default:
+
+      if (event.postback.payload === 'yay' ) {
+        fbMessage(sender,'It is my pleasure!');
 
         // console.log('session terminated');
       } else {
@@ -1000,10 +1042,10 @@ var execute = (sender, msg , sessionId ) => {
   	break;
     case "help":
     fbMessage(sender,"Hi, I'm a NUS bot. Ask me with the following formats: " + os.EOL + 
-        "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
-        "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
-        "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
-        "4. Include 'remind me' to alert whe bidding round comes");
+      "1. To know about class location of any module today, include 'class <modulecode>'" + os.EOL +
+      "2. To know about exam detail, include 'exam <modulecode>'" + os.EOL +
+      "3. To know about cors bidding stats, include 'cors <modulecode>'" + os.EOL +
+      "4. Include 'remind me' to alert whe bidding round comes");
     delete sessions[sessionId];
     break;
 
@@ -1178,7 +1220,7 @@ var execute = (sender, msg , sessionId ) => {
 
 else if (sessions[sessionId].intent == null && sessions[sessionId].module == -1){
   if (lngDetector.detect(sessions[sessionId].text).length > 0){
-    if (lngDetector.detect(sessions[sessionId].text)[0][0] === 'english') {
+    if (lngDetector.detect(sessions[sessionId].text)[0][0] !== 'vietnamese') {
     //Wolfram API here    
     wolfram.query(sessions[sessionId].text, function (err, result) {
       console.log("Getting answer from Wolfram ...");

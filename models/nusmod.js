@@ -208,6 +208,8 @@ findKey: function(string){
     intent = "module";
   else if (string.search("DESCRIPTION") != -1 || string.search('CONTENT') != -1 || ((string.search('TELL') != -1 || string.search('WHAT') != -1) && findModule(string) != -1))
     intent = "description";
+  else if (string.search("ASK") != -1 && string.search("CS1010") != -1)
+    intent = "cs1010";
   else if ((string.search("EXAM") != -1 && string.search("CLASS") != -1) || ((findModule(string) != -1) &&  (string.search("EXAM") === -1) && (string.search("CLASS") === -1) && (string.search("CORS") === -1))) // need to add more to prevent abuse
     intent = "unsure";
   else if (string.search("QUANG") != -1 || string.search("GIANG") != -1)
