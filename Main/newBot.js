@@ -969,13 +969,34 @@ var execute = (sender, msg , sessionId ) => {
 
   });
    
+   case "cs1010":
+   if (msg.search("ASK") === 0) {
+    console.log("inside loop:" + msg);
+    fbMessage(sender, "What question would you like to ask about CS1010?")
+  }
+  else {
+    getAnswer(msg, function(err, answer) {
+      if (err) {
+        console.log(err);
+        fbMessage(sender, err.message);
+        Question.createQuestion(sessions[sessionId].text, function(err) {
+          if (err) console.log(err);
+        })
+      } else {
+        fbMessage(sender, answer,function(){
+          fbMessageQuickReply(sender,'Is this the answer your looking for?');
+        });
+      }
+    })
+  }
+
+  break;
 
 
+  break;
 
-   break;
-
-   case "description":
-   nus.getDescription(nus.findModule(msg)).then(function(res){
+  case "description":
+  nus.getDescription(nus.findModule(msg)).then(function(res){
     var strArray = res.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
     var i = 0;
     function recursiveMessage() { fbMessage(sender, strArray[i], function (err, data) {
@@ -1125,28 +1146,7 @@ var execute = (sender, msg , sessionId ) => {
     delete sessions[sessionId];
     break;
 
-    case 'cs1010':
-    if (msg.search("ASK") === 0) {
-      console.log("inside loop:" + msg);
-      fbMessage(sender, "What question would you like to ask about CS1010?")
-    }
-    else {
-      getAnswer(msg, function(err, answer) {
-        if (err) {
-          console.log(err);
-          fbMessage(sender, err.message);
-          Question.createQuestion(sessions[sessionId].text, function(err) {
-            if (err) console.log(err);
-          })
-        } else {
-          fbMessage(sender, answer,function(){
-            fbMessageQuickReply(sender,'Is this the answer your looking for?');
-          });
-        }
-      })
-    }
 
-    break;
 
     case "commend":
     fbMessage(sender,'Thanks mate. I really appreciate it');
