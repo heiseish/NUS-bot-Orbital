@@ -1,6 +1,6 @@
 // console.log("require utility successfully");
 var graph = require('fbgraph');
-const FB_PAGE_TOKEN = 'EAAQQyI1rDcUBAFzB4pMIYOBnQbFIuJvlmV68jqxithqRgoaYP90ZBZC629JezhLF57eSMew6PPtx8qv6DdelrLSAryPeZAIiGFz93ylWZB7yoJFQJZAQFZBxdZB5c57ZArcq0aJ5VS2qbokFE9nEsZBusdHsLumgHVmA34EzN2mQwawZDZD';
+const FB_PAGE_TOKEN = process.env.FB_PAGE_TOKEN;
 graph.setAccessToken(FB_PAGE_TOKEN);
 graph.setVersion("2.6");
 

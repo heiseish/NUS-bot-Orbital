@@ -1,4 +1,4 @@
-var Question = require('./models/Question.js');
+var Question = require('../models/Question.js');
 var compareQuestion = require('./compareQuestions');
 
 // Check if user's question has existed in database

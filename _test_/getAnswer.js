@@ -1,4 +1,4 @@
-var Question = require('./models/Question.js');
+var Question = require('../models/Question.js');
 
 
 var getAnswer = (questionText, cb) => {

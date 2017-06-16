@@ -4,7 +4,8 @@ var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
 // Connection URL. This is where your mongodb server is running.
-var mongourl = 'mongodb://giang:Madara04@ds035664.mlab.com:35664/heroku_85w00jl0';
+const mongourl = process.env.MONG_URL;
+
 
 // Use connect method to connect to the Server
 MongoClient.connect(mongourl, function (err, db) {
